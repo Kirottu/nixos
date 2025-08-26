@@ -486,6 +486,15 @@
             background: linear-gradient(90deg, transparent 10%, ${l4} 10%, ${l4} 90%, transparent 90%);
           }
 
+          @keyframes fade {
+            0% {
+              opacity: 0;
+            }
+            100% {
+              opacity: 1;
+            }
+          }
+
           window#waybar.left,
           window#waybar.right {
             background: transparent;

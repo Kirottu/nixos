@@ -69,26 +69,7 @@
                 "Mod+D".action = spawn "anyrun";
               };
               overview = {
-                "Mod+D" =
-                  let
-                    lockfile = "/tmp/niri-overview";
-                  in
-                  {
-                    repeat = false;
-                    action = spawn "${pkgs.writeShellScript "niri-overview" ''
-                      if [ ! -f ${lockfile} ]; then
-                        touch ${lockfile}
-                        niri msg action open-overview
-                        killall -SIGUSR1 .waybar-wrapped
-                        anyrun
-                        killall -SIGUSR1 .waybar-wrapped
-                        niri msg action close-overview
-                        rm ${lockfile}
-                      else
-                        killall .anyrun-wrapped
-                      fi
-                    ''}";
-                  };
+
               };
             }
             .${config.theming.themeAttrs.subtheme};

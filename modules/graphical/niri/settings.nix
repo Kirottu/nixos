@@ -98,29 +98,52 @@
             };
             layout.struts.right = 45;
           };
-          overview = {
-            spawn-at-startup = [
-              {
-                command = [
-                  "sh"
-                  "-c"
-                  "niri msg -j event-stream | ${pkgs.writeShellScript "niri-overview-monitor" ''
-                    while read line; do
-                      overview=$(echo $line | ${lib.getExe pkgs.jq} '.OverviewOpenedOrClosed.is_open')
+          overview =
+            let
+              lockfile = "/tmp/niri-overview";
+            in
+            {
+              spawn-at-startup = [
+                {
+                  command = [
+                    "sh"
+                    "-c"
+                    "niri msg -j event-stream | ${pkgs.writeShellScript "niri-overview-monitor" ''
+                      while read line; do
+                        overview=$(echo $line | ${lib.getExe pkgs.jq} '.OverviewOpenedOrClosed.is_open')
 
-                      if [ $overview = "false" ]; then
-                        killall .anyrun-wrapped
-                      fi
-                    done                                            
-                  ''}"
-                ];
-              }
-            ];
-            overview = {
-              backdrop-color = "#040404";
-              zoom = 0.75;
+                        if [ $overview = "false" ] && [ -f ${lockfile} ]; then
+                          kill $(cat ${lockfile})
+                        fi
+                      done                                            
+                    ''}"
+                  ];
+                }
+              ];
+              overview = {
+                backdrop-color = "#040404";
+                zoom = 0.75;
+              };
+              binds = with config.hm.lib.niri.actions; {
+                "Mod+D" = {
+                  repeat = false;
+                  action = spawn "${pkgs.writeShellScript "niri-overview" ''
+                    if [ ! -f ${lockfile} ]; then
+                      anyrun &
+                      echo $! > ${lockfile}
+                      niri msg action open-overview
+                      killall -SIGUSR1 .waybar-wrapped
+                      wait
+                      killall -SIGUSR1 .waybar-wrapped
+                      rm ${lockfile}
+                      niri msg action close-overview
+                    else
+                      kill $(cat ${lockfile})
+                    fi
+                  ''}";
+                };
+              };
             };
-          };
         }
         .${config.theming.themeAttrs.subtheme}
       ];

@@ -14,7 +14,7 @@
         webapps.cinny = {
           title = "Cinny";
           url = "https://app.cinny.in";
-          icon = ./cinny.svg;
+          icon = ./cinny.png;
         };
       };
       browsers = {

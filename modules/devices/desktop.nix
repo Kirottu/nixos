@@ -27,5 +27,7 @@
     # };
 
     powerManagement.cpuFreqGovernor = "performance";
+
+    virt.distrobox.enable = true;
   };
 }

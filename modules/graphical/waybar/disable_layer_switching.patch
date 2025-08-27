@@ -1,0 +1,19 @@
+diff --git a/src/bar.cpp b/src/bar.cpp
+index f3468ff4..c6331d35 100644
+--- a/src/bar.cpp
++++ b/src/bar.cpp
+@@ -345,14 +345,6 @@ void waybar::Bar::setMode(const std::string& mode) {
+ void waybar::Bar::setMode(const struct bar_mode& mode) {
+   auto* gtk_window = window.gobj();
+ 
+-  auto layer = GTK_LAYER_SHELL_LAYER_BOTTOM;
+-  if (mode.layer == bar_layer::TOP) {
+-    layer = GTK_LAYER_SHELL_LAYER_TOP;
+-  } else if (mode.layer == bar_layer::OVERLAY) {
+-    layer = GTK_LAYER_SHELL_LAYER_OVERLAY;
+-  }
+-  gtk_layer_set_layer(gtk_window, layer);
+-
+   if (mode.exclusive) {
+     gtk_layer_auto_exclusive_zone_enable(gtk_window);
+   } else {

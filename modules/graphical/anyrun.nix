@@ -36,7 +36,6 @@ in
         width = {
           absolute = 800;
         };
-        margin = 10;
         hidePluginInfo = true;
         ignoreExclusiveZones = true;
         plugins = [

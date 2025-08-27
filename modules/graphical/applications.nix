@@ -135,5 +135,11 @@ in
         ".stremio-server"
       ];
     })
+    {
+      hm.programs.obs-studio = {
+        enable = true;
+      };
+      impermanence.userDirectories = [ ".config/obs-studio" ];
+    }
   ];
 }

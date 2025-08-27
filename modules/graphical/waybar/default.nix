@@ -23,6 +23,11 @@
         };
       in
       {
+        package = pkgs.waybar.overrideAttrs {
+          patches = [
+            ./disable_layer_switching.patch
+          ];
+        };
         enable = true;
         systemd = {
           enable = true;

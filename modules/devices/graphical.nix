@@ -7,6 +7,7 @@
 {
   config = lib.mkIf (config.devices.class == "desktop" || config.devices.class == "laptop") {
     graphical = {
+      enable = true;
       niri.enable = true;
       waybar.enable = true;
       webapps = {

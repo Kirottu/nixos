@@ -16,15 +16,14 @@
     # };
     boot.kernelPackages = pkgs.linuxPackages_latest;
 
-    # FIXME: Disabled due to upstream problems
-    # services.scx = {
-    #   enable = true;
-    #   scheduler = "scx_lavd";
-    #   extraArgs = [
-    #     "--autopower"
-    #   ];
-    #   package = pkgs.scx.rustscheds;
-    # };
+    services.scx = {
+      enable = true;
+      scheduler = "scx_lavd";
+      extraArgs = [
+        "--autopower"
+      ];
+      package = pkgs.scx.rustscheds;
+    };
 
     powerManagement.cpuFreqGovernor = "performance";
 

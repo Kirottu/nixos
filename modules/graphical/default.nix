@@ -1,4 +1,7 @@
+{ lib, ... }:
 {
+  options.graphical.enable = lib.mkEnableOption "Graphical environment";
+
   imports = [
     ./eww
     ./niri

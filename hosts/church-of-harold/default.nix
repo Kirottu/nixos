@@ -105,8 +105,7 @@
 
     hardware.amdgpu.overdrive.enable = true;
 
-    # FIXME: Disabled due to upstream problems
-    # programs.droidcam.enable = true;
+    programs.droidcam.enable = true;
 
     # Workaround for cursor corruption after suspend
     hm.programs.niri.settings.debug.disable-cursor-plane = [ ];

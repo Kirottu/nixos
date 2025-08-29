@@ -17,7 +17,7 @@
     };
     mainUser = {
       userName = "harold";
-      hashedPasswordFile = config.sops.secrets."users/pass-hash".path;
+      hashedPasswordFile = config.sops.secrets."server/pass-hash".path;
       openssh.authorizedKeys.keys = [
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILmnknd6bSmWrhpr+I5j3R5fou8gu8zY4V3oc+gTfVuH kirottu@church-of-harold"
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAus3fLTD2awXq7p9IVzKdhxV0k0VBlIas9L3KxBHmWb kirottu@missionary-of-harold"
@@ -59,6 +59,21 @@
       "d /nix/tmp 1777 root root 1d"
       "d /var/log/nginx 1640 nginx nginx 1d"
     ];
+
+    services.openssh = {
+      enable = true;
+      ports = [ 22 ];
+      settings = {
+        AllowUsers = [ config.mainUser.userName ];
+        AuthenticationMethods = "publickey,password";
+        PasswordAuthentication = true;
+        PermitRootLogin = "no";
+      };
+    };
+
+    services.fail2ban = {
+      enable = true;
+    };
 
     networking.firewall = {
       enable = true;

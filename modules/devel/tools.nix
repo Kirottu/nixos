@@ -1,10 +1,14 @@
 { pkgs, ... }:
 {
   config = {
-    environment.systemPackages = with pkgs; [
-      gdb
-    ];
+    hm.programs.direnv = {
+      enable = true;
+      nix-direnv.enable = true;
+    };
 
-    impermanence.userDirectories = [ ".cargo" ];
+    impermanence.userDirectories = [
+      ".cargo"
+      ".local/share/direnv"
+    ];
   };
 }

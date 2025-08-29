@@ -19,6 +19,11 @@ in
         enable = true;
         dockerCompat = true;
       };
+
+      impermanence = {
+        userDirectories = [ ".local/share/containers" ];
+        directories = [ "/var/lib/containers" ];
+      };
     })
     (lib.mkIf cfg.distrobox.enable {
       virt.podman.enable = true;

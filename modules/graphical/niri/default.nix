@@ -32,6 +32,7 @@
       waybar.enable = true;
       yand.enable = true;
       terminals.alacritty.enable = true;
+      anyrun.enable = true;
     };
     hm.services.wpaperd.enable = true;
 

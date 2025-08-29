@@ -7,11 +7,21 @@
 }:
 let
   pkg = inputs.anyrun.packages.${pkgs.system}.anyrun-with-all-plugins;
+  cfg = config.graphical.anyrun;
 in
 {
-  options.anyrun.enable = lib.mkEnableOption "Anyrun";
+  options.graphical.anyrun.enable = lib.mkEnableOption "Anyrun";
 
-  config = {
+  config = lib.mkIf cfg.enable {
+    hm.imports = [
+      (
+        { modulesPath, ... }:
+        {
+          disabledModules = [ "${modulesPath}/programs/anyrun.nix" ];
+        }
+      )
+      inputs.anyrun.homeManagerModules.default
+    ];
     hm.programs.anyrun = {
       package = pkg;
       enable = true;
@@ -39,13 +49,13 @@ in
         hidePluginInfo = true;
         ignoreExclusiveZones = true;
         plugins = [
-          "${pkg}/lib/libniri_focus.so"
-          "${pkg}/lib/libapplications.so"
-          "${pkg}/lib/libnix_run.so"
-          "${pkg}/lib/libsymbols.so"
-          "${pkg}/lib/libkidex.so"
-          "${pkg}/lib/librink.so"
-          "${pkg}/lib/libtranslate.so"
+          "niri-focus"
+          "applications"
+          "nix-run"
+          "symbols"
+          "kidex"
+          "rink"
+          "translate"
         ];
       };
 

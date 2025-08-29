@@ -1,28 +1,33 @@
 {
   config,
+  pkgs,
+  lib,
   ...
 }:
 {
   imports = [
+    ./hardware-configuration.nix
+    ../../modules
     ./nextcloud.nix
     ./synapse.nix
+    ./nginx.nix
   ];
 
   config = {
-    device.class = "server";
+    devices.class = "server";
+    networking.hostName = "overwatch-of-harold";
 
-    sops.secrets."server/pass-hash" = {
-      neededForUsers = true;
-      sopsFile = ../../secrets/users.yaml;
-    };
     mainUser = {
       userName = "harold";
-      hashedPasswordFile = config.sops.secrets."server/pass-hash".path;
-      openssh.authorizedKeys.keys = [
+      extraOptions = {
+        openssh.authorizedKeys.keys = [
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILmnknd6bSmWrhpr+I5j3R5fou8gu8zY4V3oc+gTfVuH kirottu@church-of-harold"
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAus3fLTD2awXq7p9IVzKdhxV0k0VBlIas9L3KxBHmWb kirottu@missionary-of-harold"
       ];
+      };
     };
+
+    cli.fish.enable = true;
 
     security.acme = {
       acceptTerms = true;
@@ -44,7 +49,14 @@
     };
     impermanence = {
       enable = true;
-      directories = [ "/var/lib/acme" ];
+      directories = [
+        "/var/lib/acme"
+        "/var/lib/postgresql"
+        "/etc/ssh"
+      ];
+      userDirectories = [
+        "Flake"
+      ];
     };
 
     #prevent OOM on cache fail
@@ -83,5 +95,16 @@
         443
       ];
     };
+
+    services.postgresql = {
+      enable = true;
+      package = pkgs.postgresql_17;
+    };
+
+    # Fix for niri-flake compiling niri if that is set at all
+    hm.programs.niri.settings = lib.mkForce null;
+
+    system.stateVersion = "25.05";
+    hm.home.stateVersion = "25.05";
   };
 }

@@ -5,8 +5,9 @@
   inputs,
   ...
 }:
+  let cfg = config.graphical.niri; in
 {
-  config.hm.programs.niri.settings.binds =
+  config.hm.programs.niri.settings.binds = lib.mkIf cfg.enable (
     with config.hm.lib.niri.actions;
     lib.mkMerge (
       [
@@ -80,5 +81,5 @@
         "Mod+${toString i}".action.focus-workspace = i;
         "Mod+Shift+${toString i}".action.move-column-to-workspace = i;
       }) 10
-    );
+    ));
 }

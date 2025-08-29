@@ -31,6 +31,10 @@
         type = lib.types.package;
         description = "Login shell";
       };
+      extraOptions = lib.mkOption {
+        type = lib.types.attrs;
+        default = {};
+      };
     };
   };
 
@@ -38,7 +42,7 @@
     # TODO: Assertion to ensure one password method exists
     users = {
       mutableUsers = false;
-      users.${config.mainUser.userName} = {
+      users.${config.mainUser.userName} = lib.mkMerge [{
         isNormalUser = true;
         hashedPassword = lib.mkIf (config.mainUser.hashedPassword != null) config.mainUser.hashedPassword;
         hashedPasswordFile = lib.mkIf (
@@ -51,7 +55,8 @@
           "input"
           "audio"
         ];
-      };
+      }
+      config.mainUser.extraOptions];
     };
   };
 }

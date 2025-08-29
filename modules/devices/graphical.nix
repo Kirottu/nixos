@@ -45,7 +45,6 @@
       networkmanager.enable = true;
     };
     impermanence = {
-      enable = true;
       userDirectories = [
         "Projects"
         "Downloads"

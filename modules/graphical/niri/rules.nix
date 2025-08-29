@@ -1,6 +1,8 @@
 { config, lib, ... }:
+
+  let cfg = config.graphical.niri; in
 {
-  config.hm.programs.niri.settings.window-rules = [
+  config.hm.programs.niri.settings.window-rules = lib.mkIf cfg.enable [
     {
       open-floating = false;
     }

@@ -54,7 +54,7 @@
     inputs.stylix.nixosModules.stylix
   ];
 
-  config =
+  config = lib.mkIf config.graphical.enable (
     let
       icon-theme = "Papirus-Dark";
 
@@ -182,5 +182,6 @@
         initrd.verbose = false;
         loader.timeout = 0;
       };
-    };
+    }
+  );
 }

@@ -4,8 +4,9 @@
   pkgs,
   ...
 }:
+let cfg = config.graphical.niri; in
 {
-  config.hm.programs.niri.settings = lib.mkMerge [
+  config.hm.programs.niri.settings = lib.mkIf cfg.enable (lib.mkMerge [
     config.graphical.niri.extraOptions
     {
       spawn-at-startup = [
@@ -149,6 +150,6 @@
       ];
     }
     .${config.theming.theme}
-  ];
+  ]);
 
 }

@@ -42,6 +42,8 @@
       (lib.hiPrio pkgs.uutils-coreutils-noprefix)
     ];
 
+    impermanence.enable = true;
+
     secrets.sops.enable = true;
     zramSwap.enable = true;
   };

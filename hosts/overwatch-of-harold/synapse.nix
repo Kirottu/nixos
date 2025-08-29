@@ -2,7 +2,7 @@
 {
   config = {
     services.matrix-synapse = {
-      enable = true;
+      enable = false;
       configureRedisLocally = true;
     };
   };

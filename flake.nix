@@ -74,7 +74,8 @@
     };
 
     private = {
-      url = "github:Kirottu/nixos-private";
+      # url = "github:Kirottu/nixos-private";
+      url = "path:/run/media/nixos/e663c6a0-4ff4-40db-8b26-6fa338370882/server-flake/nixos-private";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -107,6 +108,16 @@
           modules = [
             ./hosts/missionary-of-harold
             inputs.private.nixosModules.missionary-of-harold
+          ];
+        };
+        overwatch-of-harold = lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = {
+            inherit inputs lib privateInputs;
+          };
+          modules = [
+            ./hosts/overwatch-of-harold
+            inputs.private.nixosModules.overwatch-of-harold
           ];
         };
       };

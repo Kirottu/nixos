@@ -7,7 +7,7 @@
 {
   config = {
     services.nextcloud = {
-      enable = true;
+      enable = false;
       package = pkgs.nextcloud31;
       configureRedis = true;
       https = true;

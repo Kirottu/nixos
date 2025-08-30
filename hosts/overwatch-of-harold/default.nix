@@ -35,6 +35,9 @@
     # DNS is somehow really slow on this thing
     services.bind = {
       enable = true;
+      extraOptions = ''
+        dnssec-validation no;
+      '';
     };
 
     mainUser = {

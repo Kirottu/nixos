@@ -7,6 +7,7 @@
 
     services.ddclient = {
       enable = true;
+      interval = "1min";
       protocol = "namecheap";
       username = config.domain;
       passwordFile = config.sops.secrets."ddclient/password".path;

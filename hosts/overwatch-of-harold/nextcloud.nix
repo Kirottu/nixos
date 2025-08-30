@@ -7,6 +7,7 @@
 let
   ncDomain = "nc.${config.domain}";
   collaboraDomain = "collabora.${config.domain}";
+  wopiUpdater = "nextcloud-update-wopi";
 in
 {
   config = {
@@ -31,6 +32,9 @@ in
       maxUploadSize = "5G";
       database.createLocally = true;
       configureRedis = true;
+      phpOptions = {
+        "opcache.interned_strings_buffer" = "12";
+      };
       settings = {
         overwriteprotocol = "https";
       };
@@ -46,6 +50,50 @@ in
           maps
           richdocuments
           ;
+      };
+      poolSettings = {
+        pm = "dynamic";
+        "pm.max_children" = "120";
+        "pm.max_requests" = "500";
+        "pm.max_spare_servers" = "86";
+        "pm.min_spare_servers" = "28";
+        "pm.start_servers" = "28";
+      };
+
+    };
+
+    systemd.timers.${wopiUpdater} = {
+      wantedBy = [ "timers.target" ];
+      timerConfig = {
+        OnBootSec = config.services.ddclient.interval;
+        OnUnitInactiveSec = config.services.ddclient.interval;
+        Unit = "${wopiUpdater}.service";
+      };
+    };
+    systemd.services.${wopiUpdater} = {
+      path = [
+        config.services.nextcloud.occ
+        pkgs.curl
+      ];
+      script = ''
+        curr_wopi=$(nextcloud-occ config:app:get richdocuments wopi_allowlist)
+        public_ip=$(curl -s https://api.ipify.org)
+
+        if [ "$public_ip" = "" ]; then
+          echo "Not connected to the internet"
+
+        elif [[ "$curr_wopi" == *"$public_ip"* ]]; then
+          echo "WOPI allow up to date"
+
+        else
+          echo "Setting WOPI allow list"
+          nextcloud-occ config:app:set richdocuments wopi_allowlist --value="$public_ip"
+
+        fi
+      '';
+      after = [ "network.target" ];
+      serviceConfig = {
+        Type = "oneshot";
       };
     };
 

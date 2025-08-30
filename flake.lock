@@ -640,14 +640,17 @@
         ]
       },
       "locked": {
-        "lastModified": 1756485727,
-        "narHash": "sha256-brrcxV2eo9WCSd62X0mcW1H1mspdh5cLY5BmlwaUKeI=",
-        "path": "/run/media/nixos/e663c6a0-4ff4-40db-8b26-6fa338370882/server-flake/nixos-private",
-        "type": "path"
+        "lastModified": 1756494690,
+        "narHash": "sha256-0YNE7TwEgdafSJfaBLPfAum1p2pLtZaQ8dTBd0a8nqE=",
+        "owner": "Kirottu",
+        "repo": "nixos-private",
+        "rev": "9cb66a7efa6a98197ce01448092382451ace0728",
+        "type": "github"
       },
       "original": {
-        "path": "/run/media/nixos/e663c6a0-4ff4-40db-8b26-6fa338370882/server-flake/nixos-private",
-        "type": "path"
+        "owner": "Kirottu",
+        "repo": "nixos-private",
+        "type": "github"
       }
     },
     "root": {

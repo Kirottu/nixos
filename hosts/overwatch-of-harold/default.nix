@@ -5,53 +5,55 @@
   ...
 }:
 {
+  options = {
+    domain = lib.mkOption {
+      type = lib.types.str;
+    };
+  };
+
   imports = [
     ./hardware-configuration.nix
     ../../modules
     ./nextcloud.nix
     ./synapse.nix
     ./nginx.nix
+    ./ddclient.nix
   ];
 
   config = {
     devices.class = "server";
-    networking.hostName = "overwatch-of-harold";
+    domain = "kirottu.com";
+    networking = {
+      hostName = "overwatch-of-harold";
+      nameservers = [
+        "1.1.1.1"
+        "8.8.8.8"
+      ];
+      dhcpcd.extraConfig = "nohook resolv.conf";
+    };
+
+    # DNS is somehow really slow on this thing
+    services.bind = {
+      enable = true;
+    };
 
     mainUser = {
       userName = "harold";
       extraOptions = {
         openssh.authorizedKeys.keys = [
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILmnknd6bSmWrhpr+I5j3R5fou8gu8zY4V3oc+gTfVuH kirottu@church-of-harold"
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAus3fLTD2awXq7p9IVzKdhxV0k0VBlIas9L3KxBHmWb kirottu@missionary-of-harold"
-      ];
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILmnknd6bSmWrhpr+I5j3R5fou8gu8zY4V3oc+gTfVuH kirottu@church-of-harold"
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAus3fLTD2awXq7p9IVzKdhxV0k0VBlIas9L3KxBHmWb kirottu@missionary-of-harold"
+        ];
       };
     };
 
     cli.fish.enable = true;
 
-    security.acme = {
-      acceptTerms = true;
-      defaults.email = "arnovaara@kirottu.com";
-      certs =
-        let
-          sub = t: s: "${s}.${t}";
-        in
-        {
-          "kirottu.com" = {
-            webroot = "/var/lib/acme/acme-challenge/";
-            extraDomainNames = builtins.map (sub "kirottu.com") [
-              "nc"
-              "calendar"
-              "matrix"
-            ];
-          };
-        };
-    };
     impermanence = {
       enable = true;
       directories = [
-        "/var/lib/acme"
         "/var/lib/postgresql"
+        "/var/lib/fail2ban"
         "/etc/ssh"
       ];
       userDirectories = [
@@ -100,6 +102,10 @@
       enable = true;
       package = pkgs.postgresql_17;
     };
+
+    hm.programs.git.signing.key = "26982691F464B6026D552AD16A022A372FDFBF4E";
+
+    services.btrfs.autoScrub.enable = true;
 
     # Fix for niri-flake compiling niri if that is set at all
     hm.programs.niri.settings = lib.mkForce null;

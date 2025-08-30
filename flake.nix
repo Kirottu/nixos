@@ -74,8 +74,7 @@
     };
 
     private = {
-      # url = "github:Kirottu/nixos-private";
-      url = "path:/run/media/nixos/e663c6a0-4ff4-40db-8b26-6fa338370882/server-flake/nixos-private";
+      url = "github:Kirottu/nixos-private";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

@@ -26,6 +26,7 @@ in
       package = pkg;
       enable = true;
       config = {
+        layer = "top";
         x = {
           fraction = 0.5;
         };

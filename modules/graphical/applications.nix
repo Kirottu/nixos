@@ -27,6 +27,11 @@ in
     lib.mkMerge [
       {
         environment.systemPackages = with pkgs; [
+          nautilus
+          # Video thumbnails
+          ffmpeg-headless
+          ffmpegthumbnailer
+
           sirikali
           pavucontrol
           kdiskmark

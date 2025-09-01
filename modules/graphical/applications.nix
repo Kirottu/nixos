@@ -152,6 +152,19 @@ in
           ];
         };
       })
+      (lib.utils.mkApp {
+        package = pkgs.freecad;
+        userDirectories = [
+          ".config/FreeCAD"
+          ".local/share/FreeCAD"
+        ];
+      })
+      (lib.utils.mkApp {
+        package = pkgs.prusa-slicer;
+        userDirectories = [
+          ".config/PrusaSlicer"
+        ];
+      })
       {
         hm.programs.obs-studio = {
           enable = true;

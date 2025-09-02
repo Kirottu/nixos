@@ -25,6 +25,9 @@ in
     services.matrix-synapse = {
       enable = true;
       configureRedisLocally = true;
+      workers = {
+        "federation_sender" = { };
+      };
       settings = {
         server_name = config.domain;
         public_baseurl = "https://${config.domain}";
@@ -47,9 +50,23 @@ in
               }
             ];
           }
+          {
+            port = 9093;
+            bind_addresses = [
+              "::1"
+            ];
+            tls = false;
+            type = "http";
+            resources = [
+              {
+                names = [ "replication" ];
+              }
+            ];
+          }
         ];
-        workers = {
-          "federation_sender" = { };
+        instance_map.main = {
+          host = "::1";
+          port = 9093;
         };
         turn_uris = [
           "turn:${matrixDomain}:3478?transport=udp"

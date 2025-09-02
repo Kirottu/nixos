@@ -37,6 +37,7 @@ in
       };
       settings = {
         overwriteprotocol = "https";
+        log_type = "file";
       };
       config = {
         adminuser = "Kirottu";
@@ -58,6 +59,7 @@ in
         "pm.max_spare_servers" = "86";
         "pm.min_spare_servers" = "28";
         "pm.start_servers" = "28";
+        "php_admin_value[memory_limit]" = "1G";
       };
 
     };
@@ -114,6 +116,8 @@ in
           "@allow" = true;
           host = [ ncDomain ];
         };
+
+        logging.disable_server_audit = true;
 
         server_name = collaboraDomain;
       };

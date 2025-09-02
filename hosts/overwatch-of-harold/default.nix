@@ -18,6 +18,7 @@
     ./synapse.nix
     ./nginx.nix
     ./ddclient.nix
+    ./vaultwarden.nix
   ];
 
   config = {
@@ -32,12 +33,10 @@
       dhcpcd.extraConfig = "nohook resolv.conf";
     };
 
-    # DNS is somehow really slow on this thing
-    services.bind = {
+    services.resolved = {
       enable = true;
-      extraOptions = ''
-        dnssec-validation no;
-      '';
+      dnsovertls = "true";
+      fallbackDns = config.networking.nameservers;
     };
 
     mainUser = {
@@ -89,11 +88,11 @@
     };
 
     services.fail2ban = {
-      enable = true;
+      # enable = true;
     };
 
     networking.firewall = {
-      enable = true;
+      enable = false;
       allowedTCPPorts = [
         22
         80

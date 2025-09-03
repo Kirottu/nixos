@@ -171,6 +171,16 @@ in
         };
         impermanence.userDirectories = [ ".config/obs-studio" ];
       }
+      (lib.utils.mkApp {
+        package = pkgs.wireshark;
+        userDirectories = [
+          ".config/wireshark"
+        ];
+        extraOptions = {
+          programs.wireshark.enable = true;
+          mainUser.extraGroups = [ "wireshark" ];
+        };
+      })
     ]
   );
 }

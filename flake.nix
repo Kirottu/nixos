@@ -64,7 +64,7 @@
     };
 
     anyrun = {
-      url = "github:anyrun-org/anyrun/relm4";
+      url = "github:anyrun-org/anyrun";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

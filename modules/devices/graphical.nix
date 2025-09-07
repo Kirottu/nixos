@@ -81,6 +81,7 @@
         subtheme = "overview";
       };
     };
+    virt.distrobox.enable = true;
     daemons.kidex.enable = true;
 
     nixpkgs.config.allowUnfree = true;

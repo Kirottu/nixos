@@ -26,16 +26,19 @@
     graphical = {
       yand.output = "eDP-1";
       niri.extraOptions = {
-        workspaces."chat" = {
+        workspaces."1-chat" = {
           open-on-output = "eDP-1";
+          name = "chat";
         };
 
-        workspaces."games" = {
+        workspaces."3-games" = {
           open-on-output = "eDP-1";
+          name = "games";
         };
 
-        workspaces."web" = {
+        workspaces."2-web" = {
           open-on-output = "eDP-1";
+          name = "web";
         };
 
         outputs."eDP-1".scale = 1.0;

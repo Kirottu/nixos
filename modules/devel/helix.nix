@@ -10,6 +10,8 @@
         nixfmt-rfc-style
         rust-analyzer
         marksman
+        python313Packages.python-lsp-server
+        sourcekit-lsp
       ];
       settings = {
         editor = {

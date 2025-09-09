@@ -64,12 +64,7 @@
     };
 
     anyrun = {
-      url = "github:anyrun-org/anyrun";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    waybar-niri-overflow = {
-      url = "github:Kirottu/waybar-niri-overflow";
+      url = "github:anyrun-org/anyrun/anyrun-provider";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

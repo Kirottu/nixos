@@ -47,6 +47,8 @@
       (lib.hiPrio pkgs.uutils-coreutils-noprefix)
     ];
 
+    nixpkgs.config.allowUnfree = true;
+
     impermanence.enable = true;
 
     secrets.sops.enable = true;

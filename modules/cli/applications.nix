@@ -22,6 +22,8 @@
         p7zip
         unrar-wrapper
         yt-dlp
+        dig
+        nettools
       ];
 
       programs.nh = {

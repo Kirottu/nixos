@@ -2,6 +2,7 @@
   config,
   inputs,
   lib,
+  myPkgs,
   pkgs,
   ...
 }:
@@ -132,15 +133,7 @@ in
         ];
       })
       (lib.utils.mkApp {
-        package = pkgs.stremio.overrideAttrs (old: {
-          postInstall = lib.concatStrings [
-            old.postInstall
-            ''
-              substituteInPlace $out/share/applications/smartcode-stremio.desktop \
-                --replace "StartupWMClass=stremio" "StartupWMClass=com.stremio.stremio"
-            ''
-          ];
-        });
+        package = pkgs.callPackage myPkgs.stremio { };
         userDirectories = [
           ".config/Smart Code ltd"
           ".local/share/Smart Code ltd"

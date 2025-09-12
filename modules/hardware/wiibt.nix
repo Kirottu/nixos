@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  myPkgs,
   ...
 }:
 {
@@ -10,7 +11,7 @@
 
   config = lib.mkIf config.wiibt.enable {
     boot.extraModulePackages = [
-      ((pkgs.callPackage ./btusb.nix { kernel = config.boot.kernelPackages.kernel; }))
+      ((pkgs.callPackage myPkgs.wii-btusb { kernel = config.boot.kernelPackages.kernel; }))
     ];
   };
 }

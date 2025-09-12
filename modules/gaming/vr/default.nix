@@ -31,6 +31,7 @@
       ".config/bs-manager"
       ".config/wlxoverlay"
       ".config/wivrn"
+      ".config/openxr"
       ".local/share/wayvr-dashboard"
       ".local/share/dev.oo8.wayvr-dashboard"
     ];
@@ -65,7 +66,7 @@
         encoders = [
           {
             encoder = "vaapi";
-            codec = "h265";
+            codec = "h264";
             width = 0.5;
             height = 0.25;
             offset_x = 0.0;
@@ -74,7 +75,7 @@
           }
           {
             encoder = "vaapi";
-            codec = "h265";
+            codec = "h264";
             width = 0.5;
             height = 0.75;
             offset_x = 0.0;
@@ -83,7 +84,7 @@
           }
           {
             encoder = "vaapi";
-            codec = "h265";
+            codec = "h264";
             width = 0.5;
             height = 1.0;
             offset_x = 0.5;

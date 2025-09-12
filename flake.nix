@@ -81,13 +81,19 @@
       # Overlay with some utilities
       lib = import ./lib { inherit inputs lib; };
       privateInputs = inputs.private.inputs;
+      myPkgs = import ./packages;
     in
     {
       nixosConfigurations = {
         church-of-harold = lib.nixosSystem {
           system = "x86_64-linux";
           specialArgs = {
-            inherit inputs lib privateInputs;
+            inherit
+              inputs
+              lib
+              privateInputs
+              myPkgs
+              ;
           };
           modules = [
             ./hosts/church-of-harold
@@ -97,7 +103,12 @@
         missionary-of-harold = lib.nixosSystem {
           system = "x86_64-linux";
           specialArgs = {
-            inherit inputs lib privateInputs;
+            inherit
+              inputs
+              lib
+              privateInputs
+              myPkgs
+              ;
           };
           modules = [
             ./hosts/missionary-of-harold
@@ -107,7 +118,12 @@
         overwatch-of-harold = lib.nixosSystem {
           system = "x86_64-linux";
           specialArgs = {
-            inherit inputs lib privateInputs;
+            inherit
+              inputs
+              lib
+              privateInputs
+              myPkgs
+              ;
           };
           modules = [
             ./hosts/overwatch-of-harold

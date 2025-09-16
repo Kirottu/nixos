@@ -84,8 +84,6 @@
     virt.distrobox.enable = true;
     daemons.kidex.enable = true;
 
-    nixpkgs.config.allowUnfree = true;
-
     programs.command-not-found.enable = true;
 
     boot.kernel.sysctl."kernel.sysrq" = 1;

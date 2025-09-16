@@ -27,17 +27,74 @@
     networking = {
       hostName = "overwatch-of-harold";
       nameservers = [
-        "1.1.1.1"
-        "8.8.8.8"
+        "127.0.0.1"
       ];
       dhcpcd.extraConfig = "nohook resolv.conf";
     };
 
-    services.resolved = {
+    services.unbound = {
       enable = true;
-      dnsovertls = "true";
-      fallbackDns = config.networking.nameservers;
+      settings = {
+        server = {
+          interface = [ "127.0.0.1" ];
+          prefetch = "yes";
+          prefetch-key = "yes";
+          num-threads = 2;
+          msg-cache-slabs = 2;
+          rrset-cache-slabs = 2;
+          infra-cache-slabs = 2;
+          key-cache-slabs = 2;
+          serve-expired = "yes";
+          cache-min-ttl = 600;
+          serve-expired-client-timeout = 0;
+          key-cache-size = "64m";
+          rrset-cache-size = "64m";
+          msg-cache-size = "32m";
+          so-rcvbuf = "8m";
+          so-sndbuf = "8m";
+          outgoing-range = 8192;
+          num-queries-per-thread = 4096;
+        };
+        forward-zone = [
+          {
+            name = ".";
+            forward-addr = [
+              "1.1.1.1@853#cloudflare-dns.com"
+              "9.9.9.9#dns.quad9.net"
+            ];
+            forward-tls-upstream = true;
+          }
+        ];
+      };
     };
+
+    # services.resolved = {
+    #   enable = true;
+    #   dnsovertls = "true";
+    #   fallbackDns = config.networking.nameservers;
+    # };
+
+    networking.useDHCP = true;
+
+    # systemd.network = {
+    #   enable = true;
+    #   networks."10-wan" = {
+    #     matchConfig.Name = "enp0s25";
+    #     networkConfig = {
+    #       DHCP = "ipv4";
+    #       IPv6AcceptRA = true;
+    #     };
+    #     linkConfig.RequiredForOnline = "routable";
+    #     routes = [
+    #       {
+    #         Gateway = "fe80::101";
+    #       }
+    #       {
+    #         Gateway = "192.168.101.1";
+    #       }
+    #     ];
+    #   };
+    # };
 
     mainUser = {
       userName = "harold";
@@ -88,11 +145,11 @@
     };
 
     services.fail2ban = {
-      # enable = true;
+      enable = true;
     };
 
     networking.firewall = {
-      enable = false;
+      enable = true;
       allowedTCPPorts = [
         22
         80

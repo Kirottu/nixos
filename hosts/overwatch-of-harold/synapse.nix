@@ -17,6 +17,39 @@ let
     return 200 '${builtins.toJSON data}';
   '';
   certDir = config.security.acme.certs.${config.domain}.directory;
+  workerLogConfig =
+    name:
+    (pkgs.formats.yaml { }).generate "log_config_${name}" {
+      disable_existing_loggers = false;
+      formatters = {
+        journal_fmt = {
+          format = "%(name)s: [%(request)s] %(message)s";
+        };
+      };
+      handlers = {
+        journal = {
+          SYSLOG_IDENTIFIER = "synapse-${name}";
+          class = "systemd.journal.JournalHandler";
+          formatter = "journal_fmt";
+        };
+      };
+      root = {
+        handlers = [
+          "journal"
+        ];
+        level = "WARN";
+      };
+      version = 1;
+    };
+
+  proxyPass = {
+    proxyPass = "http://$synapse_worker_upstream$request_uri";
+    recommendedProxySettings = true;
+    extraConfig = ''
+      client_max_body_size 50M;
+      proxy_http_version 1.1;
+    '';
+  };
 in
 {
   config = {
@@ -26,7 +59,51 @@ in
       enable = true;
       configureRedisLocally = true;
       workers = {
-        "federation_sender" = { };
+        "federation_sender" = {
+          worker_log_config = workerLogConfig "federation-sender";
+        };
+        "events_persister" = {
+          worker_log_config = workerLogConfig "events-persister";
+          worker_listeners = [
+            {
+              type = "http";
+              bind_addresses = [ "::1" ];
+              port = 9111;
+              resources = [
+                {
+                  names = [ "replication" ];
+                }
+              ];
+            }
+          ];
+        };
+        "receipts_writer" = {
+          worker_log_config = workerLogConfig "receipts-writer";
+          worker_listeners = [
+            {
+              type = "http";
+              bind_addresses = [ "::1" ];
+              port = 9112;
+              resources = [
+                {
+                  names = [ "replication" ];
+                }
+              ];
+            }
+            {
+              type = "http";
+              bind_addresses = [ "::1" ];
+              tls = false;
+              port = 8112;
+              x_forwarded = true;
+              resources = [
+                {
+                  names = [ "client" ];
+                }
+              ];
+            }
+          ];
+        };
       };
       settings = {
         server_name = config.domain;
@@ -64,9 +141,30 @@ in
             ];
           }
         ];
-        instance_map.main = {
-          host = "::1";
-          port = 9093;
+        instance_map = {
+          main = {
+            host = "::1";
+            port = 9093;
+          };
+          "events_persister" = {
+            host = "::1";
+            port = 9111;
+          };
+          "receipts_writer" = {
+            host = "::1";
+            port = 9112;
+          };
+        };
+        stream_writers = {
+          events = [ "events_persister" ];
+          receipts = "receipts_writer";
+          typing = "receipts_writer";
+        };
+        federation_sender_instances = [
+          "federation_sender"
+        ];
+        federation = {
+          client_timeout = "300s";
         };
         turn_uris = [
           "turn:${matrixDomain}:3478?transport=udp"
@@ -101,12 +199,28 @@ in
     };
 
     services.nginx = {
+      upstreams = {
+        "matrix-synapse".servers = {
+          "[::1]:8008" = { };
+        };
+        "matrix-receipts".servers = {
+          "[::1]:8112" = { };
+        };
+      };
+      commonHttpConfig = ''
+        map $uri $synapse_worker_upstream {
+          default matrix-synapse;
+          ~^/_matrix/client/(r0|v3|unstable)/rooms/.*/receipt matrix-receipts;
+          ~^/_matrix/client/(r0|v3|unstable)/rooms/.*/read_markers matrix-receipts;
+          ~^/_matrix/client/(api/v1|r0|v3|unstable)/rooms/.*/typing matrix-receipts;
+        }
+      '';
+      mapHashBucketSize = 128;
       virtualHosts.${config.domain} = {
         locations."= /.well-known/matrix/server".extraConfig = mkWellKnown serverConfig;
         locations."= /.well-known/matrix/client".extraConfig = mkWellKnown clientConfig;
         #for some reason clients insist on not using the sub domain
-        locations."/_matrix".proxyPass = "http://[::1]:8008";
-        locations."/_synapse/client".proxyPass = "http://[::1]:8008";
+        locations."~ ^(/_matrix|/_synapse/client)" = proxyPass;
       };
       virtualHosts.${matrixDomain} = {
         enableACME = true;
@@ -137,13 +251,12 @@ in
               "[::0]"
             ]
         );
-        locations."/_matrix".proxyPass = "http://[::1]:8008";
-        locations."/_synapse/client".proxyPass = "http://[::1]:8008";
+        locations."~ ^(/_matrix|/_synapse/client)" = proxyPass;
 
-        extraConfig = "
+        extraConfig = ''
           access_log /var/log/nginx/matrix_access.log;
           error_log /var/log/nginx/matrix_error.log;
-        ";
+        '';
 
       };
     };

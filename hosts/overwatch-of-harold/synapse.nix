@@ -37,7 +37,7 @@ let
         handlers = [
           "journal"
         ];
-        level = "WARN";
+        level = "INFO";
       };
       version = 1;
     };
@@ -50,9 +50,21 @@ let
       proxy_http_version 1.1;
     '';
   };
+
+  mkMetrics = port: {
+    inherit port;
+    type = "metrics";
+    tls = false;
+    resources = [ ];
+    bind_addresses = [
+      "127.0.0.1"
+    ];
+  };
 in
 {
-  config = {
+  options.synapse.enable = lib.mkEnableOption "Synapse";
+
+  config = lib.mkIf config.synapse.enable {
     impermanence.directories = [ "/var/lib/matrix-synapse" ];
 
     services.matrix-synapse = {
@@ -61,6 +73,7 @@ in
       workers = {
         "federation_sender" = {
           worker_log_config = workerLogConfig "federation-sender";
+          worker_listeners = lib.optional config.grafana.enable (mkMetrics 9001);
         };
         "events_persister" = {
           worker_log_config = workerLogConfig "events-persister";
@@ -75,7 +88,9 @@ in
                 }
               ];
             }
-          ];
+
+          ]
+          ++ lib.optional config.grafana.enable (mkMetrics 9002);
         };
         "receipts_writer" = {
           worker_log_config = workerLogConfig "receipts-writer";
@@ -88,6 +103,7 @@ in
                 {
                   names = [ "replication" ];
                 }
+
               ];
             }
             {
@@ -102,7 +118,8 @@ in
                 }
               ];
             }
-          ];
+          ]
+          ++ lib.optional config.grafana.enable (mkMetrics 9003);
         };
       };
       settings = {
@@ -140,7 +157,8 @@ in
               }
             ];
           }
-        ];
+        ]
+        ++ lib.optional config.grafana.enable (mkMetrics 9000);
         instance_map = {
           main = {
             host = "::1";
@@ -166,6 +184,9 @@ in
         federation = {
           client_timeout = "300s";
         };
+        presence = {
+          enabled = false;
+        };
         turn_uris = [
           "turn:${matrixDomain}:3478?transport=udp"
           "turn:${matrixDomain}:3478?transport=tcp"
@@ -173,6 +194,7 @@ in
         turn_shared_secret = config.services.coturn.static-auth-secret;
         turn_user_lifetime = "1h";
         turn_allow_guests = true;
+        enable_metrics = config.grafana.enable;
         log_config = (pkgs.formats.yaml { }).generate "log_config" {
           disable_existing_loggers = false;
           formatters = {
@@ -191,7 +213,7 @@ in
             handlers = [
               "journal"
             ];
-            level = "WARN";
+            level = "INFO";
           };
           version = 1;
         };

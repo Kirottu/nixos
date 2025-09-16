@@ -19,11 +19,18 @@
     ./nginx.nix
     ./ddclient.nix
     ./vaultwarden.nix
+    ./grafana.nix
+    ./mail.nix
   ];
 
   config = {
     devices.class = "server";
     domain = "kirottu.com";
+
+    synapse.enable = true;
+    grafana.enable = true;
+    # mail.enable = true;
+
     networking = {
       hostName = "overwatch-of-harold";
       nameservers = [
@@ -35,8 +42,12 @@
     services.unbound = {
       enable = true;
       settings = {
+        remote-control = lib.mkIf config.grafana.enable {
+          control-enable = true;
+          control-interface = "/run/unbound/unbound.socket";
+        };
         server = {
-          interface = [ "127.0.0.1" ];
+          interface = [ "0.0.0.0" ];
           prefetch = "yes";
           prefetch-key = "yes";
           num-threads = 2;
@@ -95,6 +106,21 @@
     #     ];
     #   };
     # };
+
+    services.fireqos = {
+      enable = true;
+      config =
+        let
+          interface = "enp0s25";
+          upSpeed = "20mbit";
+          downSpeed = "80mbit";
+        in
+        ''
+          interface ${interface} world-in input rate ${downSpeed}
+
+          interface ${interface} world-out output rate ${upSpeed}
+        '';
+    };
 
     mainUser = {
       userName = "harold";

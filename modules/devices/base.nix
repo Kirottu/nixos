@@ -17,7 +17,7 @@
           config.mainUser.userName
         ];
       };
-      package = pkgs.lixPackageSets.latest.lix;
+      # package = pkgs.lix;
     };
 
     # Bootloader.

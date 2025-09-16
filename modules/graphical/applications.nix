@@ -133,10 +133,12 @@ in
         ];
       })
       (lib.utils.mkApp {
-        package = pkgs.callPackage myPkgs.stremio { };
+        # package = pkgs.callPackage myPkgs.stremio { };
+        package = pkgs.stremio;
         userDirectories = [
           ".config/Smart Code ltd"
           ".local/share/Smart Code ltd"
+          ".local/share/stremio"
           ".stremio-server"
         ];
         extraOptions = {

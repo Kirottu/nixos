@@ -37,8 +37,8 @@
     hm.services.wpaperd.enable = true;
 
     programs.niri.enable = true;
-    nixpkgs.overlays = [ inputs.niri.overlays.niri ];
-    programs.niri.package = pkgs.niri-unstable;
+    # nixpkgs.overlays = [ inputs.niri.overlays.niri ];
+    # programs.niri.package = pkgs.niri;
 
     xdg.portal = {
       xdgOpenUsePortal = true;
@@ -56,7 +56,7 @@
       Service = {
         Type = "notify";
         NotifyAccess = "all";
-        ExecStart = lib.getExe pkgs.xwayland-satellite;
+        ExecStart = lib.getExe inputs.niri.packages.${pkgs.system}.xwayland-satellite-unstable;
         StandardOutput = "journal";
         Restart = "on-failure";
       };

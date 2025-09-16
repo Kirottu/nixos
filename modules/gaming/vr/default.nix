@@ -66,7 +66,7 @@
         encoders = [
           {
             encoder = "vaapi";
-            codec = "h264";
+            codec = "h265";
             width = 0.5;
             height = 0.25;
             offset_x = 0.0;
@@ -75,7 +75,7 @@
           }
           {
             encoder = "vaapi";
-            codec = "h264";
+            codec = "h265";
             width = 0.5;
             height = 0.75;
             offset_x = 0.0;
@@ -84,7 +84,7 @@
           }
           {
             encoder = "vaapi";
-            codec = "h264";
+            codec = "h265";
             width = 0.5;
             height = 1.0;
             offset_x = 0.5;

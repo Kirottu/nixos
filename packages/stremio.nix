@@ -11,6 +11,7 @@
   libcef,
   makeWrapper,
   nodejs,
+  libGL,
   # fetchurl,
   ...
 }:
@@ -98,6 +99,7 @@ rustPlatform.buildRustPackage (finalAttrs: {
     cp $src/data/com.stremio.Stremio.desktop $out/share/applications/com.stremio.Stremio.desktop
     cp $src/data/icons/com.stremio.Stremio.svg $out/share/icons/hicolor/scalable/apps/com.stremio.Stremio.svg
 
+    patchelf --add-rpath ${libGL}/lib $out/bin/stremio
 
     wrapProgram $out/bin/stremio \
        --prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ libappindicator ]} \

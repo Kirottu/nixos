@@ -68,6 +68,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    anyrun-master = {
+      url = "github:anyrun-org/anyrun/applications-weights";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     private = {
       url = "github:Kirottu/nixos-private";
       inputs.nixpkgs.follows = "nixpkgs";

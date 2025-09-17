@@ -51,7 +51,7 @@ in
         ignoreExclusiveZones = true;
         plugins = [
           "niri-focus"
-          inputs.anyrun-master.packages.${pkgs.system}.applications
+          "applications"
           "nix-run"
           "symbols"
           "kidex"

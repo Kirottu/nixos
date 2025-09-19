@@ -65,9 +65,6 @@
       };
     };
 
-    impermanence.userDirectories = [
-    ];
-
     services.system76-scheduler.assignments = {
       desktop-environment = {
         matchers = [ "niri" ];

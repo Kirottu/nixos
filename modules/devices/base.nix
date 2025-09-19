@@ -13,11 +13,14 @@
           "flakes"
         ];
         trusted-users = [
-          "root"
           config.mainUser.userName
         ];
+        substituters = [
+          "https://cache.garnix.io"
+        ];
+        trusted-public-keys = [ "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g=" ];
       };
-      # package = pkgs.lix;
+      package = pkgs.lix;
     };
 
     # Bootloader.

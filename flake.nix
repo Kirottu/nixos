@@ -64,7 +64,7 @@
     };
 
     anyrun = {
-      url = "github:anyrun-org/anyrun/anyrun-provider-rebase";
+      url = "github:anyrun-org/anyrun";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

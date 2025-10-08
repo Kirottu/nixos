@@ -44,9 +44,8 @@ in
               .${config.theming.themeAttrs.subtheme};
           }
           .${config.theming.theme};
-        width = {
-          absolute = 800;
-        };
+        width.absolute = 800;
+        height.absolute = 1;
         hidePluginInfo = true;
         ignoreExclusiveZones = true;
         plugins = [

@@ -10,15 +10,16 @@
         "systems": "systems"
       },
       "locked": {
-        "lastModified": 1758645700,
-        "narHash": "sha256-7VHPjP/FDqx3EctIXqUssh8GC9ldXq/eNMX21uVkI8c=",
+        "lastModified": 1759142278,
+        "narHash": "sha256-wrUXWBjMczE5vsp+CuUewzSYbvKNRIpkWBmjpMiI234=",
         "owner": "anyrun-org",
         "repo": "anyrun",
-        "rev": "8cf7bd9de48e50cf1d662a56af28c0d13da91761",
+        "rev": "f2962789405cd50766f080d367cb2056a0eb8090",
         "type": "github"
       },
       "original": {
         "owner": "anyrun-org",
+        "ref": "notashelf/push-wppqqwxstpwn",
         "repo": "anyrun",
         "type": "github"
       }

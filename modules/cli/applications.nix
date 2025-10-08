@@ -17,7 +17,6 @@
         usbutils
         cloc
         wget
-        android-tools
         unzip
         p7zip
         unrar-wrapper

@@ -37,14 +37,22 @@
       inputs.hm-modules.homeModules.wlx-overlay-s
     ];
 
-    services.system76-scheduler.assignments.vr = {
-      nice = -12;
-      ioClass = "realtime";
-      ioPrio = 0;
-      matchers = [
-        "wivrn-server"
-        "wlx-overlay-s"
-      ];
+    # services.system76-scheduler.assignments.vr = {
+    #   nice = -12;
+    #   ioClass = "realtime";
+    #   ioPrio = 0;
+    #   matchers = [
+    #     "wivrn-server"
+    #     "wlx-overlay-s"
+    #   ];
+    # };
+
+    security.wrappers."wivrn-server" = {
+      setuid = false;
+      owner = "root";
+      group = "root";
+      capabilities = "cap_sys_nice+eip";
+      source = lib.getExe pkgs.wivrn;
     };
 
     hm.programs.wivrn = {

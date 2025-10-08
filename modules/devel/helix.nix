@@ -11,7 +11,6 @@
         rust-analyzer
         marksman
         python313Packages.python-lsp-server
-        sourcekit-lsp
         typescript-language-server
         omnisharp-roslyn
       ];

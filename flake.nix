@@ -64,7 +64,7 @@
     };
 
     anyrun = {
-      url = "github:anyrun-org/anyrun";
+      url = "github:anyrun-org/anyrun/notashelf/push-wppqqwxstpwn";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

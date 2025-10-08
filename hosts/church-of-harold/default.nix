@@ -93,13 +93,16 @@
         extraRules = ''
           ACTION=="add" SUBSYSTEM=="pci" ATTR{vendor}=="0x1022" ATTR{device}=="0x1483" ATTR{power/wakeup}="disabled"
         '';
-        packages = with pkgs; [ android-udev-rules ];
       };
       lact.enable = true;
       btrfs.autoScrub.enable = true;
+      zerotierone.enable = true;
     };
     impermanence = {
-      directories = [ "/etc/lact" ];
+      directories = [
+        "/etc/lact"
+        "/var/lib/zerotier-one"
+      ];
       userDirectories = [ ".config/lact" ];
     };
 

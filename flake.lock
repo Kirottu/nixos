@@ -10,16 +10,15 @@
         "systems": "systems"
       },
       "locked": {
-        "lastModified": 1759142278,
-        "narHash": "sha256-wrUXWBjMczE5vsp+CuUewzSYbvKNRIpkWBmjpMiI234=",
+        "lastModified": 1760015533,
+        "narHash": "sha256-tNDwO+Rw0sM/QJFlMVqNypVqNLlDOD68nrrFudd4lnw=",
         "owner": "anyrun-org",
         "repo": "anyrun",
-        "rev": "f2962789405cd50766f080d367cb2056a0eb8090",
+        "rev": "326eff2153e4b206d5a26ff390f252785e1b00e5",
         "type": "github"
       },
       "original": {
         "owner": "anyrun-org",
-        "ref": "notashelf/push-wppqqwxstpwn",
         "repo": "anyrun",
         "type": "github"
       }
@@ -962,11 +961,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1751133583,
-        "narHash": "sha256-cXPWBAJxzaA74QBANslmjOwMYnvXKbE43J2lNbf4XPk=",
+        "lastModified": 1759738290,
+        "narHash": "sha256-8z8dMuC1Joi09zWFcqRE+RgdH7zDgWpEtOSVi53XKQE=",
         "owner": "Kirottu",
         "repo": "yand",
-        "rev": "5a60e627dc9babfbca05b9c60bec82e0908af0d9",
+        "rev": "d54cfb2b2f0b5ad21d862033434eed4f3f2de8c0",
         "type": "github"
       },
       "original": {

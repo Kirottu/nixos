@@ -33,7 +33,7 @@ in
           ffmpeg-headless
           ffmpegthumbnailer
 
-          # sirikali
+          sirikali
           pavucontrol
           kdiskmark
           papers

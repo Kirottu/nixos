@@ -3,6 +3,7 @@
   lib,
   pkgs,
   inputs,
+  myPkgs,
   ...
 }:
 {
@@ -55,14 +56,48 @@
       source = lib.getExe pkgs.wivrn;
     };
 
+    environment.etc."xdg/openxr/1/active_runtime.json".source =
+      "${pkgs.wivrn}/share/openxr/1/openxr_wivrn.json";
+    environment.etc."xdg/openxr/1/active_runtime.i686.json".source = "${
+      pkgs.pkgsi686Linux.callPackage myPkgs.wivrn-server-lib { absolute = true; }
+    }/share/openxr/1/openxr_wivrn.json";
+
+    programs.steam =
+      let
+        pkg = p: (p.callPackage myPkgs.wivrn-server-lib { });
+      in
+      {
+        package = pkgs.steam.override {
+          extraEnv = {
+            # XR_RUNTIME_JSON = "${pkg pkgs}/share/openxr/1/openxr_wivrn.json";
+            PRESSURE_VESSEL_IMPORT_OPENXR_1_RUNTIMES = 1;
+          };
+          # extraLibraries = p: [
+          #   (pkg p)
+          # ];
+        };
+      };
+
+    # (pkgs.pkgsi686Linux.callPackage myPkgs.wivrn-server-lib { })
+
     hm.programs.wivrn = {
+      package = pkgs.wivrn;
+      # (pkgs.pkgsCross."gnu32".wivrn.overrideAttrs {
+      #   cmakeFlags = [
+      #     (lib.cmakeBool "WIVRN_BUILD_SERVER" false)
+      #     (lib.cmakeBool "WIVRN_BUILD_SERVER_LIBRARY" true)
+      #     (lib.cmakeFeature "WIVRN_OPENXR_MANIFEST_TYPE" "absolute")
+      #   ];
+      #   preFixup = "";
+      #   desktopItems = [ ];
+      # })
       enable = true;
       autostart = ''
         #!/bin/sh
 
         ${pkgs.pulseaudio}/bin/pactl set-default-sink wivrn.sink
 
-        ${lib.getExe pkgs.wlx-overlay-s} --openxr
+        # ${lib.getExe pkgs.wlx-overlay-s} --openxr
       '';
       settings = {
         scale = 0.35;
@@ -96,7 +131,33 @@
             group = 0;
           }
         ];
-        openvr-compat-path = "${inputs.nixpkgs-xr.packages.${pkgs.system}.xrizer}/lib/xrizer";
+        # openvr-compat-path = "${inputs.nixpkgs-xr.packages.${pkgs.system}.xrizer}/lib/xrizer";
+        openvr-compat-path =
+          let
+            pkg = inputs.nixpkgs-xr.packages.${pkgs.system}.xrizer;
+          in
+          "${
+            pkgs.symlinkJoin {
+              name = "xrizer-multilib";
+              paths =
+                let
+                  attrs = (
+                    prev: {
+                      patches = prev.patches ++ [ ./dynamic-xrizer.patch ];
+
+                      postInstall = ''
+                        mkdir -p $out/lib/xrizer/$platformPath
+                        mv "$out/lib/libxrizer.so" "$out/lib/xrizer/$platformPath/vrclient.so"
+                      '';
+                    }
+                  );
+                in
+                [
+                  (pkg.overrideAttrs attrs)
+                  ((pkgs.pkgsi686Linux.callPackage pkg.override { }).overrideAttrs attrs)
+                ];
+            }
+          }/lib/xrizer";
         tcp-only = false;
       };
     };

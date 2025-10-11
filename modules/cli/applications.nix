@@ -30,7 +30,7 @@
 
         clean = {
           enable = true;
-          extraArgs = "--keep-since 7d --keep 10";
+          extraArgs = "--keep-since 30d --keep 10";
         };
         flake = "/home/${config.mainUser.userName}/Projects/nixos";
       };

@@ -7,32 +7,32 @@
   git,
   glslang,
   stdenv,
-  librsvg,
-  avahi,
+  # librsvg,
+  # avahi,
   boost,
-  cli11,
+  # cli11,
   eigen,
-  ffmpeg,
-  freetype,
+  # ffmpeg,
   glm,
   libdrm,
-  libGL,
+  # libGL,
   # libnotify,
-  libpulseaudio,
-  libva,
+  # libpulseaudio,
+  # libva,
   nlohmann_json,
   openxr-loader,
-  onnxruntime,
-  pipewire,
-  shaderc,
-  spdlog,
-  systemd,
+  # onnxruntime,
+  # pipewire,
+  # shaderc,
+  # spdlog,
+  # systemd,
   udev,
   vulkan-headers,
   vulkan-loader,
-  x264,
+  # x264,
   pkg-config,
   python3,
+  absolute ? false,
 }:
 stdenv.mkDerivation (finalAttrs: {
   pname = "wivrn-server-lib";
@@ -78,49 +78,62 @@ stdenv.mkDerivation (finalAttrs: {
     git
     # glib
     glslang
-    librsvg
+    # librsvg
     pkg-config
     python3
   ];
 
   buildInputs = [
-    avahi
+    # avahi
     boost
-    cli11
+    # cli11
     eigen
-    ffmpeg
-    freetype
+    # ffmpeg
     glm
     # harfbuzz
     # libarchive
     libdrm
-    libGL
+    # libGL
     # libnotify
-    libpulseaudio
-    librsvg
-    libva
+    # libpulseaudio
+    # librsvg
+    # libva
     # libX11
     # libXrandr
     nlohmann_json
     openxr-loader
-    onnxruntime
-    pipewire
-    shaderc
-    spdlog
-    systemd
+    # onnxruntime
+    # pipewire
+    # shaderc
+    # spdlog
+    # systemd
     udev
     vulkan-headers
     vulkan-loader
-    x264
+    # x264
   ];
 
   cmakeFlags = [
     (lib.cmakeBool "WIVRN_BUILD_SERVER" false)
+    (lib.cmakeBool "WIVRN_BUILD_WIVRNCTL" false)
     (lib.cmakeBool "WIVRN_BUILD_SERVER_LIBRARY" true)
-    (lib.cmakeFeature "WIVRN_OPENXR_MANIFEST_TYPE" "absolute")
+    (lib.cmakeBool "FETCHCONTENT_FULLY_DISCONNECTED" true)
+    (lib.cmakeFeature "WIVRN_OPENXR_MANIFEST_TYPE" (if absolute then "absolute" else "filename"))
+    (lib.cmakeFeature "GIT_DESC" "v${finalAttrs.version}")
+    (lib.cmakeFeature "FETCHCONTENT_SOURCE_DIR_MONADO" "${finalAttrs.monado}")
   ];
 
+  preFixup =
+    if absolute then
+      ""
+    else
+      ''
+        mv $out/lib/wivrn/* $out/lib
+        rm -r $out/lib/wivrn
+      '';
+
   meta = {
-    description = "32 bit WiVRn server library";
+    description = "WiVRn server library";
+    platforms = lib.platforms.linux;
   };
 })

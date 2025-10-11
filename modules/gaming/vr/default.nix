@@ -56,9 +56,9 @@
       source = lib.getExe pkgs.wivrn;
     };
 
-    environment.etc."xdg/openxr/1/active_runtime.json".source =
-      "${pkgs.wivrn}/share/openxr/1/openxr_wivrn.json";
-    environment.etc."xdg/openxr/1/active_runtime.i686.json".source = "${
+    # hm.xdg.configFile."openxr/1/active_runtime.x86_64.json".source =
+    #   "${pkgs.wivrn}/share/openxr/1/openxr_wivrn.json";
+    hm.xdg.configFile."openxr/1/active_runtime.i686.json".source = "${
       pkgs.pkgsi686Linux.callPackage myPkgs.wivrn-server-lib { absolute = true; }
     }/share/openxr/1/openxr_wivrn.json";
 
@@ -140,22 +140,50 @@
             pkgs.symlinkJoin {
               name = "xrizer-multilib";
               paths =
-                let
-                  attrs = (
-                    prev: {
-                      patches = prev.patches ++ [ ./dynamic-xrizer.patch ];
+                # let
+                #   attrs = p: prev: {
+                #     nativeBuildInputs = prev.nativeBuildInputs ++ [
+                #       p.cmake
+                #       p.python3
+                #     ];
 
-                      postInstall = ''
-                        mkdir -p $out/lib/xrizer/$platformPath
-                        mv "$out/lib/libxrizer.so" "$out/lib/xrizer/$platformPath/vrclient.so"
-                      '';
-                    }
-                  );
+                #     buildInputs = prev.buildInputs ++ [
+                #       p.libGL
+                #       p.xorg.libX11
+                #       p.wayland
+                #       p.xorg.libXrandr
+                #       p.xorg.libXxf86vm
+                #       p.vulkan-headers
+                #     ];
+
+                #     postPatch = ''
+                #       substituteInPlace src/graphics_backends/gl.rs \
+                #         --replace-fail 'libGLX.so.0' '${lib.getLib p.libGL}/lib/libGLX.so.0'
+                #     '';
+
+                #     postInstall = ''
+                #       mkdir -p $out/lib/xrizer/$platformPath
+                #       mv "$out/lib/libxrizer.so" "$out/lib/xrizer/$platformPath/vrclient.so"
+                #     '';
+                #   };
+                # in
+                # [
+                #   (pkg.overrideAttrs (attrs pkgs))
+                #   ((pkgs.pkgsi686Linux.callPackage pkg.override { }).overrideAttrs (attrs pkgs.pkgsi686Linux))
+                # ];
+                let
+                  attrs = {
+                    postInstall = ''
+                      mkdir -p $out/lib/xrizer/$platformPath
+                      mv "$out/lib/libxrizer.so" "$out/lib/xrizer/$platformPath/vrclient.so"
+                    '';
+                  };
                 in
                 [
                   (pkg.overrideAttrs attrs)
                   ((pkgs.pkgsi686Linux.callPackage pkg.override { }).overrideAttrs attrs)
                 ];
+
             }
           }/lib/xrizer";
         tcp-only = false;

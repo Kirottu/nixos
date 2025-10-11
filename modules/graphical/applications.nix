@@ -134,7 +134,7 @@ in
       })
       (lib.utils.mkApp {
         # package = pkgs.callPackage myPkgs.stremio { };
-        package = pkgs.stremio;
+        package = inputs.nixpkgs-stremio.legacyPackages.${pkgs.system}.stremio;
         userDirectories = [
           ".config/Smart Code ltd"
           ".local/share/Smart Code ltd"

@@ -192,6 +192,18 @@
 
     services.btrfs.autoScrub.enable = true;
 
+    system.autoUpgrade = {
+      enable = true;
+      flake = "github:Kirottu/nixos";
+      randomizedDelaySec = "45min";
+      dates = "02:00";
+      allowReboot = true;
+      rebootWindow = {
+        lower = "02:00";
+        upper = "04:00";
+      };
+    };
+
     # Fix for niri-flake compiling niri if that is set at all
     hm.programs.niri.settings = lib.mkForce null;
 

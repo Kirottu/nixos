@@ -26,7 +26,7 @@ in
 
     services.nextcloud = {
       enable = true;
-      package = pkgs.nextcloud31;
+      package = pkgs.nextcloud32;
       https = true;
       hostName = ncDomain;
       maxUploadSize = "5G";
@@ -46,10 +46,10 @@ in
       };
       autoUpdateApps.enable = true;
       extraApps = {
-        inherit (pkgs.nextcloud31Packages.apps)
+        inherit (pkgs.nextcloud32Packages.apps)
           calendar
-          maps
           richdocuments
+          notify_push
           ;
       };
       poolSettings = {
@@ -61,7 +61,9 @@ in
         "pm.start_servers" = "28";
         "php_admin_value[memory_limit]" = "1G";
       };
-
+      notify_push = {
+        enable = true;
+      };
     };
 
     systemd.timers.${wopiUpdater} = {

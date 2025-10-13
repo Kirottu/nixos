@@ -69,6 +69,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    wivrn-connection-manager = {
+      url = "github:Kirottu/wivrn-connection-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # anyrun-master = {
     #   url = "github:anyrun-org/anyrun";
     #   inputs.nixpkgs.follows = "nixpkgs";

@@ -1,4 +1,7 @@
 { pkgs, config, ... }:
+let
+  desktopSink = "alsa_output.pci-0000_0a_00.4.analog-stereo";
+in
 {
   imports = [
     ./hardware-configuration.nix
@@ -11,7 +14,11 @@
       hostName = "church-of-harold";
     };
     gaming = {
-      vr.enable = true;
+      vr = {
+        enable = true;
+        defaultSink = desktopSink;
+        defaultSource = "alsa_input.usb-Razer_Inc_Razer_Seiren_Mini_UC2211L03503596-00.mono-fallback";
+      };
       dolphin-emu.enable = true;
       heroic.enable = true;
       prismlauncher.enable = true;
@@ -33,7 +40,7 @@
         tvSink = "alsa_output.pci-0000_08_00.1.hdmi-stereo";
         tvRegex = "Navi.*\\[alsa\\]";
         tvProfile = 1;
-        desktopSink = "alsa_output.pci-0000_0a_00.4.analog-stereo";
+        inherit desktopSink;
       };
       niri.extraOptions = {
         workspaces."chat" = {
@@ -97,6 +104,23 @@
       lact.enable = true;
       btrfs.autoScrub.enable = true;
       zerotierone.enable = true;
+      # pid-fan-controller = {
+      #   enable = true;
+      #   settings = {
+      #     heatSources = [
+      #       {
+      #         name = "cpu";
+      #         wildcardPath = "/sys/devices/pci0000:00/0000:00:18.3/hwmon/hwmon*/temp1_input";
+      #         pidParams = {
+      #           setPoint = 60;
+      #           P = -5.0e-3;
+      #           I = -2.0e-3;
+      #           D = -6.0e-3;
+      #         };
+      #       }
+      #     ];
+      #   };
+      # };
     };
     impermanence = {
       directories = [
@@ -105,6 +129,8 @@
       ];
       userDirectories = [ ".config/lact" ];
     };
+
+    boot.kernelPackages = pkgs.linuxPackages_6_16;
 
     hardware.amdgpu.overdrive.enable = true;
 

@@ -1,4 +1,9 @@
-{ pkgs, config, ... }:
+{
+  pkgs,
+  config,
+  myPkgs,
+  ...
+}:
 let
   desktopSink = "alsa_output.pci-0000_0a_00.4.analog-stereo";
 in
@@ -104,24 +109,62 @@ in
       lact.enable = true;
       btrfs.autoScrub.enable = true;
       zerotierone.enable = true;
-      # pid-fan-controller = {
-      #   enable = true;
-      #   settings = {
-      #     heatSources = [
-      #       {
-      #         name = "cpu";
-      #         wildcardPath = "/sys/devices/pci0000:00/0000:00:18.3/hwmon/hwmon*/temp1_input";
-      #         pidParams = {
-      #           setPoint = 60;
-      #           P = -5.0e-3;
-      #           I = -2.0e-3;
-      #           D = -6.0e-3;
-      #         };
-      #       }
-      #     ];
-      #   };
-      # };
+      pid-fan-controller = {
+        enable = true;
+        settings = {
+          heatSources = [
+            {
+              name = "cpu";
+              wildcardPath = "/sys/devices/pci0000:00/0000:00:18.3/hwmon/hwmon*/temp1_input";
+              pidParams = {
+                setPoint = 60;
+                P = -5.0e-3;
+                I = -2.0e-3;
+                D = -6.0e-3;
+              };
+            }
+            {
+              name = "gpu";
+              wildcardPath = "/sys/class/drm/card*/device/hwmon/hwmon*/temp1_input";
+              pidParams = {
+                setPoint = 65;
+                P = -5.0e-3;
+                I = -2.0e-3;
+                D = -6.0e-3;
+              };
+            }
+          ];
+          fans = [
+            {
+              # GPU
+              wildcardPath = "/sys/class/drm/card*/device/hwmon/hwmon*/pwm1";
+              minPwm = 10;
+              maxPwm = 255;
+              cutoff = true;
+              heatPressureSrcs = [ "gpu" ];
+            }
+            {
+              # CPU fan
+              wildcardPath = "/sys/devices/platform/it87.2624/hwmon/hwmon*/pwm1";
+              minPwm = 30;
+              maxPwm = 255;
+              heatPressureSrcs = [ "cpu" ];
+            }
+            {
+              # Intake fans
+              wildcardPath = "/sys/devices/platform/it87.2624/hwmon/hwmon*/pwm3";
+              minPwm = 30;
+              maxPwm = 255;
+              heatPressureSrcs = [
+                "cpu"
+                "gpu"
+              ];
+            }
+          ];
+        };
+      };
     };
+    # programs.coolercontrol.enable = true;
     impermanence = {
       directories = [
         "/etc/lact"
@@ -130,7 +173,12 @@ in
       userDirectories = [ ".config/lact" ];
     };
 
-    boot.kernelPackages = pkgs.linuxPackages_6_16;
+    boot = {
+      kernelPackages = pkgs.linuxPackages_6_16;
+      extraModulePackages = [
+        (pkgs.callPackage myPkgs.it87 { })
+      ];
+    };
 
     hardware.amdgpu.overdrive.enable = true;
 

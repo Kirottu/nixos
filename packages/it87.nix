@@ -1,11 +1,10 @@
 {
   stdenv,
-  lib,
   fetchFromGitHub,
   kernel,
   kmod,
 }:
-{
+stdenv.mkDerivation {
   pname = "it87";
   version = "1";
 
@@ -13,7 +12,7 @@
     owner = "frankcrawford";
     repo = "it87";
     rev = "60d9def80d65e7e34a73e6f32d8677ad5bfa58a9";
-    hash = lib.fakeHash;
+    hash = "sha256-xlUyq1DQFBCvAs9DP6i1ose+6e+nmmXFRyuzRXCg+Ko=";
   };
 
   hardeningDisable = [
@@ -21,6 +20,11 @@
     "format"
   ];
   nativeBuildInputs = kernel.moduleBuildDependencies;
+
+  postPatch = ''
+    substituteInPlace Makefile \
+      --replace-fail 'depmod -a -F $(SYSTEM_MAP) $(TARGET)' ""
+  '';
 
   makeFlags = [
     "TARGET=${kernel.modDirVersion}"

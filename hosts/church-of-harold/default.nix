@@ -110,7 +110,7 @@ in
       btrfs.autoScrub.enable = true;
       zerotierone.enable = true;
       pid-fan-controller = {
-        enable = true;
+        enable = false;
         settings = {
           heatSources = [
             {
@@ -146,14 +146,14 @@ in
             {
               # CPU fan
               wildcardPath = "/sys/devices/platform/it87.2624/hwmon/hwmon*/pwm1";
-              minPwm = 30;
+              minPwm = 200;
               maxPwm = 255;
               heatPressureSrcs = [ "cpu" ];
             }
             {
               # Intake fans
               wildcardPath = "/sys/devices/platform/it87.2624/hwmon/hwmon*/pwm3";
-              minPwm = 30;
+              minPwm = 200;
               maxPwm = 255;
               heatPressureSrcs = [
                 "cpu"
@@ -175,9 +175,15 @@ in
 
     boot = {
       kernelPackages = pkgs.linuxPackages_6_16;
-      extraModulePackages = [
-        (pkgs.callPackage myPkgs.it87 { })
-      ];
+      # extraModulePackages = [
+      #   (pkgs.callPackage myPkgs.it87 { kernel = config.boot.kernelPackages.kernel; })
+      # ];
+      # kernelParams = [
+      #   "acpi_enforce_resources=lax"
+      # ];
+      # extraModprobeConfig = ''
+      #   options it87 force_id=0x8622
+      # '';
     };
 
     hardware.amdgpu.overdrive.enable = true;

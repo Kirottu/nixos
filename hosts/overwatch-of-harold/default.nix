@@ -220,7 +220,6 @@
       enable = true;
       serviceConfig = {
         Type = "simple";
-        User = "git";
         ExecStart = lib.getExe (
           pkgs.writeShellApplication {
             name = "updateFlake";

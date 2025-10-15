@@ -63,6 +63,7 @@ in
       };
       notify_push = {
         enable = true;
+        bendDomainToLocalhost = true;
       };
     };
 

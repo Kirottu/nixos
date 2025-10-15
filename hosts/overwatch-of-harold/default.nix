@@ -208,6 +208,43 @@
       GIT_SSH_COMMAND = "ssh -i /etc/ssh/ssh_host_ed25519_key";
     };
 
+    systemd.timers.updateFlake = {
+      enable = true;
+      wantedBy = [ "timers.target" ];
+      timerConfig = {
+        OnCalendar = "3:30";
+        Unit = "updateFlake.service";
+      };
+    };
+    systemd.services.updateFlake = {
+      enable = true;
+      serviceConfig = {
+        Type = "simple";
+        User = "git";
+        ExecStart = lib.getExe (
+          pkgs.writeShellApplication {
+            name = "updateFlake";
+            runtimeInputs = [
+              pkgs.git
+              config.services.openssh.package
+              config.nix.package
+            ];
+            text = ''
+              cd "$(mktemp -d)"
+              GIT_SSH_COMMAND="ssh -i /etc/ssh/ssh_host_ed25519_key" git clone ssh://git@github.com/Kirottu/nixos
+              cd nixos
+              nix flake update
+              git add flake.lock
+              git commit -m "flake: update lock"
+              git push
+              cd ..
+              rm -rf nixos
+            '';
+          }
+        );
+      };
+    };
+
     # Fix for niri-flake compiling niri if that is set at all
     hm.programs.niri.settings = lib.mkForce null;
 

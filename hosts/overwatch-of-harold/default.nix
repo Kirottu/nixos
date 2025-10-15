@@ -204,6 +204,10 @@
       };
     };
 
+    systemd.services.nixos-upgrade.environment = {
+      GIT_SSH_COMMAND = "ssh -i /etc/ssh/ssh_host_ed25519_key";
+    };
+
     # Fix for niri-flake compiling niri if that is set at all
     hm.programs.niri.settings = lib.mkForce null;
 

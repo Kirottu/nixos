@@ -219,6 +219,7 @@
     systemd.services.updateFlake = {
       enable = true;
       serviceConfig = {
+        User = config.mainUser.userName;
         Type = "simple";
         ExecStart = lib.getExe (
           pkgs.writeShellApplication {
@@ -230,7 +231,8 @@
             ];
             text = ''
               cd "$(mktemp -d)"
-              GIT_SSH_COMMAND="ssh -i /etc/ssh/ssh_host_ed25519_key" git clone ssh://git@github.com/Kirottu/nixos
+              # GIT_SSH_COMMAND="ssh -i /etc/ssh/ssh_host_ed25519_key" git clone ssh://git@github.com/Kirottu/nixos
+              git clone https://github.com/Kirottu/nixos
               cd nixos
               nix flake update
               git add flake.lock

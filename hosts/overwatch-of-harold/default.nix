@@ -212,7 +212,7 @@
       enable = true;
       wantedBy = [ "timers.target" ];
       timerConfig = {
-        OnCalendar = "3:30";
+        OnCalendar = "1:30";
         Unit = "updateFlake.service";
       };
     };
@@ -226,6 +226,7 @@
             name = "updateFlake";
             runtimeInputs = [
               pkgs.git
+              pkgs.gnupg
               config.services.openssh.package
               config.nix.package
             ];

@@ -80,7 +80,7 @@
     # };
 
     private = {
-      url = "github:Kirottu/nixos-private";
+      url = "git+ssh://git@github.com/Kirottu/nixos-private";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

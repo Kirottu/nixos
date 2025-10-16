@@ -28,7 +28,7 @@
     domain = "kirottu.com";
 
     synapse.enable = true;
-    grafana.enable = true;
+    # grafana.enable = true;
     # mail.enable = true;
 
     networking = {

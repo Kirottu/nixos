@@ -38,6 +38,7 @@ in
       settings = {
         overwriteprotocol = "https";
         log_type = "file";
+        loglevel = 2;
       };
       config = {
         adminuser = "Kirottu";

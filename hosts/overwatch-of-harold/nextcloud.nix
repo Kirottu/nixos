@@ -47,10 +47,9 @@ in
       };
       autoUpdateApps.enable = true;
       extraApps = {
-        inherit (pkgs.nextcloud32Packages.apps)
+        inherit (config.services.nextcloud.package.packages.apps)
           calendar
           richdocuments
-          notify_push
           ;
       };
       poolSettings = {

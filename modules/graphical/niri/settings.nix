@@ -101,6 +101,14 @@ in
                 backdrop-color = "#090909";
               };
               layout.struts.right = 45;
+
+              binds = with config.hm.niri.actions; {
+                "Mod+R" = {
+                  repeat = false;
+                  action = toggle-overview;
+                };
+                "Mod+D".action = spawn "anyrun";
+              };
             };
             overview =
               let

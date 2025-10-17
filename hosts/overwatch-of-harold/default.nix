@@ -28,6 +28,10 @@
     domain = "kirottu.com";
 
     synapse.enable = true;
+    nextcloud = {
+      enable = true;
+      monitoredServices = [ "nixos-upgrade" ];
+    };
     # grafana.enable = true;
     # mail.enable = true;
 

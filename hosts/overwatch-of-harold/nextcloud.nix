@@ -8,8 +8,19 @@ let
   ncDomain = "nc.${config.domain}";
   collaboraDomain = "collabora.${config.domain}";
   wopiUpdater = "nextcloud-update-wopi";
+  service-notifier = "nextcloud-service-notify@";
+
+  cfg = config.nextcloud;
 in
 {
+  options.nextcloud = {
+    enable = lib.mkEnableOption "Nextcloud";
+    monitoredServices = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [ ];
+    };
+  };
+
   config = {
     impermanence.directories = [
       "/var/lib/nextcloud"
@@ -75,32 +86,64 @@ in
         Unit = "${wopiUpdater}.service";
       };
     };
-    systemd.services.${wopiUpdater} = {
-      path = [
-        config.services.nextcloud.occ
-        pkgs.curl
-      ];
-      script = ''
-        curr_wopi=$(nextcloud-occ config:app:get richdocuments wopi_allowlist)
-        public_ip=$(curl -s https://api.ipify.org)
 
-        if [ "$public_ip" = "" ]; then
-          echo "Not connected to the internet"
+    systemd.services =
+      lib.mkMerge [
+        {
+          ${wopiUpdater} = {
+            path = [
+              config.services.nextcloud.occ
+              pkgs.curl
+            ];
+            script = ''
+              curr_wopi=$(nextcloud-occ config:app:get richdocuments wopi_allowlist)
+              public_ip=$(curl -s https://api.ipify.org)
 
-        elif [[ "$curr_wopi" == *"$public_ip"* ]]; then
-          echo "WOPI allow up to date"
+              if [ "$public_ip" = "" ]; then
+                echo "Not connected to the internet"
 
-        else
-          echo "Setting WOPI allow list"
-          nextcloud-occ config:app:set richdocuments wopi_allowlist --value="$public_ip"
+              elif [[ "$curr_wopi" == *"$public_ip"* ]]; then
+                echo "WOPI allow up to date"
 
-        fi
-      '';
-      after = [ "network.target" ];
-      serviceConfig = {
-        Type = "oneshot";
-      };
-    };
+              else
+                echo "Setting WOPI allow list"
+                nextcloud-occ config:app:set richdocuments wopi_allowlist --value="$public_ip"
+
+              fi
+            '';
+            after = [ "network.target" ];
+            serviceConfig = {
+              Type = "oneshot";
+            };
+          };
+        }
+        {
+          ${service-notifier} = {
+            environment.SERVICE_ID = "%i";
+            path = [
+              config.services.nextcloud.occ
+              pkgs.systemd
+            ];
+            script = ''
+              STATUS=$(systemctl status "$SERVICE_ID")
+
+              nextcloud-occ notification:generate \
+                "${config.services.nextcloud.config.adminuser}" \
+                "systemd service $SERVICE_ID failed" \
+                -l "$STATUS"
+            '';
+          };
+        }
+      ]
+      ++ builtins.map (service: {
+        ${service} = {
+          onFailure = [ "${service-notifier}%i.service" ];
+        };
+      }) cfg.monitoredServices;
+
+    # systemd.services.nixos-upgrade = lib.mkIf config.system.autoUpgrade.enable {
+    #   onFailure = [ "${service-notifier}%i.service" ];
+    # };
 
     services.collabora-online = {
       enable = true;

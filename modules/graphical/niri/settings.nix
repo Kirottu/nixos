@@ -61,26 +61,6 @@ in
           hide-when-typing = true;
         };
 
-        animations = {
-          window-close = {
-            kind.spring = {
-              damping-ratio = 1.0;
-              stiffness = 800;
-              epsilon = 0.0001;
-            };
-            custom-shader = ''
-              float map(float value, float min1, float max1, float min2, float max2) {
-                  return min2 + (value - min1) * (max2 - min2) / (max1 - min1);
-              }
-              vec4 close_color(vec3 coords_geo, vec3 size_geo) {
-                  float cur = 1.0-niri_clamped_progress;
-                  if (coords_geo.x > cur) { return vec4(0.0); }
-                  vec3 coord = vec3(map(coords_geo.x,0.0, cur, 0.0, 1.0), coords_geo.y, coords_geo.z);
-                  return texture2D(niri_tex, (niri_geo_to_tex * coord).st);
-              }
-            '';
-          };
-        };
       }
       {
         diagonals = lib.mkMerge [
@@ -91,6 +71,90 @@ in
                 width = 4;
                 active.color = config.theming.themeAttrs.l1;
                 inactive.color = "#000000";
+              };
+            };
+            animations = {
+              window-open = {
+                kind.easing = {
+                  curve = "linear";
+                  duration-ms = 250;
+                };
+                custom-shader = ''
+                  bool is_in_diamond(float p, float x, float y, float cx, float cy) {
+                      return (abs(x - cx) + abs(y - cy) < p);
+                  }
+
+                  vec4 open_color(vec3 coords_geo, vec3 size_geo) {
+                      vec3 coords_tex = niri_geo_to_tex * coords_geo;
+                      vec4 color = texture2D(niri_tex, coords_tex.st);
+                      vec2 coords = coords_geo.xy * size_geo.xy; // Coordinates in pixel space
+
+                      float border = 4.0;
+                      
+                      // Center of the window
+                      vec2 c = size_geo.xy / 2.0;
+                      
+                      float p = niri_clamped_progress * max(size_geo.x, size_geo.y);
+                      float x = coords.x;
+                      float y = coords.y;
+
+                      if (!is_in_diamond(p, x, y, c.x, c.y)) {
+                          color = vec4(0.0);
+                      }
+                      // The border region
+                      else if ((!is_in_diamond(p, x - border, y - border, c.x, c.y) ||
+                               !is_in_diamond(p, x + border, y - border, c.x, c.y) ||
+                               !is_in_diamond(p, x - border, y + border, c.x, c.y) ||
+                               !is_in_diamond(p, x + border, y + border, c.x, c.y)) &&
+                               x >= 0.0 && y >= 0.0 && x <= size_geo.x && y <= size_geo.y)
+                      {
+                          color = vec4(0.4, 0.0, 0.2, 1.0);
+                      }
+
+                      return color;
+                  }
+                '';
+              };
+              window-close = {
+                kind.easing = {
+                  curve = "linear";
+                  duration-ms = 250;
+                };
+                custom-shader = ''
+                  bool is_in_diamond(float p, float x, float y, float cx, float cy) {
+                      return (abs(x - cx) + abs(y - cy) < p);
+                  }
+
+                  vec4 open_color(vec3 coords_geo, vec3 size_geo) {
+                      vec3 coords_tex = niri_geo_to_tex * coords_geo;
+                      vec4 color = texture2D(niri_tex, coords_tex.st);
+                      vec2 coords = coords_geo.xy * size_geo.xy; // Coordinates in pixel space
+
+                      float border = 4.0;
+                      
+                      // Center of the window
+                      vec2 c = size_geo.xy / 2.0;
+                      
+                      float p = (1.0 - niri_clamped_progress) * max(size_geo.x, size_geo.y);
+                      float x = coords.x;
+                      float y = coords.y;
+
+                      if (!is_in_diamond(p, x, y, c.x, c.y)) {
+                          color = vec4(0.0);
+                      }
+                      // The border region
+                      else if ((!is_in_diamond(p, x - border, y - border, c.x, c.y) ||
+                               !is_in_diamond(p, x + border, y - border, c.x, c.y) ||
+                               !is_in_diamond(p, x - border, y + border, c.x, c.y) ||
+                               !is_in_diamond(p, x + border, y + border, c.x, c.y)) &&
+                               x >= 0.0 && y >= 0.0 && x <= size_geo.x && y <= size_geo.y)
+                      {
+                          color = vec4(0.4, 0.0, 0.2, 1.0);
+                      }
+
+                      return color;
+                  }
+                '';
               };
             };
           }

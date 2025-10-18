@@ -87,59 +87,52 @@ in
       };
     };
 
-    systemd.services =
-      lib.mkMerge [
-        {
-          ${wopiUpdater} = {
-            path = [
-              config.services.nextcloud.occ
-              pkgs.curl
-            ];
-            script = ''
-              curr_wopi=$(nextcloud-occ config:app:get richdocuments wopi_allowlist)
-              public_ip=$(curl -s https://api.ipify.org)
+    systemd.services = {
+      ${wopiUpdater} = {
+        path = [
+          config.services.nextcloud.occ
+          pkgs.curl
+        ];
+        script = ''
+          curr_wopi=$(nextcloud-occ config:app:get richdocuments wopi_allowlist)
+          public_ip=$(curl -s https://api.ipify.org)
 
-              if [ "$public_ip" = "" ]; then
-                echo "Not connected to the internet"
+          if [ "$public_ip" = "" ]; then
+            echo "Not connected to the internet"
 
-              elif [[ "$curr_wopi" == *"$public_ip"* ]]; then
-                echo "WOPI allow up to date"
+          elif [[ "$curr_wopi" == *"$public_ip"* ]]; then
+            echo "WOPI allow up to date"
 
-              else
-                echo "Setting WOPI allow list"
-                nextcloud-occ config:app:set richdocuments wopi_allowlist --value="$public_ip"
+          else
+            echo "Setting WOPI allow list"
+            nextcloud-occ config:app:set richdocuments wopi_allowlist --value="$public_ip"
 
-              fi
-            '';
-            after = [ "network.target" ];
-            serviceConfig = {
-              Type = "oneshot";
-            };
-          };
-        }
-        {
-          ${service-notifier} = {
-            environment.SERVICE_ID = "%i";
-            path = [
-              config.services.nextcloud.occ
-              pkgs.systemd
-            ];
-            script = ''
-              STATUS=$(systemctl status "$SERVICE_ID")
-
-              nextcloud-occ notification:generate \
-                "${config.services.nextcloud.config.adminuser}" \
-                "systemd service $SERVICE_ID failed" \
-                -l "$STATUS"
-            '';
-          };
-        }
-      ]
-      ++ builtins.map (service: {
-        ${service} = {
-          onFailure = [ "${service-notifier}%i.service" ];
+          fi
+        '';
+        after = [ "network.target" ];
+        serviceConfig = {
+          Type = "oneshot";
         };
-      }) cfg.monitoredServices;
+      };
+      ${service-notifier} = {
+        environment.SERVICE_ID = "%i";
+        path = [
+          config.services.nextcloud.occ
+          pkgs.systemd
+        ];
+        script = ''
+          STATUS=$(systemctl status "$SERVICE_ID" ||:)
+
+          nextcloud-occ notification:generate \
+            "${config.services.nextcloud.config.adminuser}" \
+            "systemd service $SERVICE_ID failed" \
+            -l "$STATUS"
+        '';
+      };
+    }
+    // (lib.genAttrs cfg.monitoredServices (service: {
+      onFailure = [ "${service-notifier}%i.service" ];
+    }));
 
     # systemd.services.nixos-upgrade = lib.mkIf config.system.autoUpgrade.enable {
     #   onFailure = [ "${service-notifier}%i.service" ];

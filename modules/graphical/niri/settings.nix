@@ -125,7 +125,7 @@ in
                       return (abs(x - cx) + abs(y - cy) < p);
                   }
 
-                  vec4 open_color(vec3 coords_geo, vec3 size_geo) {
+                  vec4 close_color(vec3 coords_geo, vec3 size_geo) {
                       vec3 coords_tex = niri_geo_to_tex * coords_geo;
                       vec4 color = texture2D(niri_tex, coords_tex.st);
                       vec2 coords = coords_geo.xy * size_geo.xy; // Coordinates in pixel space

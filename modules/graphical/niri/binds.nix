@@ -45,7 +45,7 @@ in
           "Mod+Comma".action = set-column-width "-10%";
           "Mod+Period".action = set-column-width "+10%";
 
-          "Print".action = screenshot;
+          "Print".action.screenshot = [ ];
           "Shift+Print".action.screenshot-screen = [ ];
           "Mod+Shift+E".action = quit;
         }

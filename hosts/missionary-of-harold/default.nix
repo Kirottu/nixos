@@ -1,5 +1,6 @@
 {
   config,
+  pkgs,
   ...
 }:
 {
@@ -48,6 +49,13 @@
     services.btrfs.autoScrub.enable = true;
 
     hm.programs.git.signing.key = "B533007F762CC944EE90C544121FC25B5BCEC10E";
+
+    boot = {
+      kernelPackages = pkgs.linuxPackages_latest;
+      # extraModulePackages = [ config.boot.kernelPackages.rtl8821ce ];
+      # kernelModules = [ "8821ce" ];
+      # blacklistedKernelModules = [ "rtw88_8821ce" ];
+    };
 
     system.stateVersion = "24.11"; # Did you read the comment?
     hm.home.stateVersion = "24.11";

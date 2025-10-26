@@ -1,0 +1,55 @@
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
+index a36e15beafeb..71965c9392dc 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
+@@ -2627,9 +2627,15 @@ static int amdgpu_pmops_suspend_noirq(struct device *dev)
+ {
+ 	struct drm_device *drm_dev = dev_get_drvdata(dev);
+ 	struct amdgpu_device *adev = drm_to_adev(drm_dev);
++	int r;
+ 
+-	if (amdgpu_acpi_should_gpu_reset(adev))
+-		return amdgpu_asic_reset(adev);
++	if (amdgpu_acpi_should_gpu_reset(adev)) {
++		amdgpu_device_lock_reset_domain(adev->reset_domain);
++		r = amdgpu_asic_reset(adev);
++		amdgpu_device_unlock_reset_domain(adev->reset_domain);
++
++		return r;
++	}
+ 
+ 	return 0;
+ }
+diff --git a/drivers/gpu/drm/amd/amdgpu/psp_v11_0.c b/drivers/gpu/drm/amd/amdgpu/psp_v11_0.c
+index 64b240b51f1a..34badf964a09 100644
+--- a/drivers/gpu/drm/amd/amdgpu/psp_v11_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/psp_v11_0.c
+@@ -149,6 +149,28 @@ static int psp_v11_0_wait_for_bootloader(struct psp_context *psp)
+ 	int ret;
+ 	int retry_loop;
+ 
++	if (adev->in_s3 && !(adev->flags & AMD_IS_APU) &&
++	    amdgpu_in_reset(adev)) {
++		uint32_t sol_reg1, sol_reg2;
++
++		dev_info(adev->dev, "C2PMSG_35: %x C2PMSG_81: %x",
++			 RREG32_SOC15(MP0, 0, mmMP0_SMN_C2PMSG_35),
++			 RREG32_SOC15(MP0, 0, mmMP0_SMN_C2PMSG_81));
++		/* Only wait for the TOS to be unloaded */
++		for (retry_loop = 0; retry_loop < 20; retry_loop++) {
++			sol_reg1 = RREG32_SOC15(MP0, 0, mmMP0_SMN_C2PMSG_81);
++			usleep_range(1000, 2000);
++			sol_reg2 = RREG32_SOC15(MP0, 0, mmMP0_SMN_C2PMSG_81);
++			if (sol_reg1 == sol_reg2)
++				return 0;
++		}
++		dev_info(adev->dev,
++			 "TOS wait failed, C2PMSG_35: %x C2PMSG_81: %x",
++			 RREG32_SOC15(MP0, 0, mmMP0_SMN_C2PMSG_35),
++			 RREG32_SOC15(MP0, 0, mmMP0_SMN_C2PMSG_81));
++		return -ETIME;
++	}
++
+ 	for (retry_loop = 0; retry_loop < 20; retry_loop++) {
+ 		/* Wait for bootloader to signify that is
+ 		    ready having bit 31 of C2PMSG_35 set to 1 */

@@ -549,22 +549,6 @@
         "type": "github"
       }
     },
-    "nixpkgs-stremio": {
-      "locked": {
-        "lastModified": 1740560979,
-        "narHash": "sha256-Vr3Qi346M+8CjedtbyUevIGDZW8LcA1fTG0ugPY/Hic=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "5135c59491985879812717f4c9fea69604e7f26f",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "5135c59491985879812717f4c9fea69604e7f26f",
-        "type": "github"
-      }
-    },
     "nixpkgs-wivrn": {
       "locked": {
         "lastModified": 1760820438,
@@ -721,7 +705,6 @@
         "kidex": "kidex",
         "niri": "niri",
         "nixpkgs": "nixpkgs_2",
-        "nixpkgs-stremio": "nixpkgs-stremio",
         "nixpkgs-wivrn": "nixpkgs-wivrn",
         "nixpkgs-xr": "nixpkgs-xr",
         "persist-retro": "persist-retro",

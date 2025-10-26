@@ -5,7 +5,9 @@
       userEmail = "arnovaara@kirottu.com";
       userName = "Arno Vaara";
       signing.signByDefault = true;
-      extraConfig = {
+      settings = {
+        user.name = "Arno Vaara";
+        user.email = "arnovaara@kirottu.com";
         init.defaultBranch = "main";
       };
     };

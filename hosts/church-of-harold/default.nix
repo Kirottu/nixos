@@ -174,7 +174,7 @@ in
     };
 
     boot = {
-      kernelPackages = pkgs.linuxPackages_6_16;
+      kernelPackages = pkgs.linuxPackages_latest;
       # extraModulePackages = [
       #   (pkgs.callPackage myPkgs.it87 { kernel = config.boot.kernelPackages.kernel; })
       # ];

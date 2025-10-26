@@ -165,6 +165,7 @@ in
     # };
 
     services.wivrn = {
+      package = inputs.nixpkgs-wivrn.legacyPackages.${pkgs.system}.wivrn;
       enable = true;
       config = {
         enable = true;

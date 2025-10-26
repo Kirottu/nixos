@@ -565,6 +565,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-wivrn": {
+      "locked": {
+        "lastModified": 1760820438,
+        "narHash": "sha256-Rpq80chwCIBRGWpcDImDSOKQIy5y9jfCtFHzQK7n85g=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "e64102a9f7f35ef2cddaea6f09c1f5077b948296",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "e64102a9f7f35ef2cddaea6f09c1f5077b948296",
+        "type": "github"
+      }
+    },
     "nixpkgs-xr": {
       "inputs": {
         "flake-compat": "flake-compat",
@@ -706,6 +722,7 @@
         "niri": "niri",
         "nixpkgs": "nixpkgs_2",
         "nixpkgs-stremio": "nixpkgs-stremio",
+        "nixpkgs-wivrn": "nixpkgs-wivrn",
         "nixpkgs-xr": "nixpkgs-xr",
         "persist-retro": "persist-retro",
         "private": "private",

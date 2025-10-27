@@ -10,5 +10,6 @@
       "Games"
       ".factorio"
     ];
+    programs.gamemode.enable = true;
   };
 }

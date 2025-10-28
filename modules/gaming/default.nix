@@ -1,10 +1,17 @@
 {
+  lib,
+  config,
+  ...
+}:
+{
   imports = [
     ./vr
     ./applications.nix
   ];
 
-  config = {
+  options.gaming.enable = lib.mkEnableOption "Gaming";
+
+  config = lib.mkIf config.gaming.enable {
     # Various persistent directories needed by games
     impermanence.userDirectories = [
       "Games"

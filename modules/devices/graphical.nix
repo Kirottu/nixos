@@ -6,6 +6,7 @@
 }:
 {
   config = lib.mkIf (config.devices.class == "desktop" || config.devices.class == "laptop") {
+    gaming.enable = true;
     graphical = {
       enable = true;
       niri.enable = true;

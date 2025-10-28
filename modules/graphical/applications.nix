@@ -37,6 +37,42 @@ in
           pavucontrol
           kdiskmark
           papers
+          (pkgs.writeShellApplication {
+            name = "xwayland-rootful";
+            text = ''
+              STATE_FILE="/tmp/xwayland-rootful.state"
+
+              if [ ! -f $STATE_FILE ]; then
+                printf "10" > $STATE_FILE
+              fi
+
+              # shellcheck disable=SC2155
+              export DISPLAY=":$(cat $STATE_FILE)"
+
+              INC=$(($(cat $STATE_FILE) + 1))
+
+              printf "%s" "$INC" > $STATE_FILE
+
+              if [ -f "/tmp/tv.state" ]; then
+                GEOMETRY="3840x2160"
+              else
+                GEOMETRY="1920x1080"
+              fi
+
+              ${lib.getExe pkgs.xwayland} -geometry $GEOMETRY -fullscreen -hidpi "$DISPLAY" &
+              PID=$!
+
+              sleep 0.1
+
+              ${pkgs.openbox}/bin/openbox &
+
+              sleep 0.1
+
+              WAYLAND_DISPLAY="" "$@"
+
+              kill $PID
+            '';
+          })
         ];
         hm.xdg.mimeApps = {
           enable = true;

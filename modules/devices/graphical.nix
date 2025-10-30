@@ -53,6 +53,7 @@
         ".config/dconf"
         ".local/share/flatpak" # Used for screen share tokens
         ".local/share/keyrings"
+        ".local/share/racket"
         ".local/state"
         ".cache"
         {

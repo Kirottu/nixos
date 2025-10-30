@@ -2,9 +2,13 @@
   lib,
   config,
   pkgs,
+  inputs,
   ...
 }:
 {
+  imports = [
+    inputs.nix-index-database.nixosModules.nix-index
+  ];
   # FIXME: Needs to be more configurable
   config = lib.mkMerge [
     {
@@ -34,6 +38,7 @@
         };
         flake = "/home/${config.mainUser.userName}/Projects/nixos";
       };
+      programs.nix-index-database.comma.enable = true;
 
       hm.programs.htop = {
         enable = true;

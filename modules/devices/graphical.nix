@@ -89,8 +89,6 @@
     programs.adb.enable = true;
     mainUser.extraGroups = [ "adbusers" ];
 
-    programs.command-not-found.enable = true;
-
     boot.kernel.sysctl."kernel.sysrq" = 1;
   };
 }

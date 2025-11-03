@@ -187,6 +187,9 @@ in
       # extraModprobeConfig = ''
       #   options it87 force_id=0x8622
       # '';
+      kernelParams = [
+        "mitigations=off"
+      ];
     };
 
     hardware.amdgpu.overdrive.enable = true;

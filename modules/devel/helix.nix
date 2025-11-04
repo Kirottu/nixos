@@ -9,6 +9,7 @@
         nil
         nixfmt-rfc-style
         rust-analyzer
+        tinymist
         marksman
         python313Packages.python-lsp-server
         typescript-language-server
@@ -38,6 +39,9 @@
       languages = {
         language-server.rust-analyzer.config.check = {
           command = "clippy";
+        };
+        language-server.tinymist.config = {
+          exportPdf = "onType";
         };
         language = [
           {

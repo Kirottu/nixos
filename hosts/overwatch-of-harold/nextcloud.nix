@@ -79,42 +79,42 @@ in
       };
     };
 
-    systemd.timers.${wopiUpdater} = {
-      wantedBy = [ "timers.target" ];
-      timerConfig = {
-        OnBootSec = config.services.ddclient.interval;
-        OnUnitInactiveSec = config.services.ddclient.interval;
-        Unit = "${wopiUpdater}.service";
-      };
-    };
+    # systemd.timers.${wopiUpdater} = {
+    #   wantedBy = [ "timers.target" ];
+    #   timerConfig = {
+    #     OnBootSec = config.services.ddclient.interval;
+    #     OnUnitInactiveSec = config.services.ddclient.interval;
+    #     Unit = "${wopiUpdater}.service";
+    #   };
+    # };
 
     systemd.services = {
-      ${wopiUpdater} = {
-        path = [
-          config.services.nextcloud.occ
-          pkgs.curl
-        ];
-        script = ''
-          curr_wopi=$(nextcloud-occ config:app:get richdocuments wopi_allowlist)
-          public_ip=$(curl -s https://api.ipify.org)
+      # ${wopiUpdater} = {
+      #   path = [
+      #     config.services.nextcloud.occ
+      #     pkgs.curl
+      #   ];
+      #   script = ''
+      #     curr_wopi=$(nextcloud-occ config:app:get richdocuments wopi_allowlist)
+      #     public_ip=$(curl -s https://api.ipify.org)
 
-          if [ "$public_ip" = "" ]; then
-            echo "Not connected to the internet"
+      #     if [ "$public_ip" = "" ]; then
+      #       echo "Not connected to the internet"
 
-          elif [[ "$curr_wopi" == *"$public_ip"* ]]; then
-            echo "WOPI allow up to date"
+      #     elif [[ "$curr_wopi" == *"$public_ip"* ]]; then
+      #       echo "WOPI allow up to date"
 
-          else
-            echo "Setting WOPI allow list"
-            nextcloud-occ config:app:set richdocuments wopi_allowlist --value="$public_ip"
+      #     else
+      #       echo "Setting WOPI allow list"
+      #       nextcloud-occ config:app:set richdocuments wopi_allowlist --value="$public_ip"
 
-          fi
-        '';
-        after = [ "network.target" ];
-        serviceConfig = {
-          Type = "oneshot";
-        };
-      };
+      #     fi
+      #   '';
+      #   after = [ "network.target" ];
+      #   serviceConfig = {
+      #     Type = "oneshot";
+      #   };
+      # };
       ${service-notifier} = {
         environment.SERVICE_ID = "%i";
         path = [

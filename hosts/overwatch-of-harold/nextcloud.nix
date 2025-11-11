@@ -56,14 +56,16 @@ in
         adminpassFile = config.sops.secrets."nextcloud/adminpass".path;
         dbtype = "pgsql";
       };
+      appstoreEnable = true;
       autoUpdateApps.enable = true;
-      extraApps = {
-        inherit (config.services.nextcloud.package.packages.apps)
-          calendar
-          deck
-          richdocuments
-          ;
-      };
+      # extraApps = {
+      #   inherit (config.services.nextcloud.package.packages.apps)
+      #     calendar
+      #     deck
+      #     richdocuments
+      #     tasks
+      #     ;
+      # };
       poolSettings = {
         pm = "dynamic";
         "pm.max_children" = "120";

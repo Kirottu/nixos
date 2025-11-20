@@ -32,7 +32,7 @@ let
     bitrate = 90000000;
     encoders = [
       {
-        encoder = "vaapi";
+        encoder = "vulkan";
         codec = "h265";
         width = 0.5;
         height = 0.25;
@@ -41,7 +41,7 @@ let
         group = 0;
       }
       {
-        encoder = "vaapi";
+        encoder = "vulkan";
         codec = "h265";
         width = 0.5;
         height = 0.75;
@@ -50,7 +50,7 @@ let
         group = 0;
       }
       {
-        encoder = "vaapi";
+        encoder = "vulkan";
         codec = "h265";
         width = 0.5;
         height = 1.0;
@@ -165,7 +165,7 @@ in
     # };
 
     services.wivrn = {
-      package = inputs.nixpkgs-wivrn.legacyPackages.${pkgs.system}.wivrn;
+      # package = inputs.nixpkgs-wivrn.legacyPackages.${pkgs.system}.wivrn;
       enable = true;
       config = {
         enable = true;

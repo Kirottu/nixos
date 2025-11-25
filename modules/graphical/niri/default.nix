@@ -38,7 +38,16 @@
 
     programs.niri.enable = true;
     # nixpkgs.overlays = [ inputs.niri.overlays.niri ];
-    # programs.niri.package = pkgs.niri;
+    # programs.niri.package =
+    #   inputs.niri.packages.${pkgs.stdenv.hostPlatform.system}.niri-unstable.overrideAttrs
+    #     {
+    #       src = pkgs.fetchFromGitHub {
+    #         owner = "flowerysong";
+    #         repo = "niri";
+    #         rev = "release-keybinds";
+    #         hash = "sha256-R7qJK5io3o+BsVx1cSQSj8asYXg7WvLqNchY7SYnmuo=";
+    #       };
+    #     };
 
     xdg.portal = {
       xdgOpenUsePortal = true;

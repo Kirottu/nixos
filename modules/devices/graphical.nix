@@ -50,10 +50,12 @@
         "Projects"
         "Downloads"
         "git"
-        ".config/dconf"
-        ".local/share/flatpak" # Used for screen share tokens
-        ".local/share/keyrings"
-        ".local/share/racket"
+        # ".local/share/flatpak" # Used for screen share tokens
+        # ".local/share/keyrings"
+        # ".local/share/racket"
+        # Got tired of impermanence on these, TODO: vibe check this later
+        ".config"
+        ".local/share"
         ".local/state"
         ".cache"
         {

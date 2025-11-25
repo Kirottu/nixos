@@ -24,8 +24,11 @@ in
     ];
     hm.programs.anyrun = {
       package = pkg;
+      # package = pkgs.anyrun;
       enable = true;
       config = {
+        # provider = inputs.anyrun.packages.${pkgs.system}.anyrun-provider;
+        # provider = null;
         layer = "top";
         x = {
           fraction = 0.5;

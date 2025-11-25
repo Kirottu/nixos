@@ -82,9 +82,6 @@
       double_click: true,
       left: "/user/hand/left/input/y/click",
     },
-    toggle_dashboard: {
-      left: "/user/hand/left/input/menu/click",
-    },
     click_modifier_right: {
       left: "/user/hand/left/input/y/touch",
       right: "/user/hand/right/input/b/touch"

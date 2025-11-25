@@ -3,7 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    # nixpkgs-stremio.url = "github:NixOS/nixpkgs/5135c59491985879812717f4c9fea69604e7f26f";
+    nixpkgs-stremio.url = "github:NixOS/nixpkgs/b6a8526db03f735b89dd5ff348f53f752e7ddc8e";
     # nixpkgs-wivrn.url = "github:NixOS/nixpkgs/e64102a9f7f35ef2cddaea6f09c1f5077b948296";
 
     home-manager = {

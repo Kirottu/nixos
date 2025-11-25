@@ -42,7 +42,6 @@
     })
     (lib.mkIf config.audio.easyeffects.enable {
       hm.services.easyeffects.enable = true;
-      hm.systemd.user.services.easyeffects.Service.TimeoutStopSec = 1;
       impermanence.userDirectories = [
         ".config/easyeffects"
         ".local/share/easyeffects"

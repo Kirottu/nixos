@@ -170,8 +170,8 @@ in
       })
       (lib.utils.mkApp {
         # package = pkgs.callPackage myPkgs.stremio { };
-        # package = inputs.nixpkgs-stremio.legacyPackages.${pkgs.system}.stremio;
-        package = pkgs.stremio;
+        package = inputs.nixpkgs-stremio.legacyPackages.${pkgs.system}.stremio;
+        # package = pkgs.stremio;
         userDirectories = [
           ".config/Smart Code ltd"
           ".local/share/Smart Code ltd"
@@ -184,6 +184,14 @@ in
           ];
         };
       })
+      # {
+      #   impermanence.userDirectories = [
+      #     ".config/Smart Code ltd"
+      #     ".local/share/Smart Code ltd"
+      #     ".local/share/stremio"
+      #     ".stremio-server"
+      #   ];
+      # }
       (lib.utils.mkApp {
         package = pkgs.freecad;
         userDirectories = [

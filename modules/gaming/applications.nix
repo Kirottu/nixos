@@ -14,6 +14,7 @@ in
     steam.enable = lib.mkEnableOption "Steam";
     umu-run.enable = lib.mkEnableOption "UMU Launcher";
     r2modman.enable = lib.mkEnableOption "r2modman";
+    itch.enable = lib.mkEnableOption "itch";
   };
 
   imports = [
@@ -80,6 +81,11 @@ in
         ];
       };
     })
+    (lib.mkIf cfg.itch.enable (
+      lib.utils.mkApp {
+        package = pkgs.itch;
+      }
+    ))
     (lib.mkIf cfg.r2modman.enable (
       lib.utils.mkApp {
         package = pkgs.r2modman;

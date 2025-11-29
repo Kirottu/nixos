@@ -32,10 +32,10 @@
       programs.nh = {
         enable = true;
 
-        clean = {
-          enable = true;
-          extraArgs = "--keep-since 30d --keep 10";
-        };
+        # clean = {
+        #   enable = true;
+        #   extraArgs = "--keep-since 30d --keep 10";
+        # };
         flake = "/home/${config.mainUser.userName}/Projects/nixos";
       };
       programs.nix-index-database.comma.enable = true;

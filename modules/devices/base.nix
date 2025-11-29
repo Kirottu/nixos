@@ -49,6 +49,13 @@
       LC_TIME = "fi_FI.UTF-8";
     };
 
+    nix.gc = {
+      automatic = true;
+      dates = "weekly";
+      persistent = true;
+      options = "--delete-older-than 14d";
+    };
+
     console.keyMap = "fi";
 
     environment.systemPackages = [

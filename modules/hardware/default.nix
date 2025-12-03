@@ -6,5 +6,6 @@
     ./bluetooth.nix
     ./impermanence.nix
     ./wiibt.nix
+    ./razer.nix
   ];
 }

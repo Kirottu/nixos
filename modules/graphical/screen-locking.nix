@@ -25,16 +25,10 @@ in
 
       hm.services.swayidle = {
         enable = true;
-        events = [
-          {
-            event = "before-sleep";
-            inherit (cfg.swayidle) command;
-          }
-          {
-            event = "lock";
-            inherit (cfg.swayidle) command;
-          }
-        ];
+        events = {
+          "before-sleep" = cfg.swayidle.command;
+          "lock" = cfg.swayidle.command;
+        };
       };
     })
     (lib.mkIf cfg.gtklock.enable {

@@ -736,6 +736,7 @@
         "stylix": "stylix",
         "system76-scheduler-niri": "system76-scheduler-niri",
         "wivrn-connection-manager": "wivrn-connection-manager",
+        "wrappers": "wrappers",
         "yand": "yand",
         "zen-browser": "zen-browser"
       }
@@ -978,6 +979,26 @@
       "original": {
         "owner": "Kirottu",
         "repo": "wivrn-connection-manager",
+        "type": "github"
+      }
+    },
+    "wrappers": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1764326721,
+        "narHash": "sha256-JT6Nz/I4IpJNIbY5Oy+NpHTe4fqEsIuxIpIZAfEZWEc=",
+        "owner": "Lassulus",
+        "repo": "wrappers",
+        "rev": "94d1131dd8c8a310f3e23c82ee75919cb401e716",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Lassulus",
+        "repo": "wrappers",
         "type": "github"
       }
     },

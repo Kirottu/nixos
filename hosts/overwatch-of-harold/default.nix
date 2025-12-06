@@ -192,7 +192,7 @@
       package = pkgs.postgresql_17;
     };
 
-    hm.programs.git.signing.key = "26982691F464B6026D552AD16A022A372FDFBF4E";
+    git.key = "26982691F464B6026D552AD16A022A372FDFBF4E";
 
     services.btrfs.autoScrub.enable = true;
 

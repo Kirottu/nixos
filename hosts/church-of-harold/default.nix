@@ -200,7 +200,7 @@ in
     # Workaround for cursor corruption after suspend
     hm.programs.niri.settings.debug.disable-cursor-plane = [ ];
 
-    hm.programs.git.signing.key = "B0640016A4BADA0FFBDBD1A57A14996A0D0109CC";
+    git.key = "B0640016A4BADA0FFBDBD1A57A14996A0D0109CC";
 
     wiibt.enable = true;
 

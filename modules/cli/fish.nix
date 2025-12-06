@@ -8,7 +8,7 @@
   options.cli.fish.enable = lib.mkEnableOption "Fish login shell";
 
   config = lib.mkIf config.cli.fish.enable {
-    programs.fish.enable = true;
+    # programs.fish.enable = true;
     mainUser.shell = pkgs.fish;
 
     impermanence.userDirectories = [
@@ -18,7 +18,7 @@
     # Takes really long to eval during build
     documentation.man.generateCaches = false;
 
-    hm.programs.fish =
+    programs.fish =
       let
         flake = "${config.hm.home.homeDirectory}/Projects/nixos";
       in

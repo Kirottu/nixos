@@ -9,7 +9,7 @@
 let
   xrizer-multilib =
     let
-      pkg = inputs.nixpkgs-xr.packages.${pkgs.system}.xrizer;
+      pkg = inputs.nixpkgs-xr.packages.${pkgs.stdenv.hostPlatform.system}.xrizer;
     in
     pkgs.symlinkJoin {
       name = "xrizer-multilib";
@@ -172,7 +172,9 @@ in
         json = wivrn-config // {
           application =
             let
-              exec = lib.getExe inputs.wivrn-connection-manager.packages.${pkgs.system}.wivrn-connection-manager;
+              exec =
+                lib.getExe
+                  inputs.wivrn-connection-manager.packages.${pkgs.stdenv.hostPlatform.system}.wivrn-connection-manager;
               config = (pkgs.formats.json { }).generate "config.json" {
                 on_startup = [
                   {
@@ -233,7 +235,7 @@ in
       enable = true;
       watch = ./watch.yaml;
       openxrActions = ./openxr_actions.json5;
-      dashboard.package = inputs.nixpkgs-xr.packages.${pkgs.system}.wayvr-dashboard;
+      dashboard.package = inputs.nixpkgs-xr.packages.${pkgs.stdenv.hostPlatform.system}.wayvr-dashboard;
       settings = {
         notification_topics = {
           DesktopNotification = "Watch";

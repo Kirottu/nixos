@@ -65,7 +65,9 @@
       Service = {
         Type = "notify";
         NotifyAccess = "all";
-        ExecStart = lib.getExe inputs.niri.packages.${pkgs.system}.xwayland-satellite-unstable;
+        ExecStart =
+          lib.getExe
+            inputs.niri.packages.${pkgs.stdenv.hostPlatform.system}.xwayland-satellite-unstable;
         StandardOutput = "journal";
         Restart = "on-failure";
       };

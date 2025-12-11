@@ -6,7 +6,7 @@
   ...
 }:
 let
-  pkg = inputs.anyrun.packages.${pkgs.system}.anyrun-with-all-plugins;
+  pkg = inputs.anyrun.packages.${pkgs.stdenv.hostPlatform.system}.anyrun-with-all-plugins;
   cfg = config.graphical.anyrun;
 in
 {

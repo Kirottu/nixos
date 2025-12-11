@@ -21,7 +21,7 @@
     #   };
     # };
 
-    environment.systemPackages = [
+    mainUser.extraOptions.packages = [
       pkgs.gh
       (inputs.wrappers.wrapperModules.git.apply {
         inherit pkgs;
@@ -34,6 +34,11 @@
           commit.gpgSign = true;
           tag.gpgSign = true;
           init.defaultBranch = "main";
+          credential = {
+            "github.com" = {
+              helper = "${pkgs.gh}/bin/gh auth git-credential";
+            };
+          };
         };
       }).wrapper
     ];

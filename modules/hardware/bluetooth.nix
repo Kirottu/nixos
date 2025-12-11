@@ -1,4 +1,8 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  ...
+}:
 {
   options.bluetooth.enable = lib.mkEnableOption "Bluetooth";
 
@@ -16,7 +20,18 @@
 
     services.blueman.enable = true;
 
-    hm.services.blueman-applet.enable = true;
+    # hm.services.blueman-applet.enable = true;
+
+    systemd.user.services.blueman-applet = {
+      description = "Blueman applet";
+      requires = [ "tray.target" ];
+      after = [
+        "graphical-session.target"
+        "tray.target"
+      ];
+      partOf = [ "graphical-session.target" ];
+      wantedBy = [ "graphical-session.target" ];
+    };
 
     impermanence.directories = lib.mkIf config.impermanence.enable [
       "/var/lib/bluetooth"

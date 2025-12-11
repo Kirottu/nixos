@@ -5,7 +5,7 @@
     #   enable = true;
     #   defaultEditor = true;
     environment.variables.EDITOR = "helix";
-    environment.systemPackages = [
+    mainUser.extraOptions.packages = [
       (inputs.wrappers.wrapperModules.helix.apply {
         inherit pkgs;
         extraPackages = with pkgs; [

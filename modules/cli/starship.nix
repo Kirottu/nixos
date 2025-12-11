@@ -3,9 +3,9 @@
   options.cli.starship.enable = lib.mkEnableOption "Starship prompt";
 
   config = lib.mkIf config.cli.starship.enable {
-    programs.starship = {
+    hm.programs.starship = {
       enable = true;
-      # enableFishIntegration = true;
+      enableFishIntegration = true;
       settings =
         let
           middle_modules = [

@@ -104,23 +104,14 @@ in
         };
       }
       (lib.mkIf cfg.terminals.alacritty.enable {
-        environment.systemPackages = [
-          (inputs.wrappers.wrapperModules.alacritty.apply {
-            inherit pkgs;
-            settings = {
-              window = {
-                decorations = "None";
-              };
-              font = {
-                normal = {
-                  family = "Hack Nerd Font";
-                  style = "Regular";
-                };
-                size = 11;
-              };
+        hm.programs.alacritty = {
+          enable = true;
+          settings = {
+            window = {
+              decorations = "None";
             };
-          }).wrapper
-        ];
+          };
+        };
       })
       (lib.mkIf cfg.browsers.zen.enable {
         hm.imports = [ inputs.zen-browser.homeModules.beta ];

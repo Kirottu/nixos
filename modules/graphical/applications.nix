@@ -33,6 +33,8 @@ in
           ffmpeg-headless
           ffmpegthumbnailer
 
+          kdePackages.partitionmanager
+
           sirikali
           pavucontrol
           kdiskmark

@@ -75,6 +75,14 @@ in
             max_entries: 3,
           )
         '';
+        "nix-run.ron".text = ''
+          Config(
+            prefix: ", ",
+            allow_unfree: true,
+            channel: "nixpkgs-unstable",
+            max_entries: 3,
+          )
+        '';
       };
       extraCss =
         with config.theming.themeAttrs;

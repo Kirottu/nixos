@@ -10,18 +10,19 @@ let
   xrizer-multilib =
     let
       # FIXME temporary
-      pkg = inputs.nixpkgs-xr.packages.${pkgs.stdenv.hostPlatform.system}.xrizer.overrideAttrs {
-        version = "b88f432e26a0400b170fb075e15a49bb364688e8";
-        src = pkgs.fetchgit {
-          url = "https://github.com/Supreeeme/xrizer.git";
-          rev = "b88f432e26a0400b170fb075e15a49bb364688e8";
-          fetchSubmodules = false;
-          deepClone = false;
-          leaveDotGit = false;
-          sparseCheckout = [ ];
-          sha256 = "sha256-L3beL0T0RJfVnPkP2ynWV1BgWlZEc+DhMIhX5Myjr+w=";
-        };
-      };
+      # pkg = inputs.nixpkgs-xr.packages.${pkgs.stdenv.hostPlatform.system}.xrizer.overrideAttrs {
+      #   version = "b88f432e26a0400b170fb075e15a49bb364688e8";
+      #   src = pkgs.fetchgit {
+      #     url = "https://github.com/Supreeeme/xrizer.git";
+      #     rev = "b88f432e26a0400b170fb075e15a49bb364688e8";
+      #     fetchSubmodules = false;
+      #     deepClone = false;
+      #     leaveDotGit = false;
+      #     sparseCheckout = [ ];
+      #     sha256 = "sha256-L3beL0T0RJfVnPkP2ynWV1BgWlZEc+DhMIhX5Myjr+w=";
+      #   };
+      # };
+      pkg = inputs.nixpkgs-xr.packages.${pkgs.stdenv.hostPlatform.system}.xrizer;
     in
     pkgs.symlinkJoin {
       name = "xrizer-multilib";

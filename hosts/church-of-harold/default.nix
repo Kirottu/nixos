@@ -177,7 +177,7 @@ in
     boot = {
       kernelPackages = pkgs.linuxPackagesFor pkgs.linux_zen;
       extraModulePackages = [
-        (pkgs.callPackage ./amdgpu.nix { kernel = config.boot.kernelPackages.kernel; })
+        # (pkgs.callPackage ./amdgpu.nix { kernel = config.boot.kernelPackages.kernel; })
       ];
       # extraModulePackages = [
       #   (pkgs.callPackage myPkgs.it87 { kernel = config.boot.kernelPackages.kernel; })

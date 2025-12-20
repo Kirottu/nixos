@@ -9,19 +9,6 @@
 let
   xrizer-multilib =
     let
-      # FIXME temporary
-      # pkg = inputs.nixpkgs-xr.packages.${pkgs.stdenv.hostPlatform.system}.xrizer.overrideAttrs {
-      #   version = "b88f432e26a0400b170fb075e15a49bb364688e8";
-      #   src = pkgs.fetchgit {
-      #     url = "https://github.com/Supreeeme/xrizer.git";
-      #     rev = "b88f432e26a0400b170fb075e15a49bb364688e8";
-      #     fetchSubmodules = false;
-      #     deepClone = false;
-      #     leaveDotGit = false;
-      #     sparseCheckout = [ ];
-      #     sha256 = "sha256-L3beL0T0RJfVnPkP2ynWV1BgWlZEc+DhMIhX5Myjr+w=";
-      #   };
-      # };
       pkg = inputs.nixpkgs-xr.packages.${pkgs.stdenv.hostPlatform.system}.xrizer;
     in
     pkgs.symlinkJoin {
@@ -139,9 +126,50 @@ in
 
     # hm.xdg.configFile."openxr/1/active_runtime.x86_64.json".source =
     #   "${pkgs.wivrn}/share/openxr/1/openxr_wivrn.json";
-    hm.xdg.configFile."openxr/1/active_runtime.i686.json".source = "${
-      pkgs.pkgsi686Linux.callPackage myPkgs.wivrn-server-lib { absolute = true; }
-    }/share/openxr/1/openxr_wivrn.json";
+    # hm.xdg.configFile."openxr/1/active_runtime.i686.json".source = "${
+    #   pkgs.pkgsi686Linux.callPackage myPkgs.wivrn-server-lib { absolute = true; }
+    # }/share/openxr/1/openxr_wivrn.json";
+    hm.xdg.configFile."openxr/1/active_runtime.i686.json".source =
+      let
+        p = pkgs.pkgsi686Linux;
+        pkg = pkgs.pkgsi686Linux.wivrn.overrideAttrs (prev: {
+          pname = "wivrn-server-lib";
+          nativeBuildInputs = with p; [
+            cmake
+            git
+            glslang
+            pkg-config
+            python3
+          ];
+
+          buildInputs = with p; [
+            boost
+            eigen
+            glm
+            libdrm
+            nlohmann_json
+            openxr-loader
+            udev
+            vulkan-headers
+            vulkan-loader
+          ];
+
+          desktopItems = [ ];
+
+          cmakeFlags = [
+            (lib.cmakeBool "WIVRN_BUILD_SERVER" false)
+            (lib.cmakeBool "WIVRN_BUILD_WIVRNCTL" false)
+            (lib.cmakeBool "WIVRN_BUILD_SERVER_LIBRARY" true)
+            (lib.cmakeBool "FETCHCONTENT_FULLY_DISCONNECTED" true)
+            (lib.cmakeFeature "WIVRN_OPENXR_MANIFEST_TYPE" "absolute")
+            (lib.cmakeFeature "GIT_DESC" "v${prev.version}")
+            (lib.cmakeFeature "FETCHCONTENT_SOURCE_DIR_MONADO" "${prev.monado}")
+          ];
+
+          preFixup = "";
+        });
+      in
+      "${pkg}/share/openxr/1/openxr_wivrn.json";
 
     # programs.steam =
     #   let

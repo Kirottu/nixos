@@ -11,6 +11,7 @@
     ./applications.nix
     ./browsers.nix
     ./screen-locking.nix
+    ./instant-replay.nix
     ./tv.nix
     ./yand.nix
   ];

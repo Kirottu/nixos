@@ -48,6 +48,11 @@ in
         tvProfile = 1;
         inherit desktopSink;
       };
+      instant-replay = {
+        enable = true;
+        screen = "DP-3";
+        audioSources = [ ];
+      };
       niri.extraOptions = {
         workspaces."chat" = {
           open-on-output = "DP-3";

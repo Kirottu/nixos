@@ -88,7 +88,6 @@
     virt.distrobox.enable = true;
     daemons.kidex.enable = true;
 
-    programs.adb.enable = true;
     mainUser.extraGroups = [ "adbusers" ];
 
     boot.kernel.sysctl."kernel.sysrq" = 1;

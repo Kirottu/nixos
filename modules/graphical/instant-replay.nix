@@ -30,6 +30,7 @@ in
       Service = {
         Type = "simple";
         ExecStart = "${lib.getExe pkgs.gpu-screen-recorder} -bm cbr -w portal -r 60 -q 10000 -c mp4 -restore-portal-session yes -o ${config.hm.home.homeDirectory}/Videos/InstantReplay -a ${cfg.audioSource}";
+        Restart = "on-failure";
       };
       Install = {
         WantedBy = [ "graphical-session.target" ];

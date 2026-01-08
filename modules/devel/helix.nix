@@ -43,6 +43,9 @@
         language-server.tinymist.config = {
           exportPdf = "onType";
         };
+        language-server.nil.config = {
+          autoArchive = true;
+        };
         language = [
           {
             name = "css";

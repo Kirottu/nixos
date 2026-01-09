@@ -50,7 +50,11 @@ in
       };
       instant-replay = {
         enable = true;
-        audioSource = "default_output|easyeffects_source";
+        display = "DP-2";
+        audioSources = [
+          "default_output"
+          "easyeffects_source"
+        ];
       };
       niri.extraOptions = {
         workspaces."chat" = {

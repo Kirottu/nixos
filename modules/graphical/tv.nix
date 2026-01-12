@@ -112,6 +112,9 @@ in
           script =
             mkScript
               ''
+                ${
+                  if config.graphical.instant-replay.enable then "systemctl --user stop gpu-screen-recorder" else ""
+                }
                 ${niri} msg output ${cfg.tvOutput} on
                 sleep 1
                 ${wsToTv}
@@ -126,6 +129,9 @@ in
                 sleep 1
                 ${niri} msg output ${cfg.tvOutput} off
                 ${fixDesktopOrder}
+                ${
+                  if config.graphical.instant-replay.enable then "systemctl --user start gpu-screen-recorder" else ""
+                }
               '';
         in
         {

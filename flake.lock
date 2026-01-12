@@ -612,6 +612,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-wayvr": {
+      "locked": {
+        "lastModified": 1768055082,
+        "narHash": "sha256-iMdzjOZPTKv9pmPiR9fkEYEE8ZEREKBh4UsgShz2O9M=",
+        "owner": "Scrumplex",
+        "repo": "nixpkgs",
+        "rev": "2cd8493d435707b0908730bf6552e316c56b8830",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Scrumplex",
+        "ref": "pkgs/wayvr/init",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs-xr": {
       "inputs": {
         "flake-compat": "flake-compat",
@@ -801,6 +817,7 @@
         "nix-index-database": "nix-index-database",
         "nixpkgs": "nixpkgs_3",
         "nixpkgs-stremio": "nixpkgs-stremio",
+        "nixpkgs-wayvr": "nixpkgs-wayvr",
         "nixpkgs-xr": "nixpkgs-xr",
         "persist-retro": "persist-retro",
         "private": "private",

@@ -219,8 +219,8 @@ in
               config = (pkgs.formats.json { }).generate "config.json" {
                 on_startup = [
                   {
-                    exec = lib.getExe pkgs.wlx-overlay-s;
-                    args = [ "--openxr" ];
+                    exec = "${inputs.nixpkgs-wayvr.legacyPackages.${pkgs.stdenv.hostPlatform.system}.wayvr}/bin/wayvr";
+                    args = [ ];
                   }
                 ];
                 on_connect = [
@@ -272,16 +272,16 @@ in
       autoStart = true;
     };
 
-    hm.programs.wlx-overlay-s = {
-      enable = true;
-      watch = ./watch.yaml;
-      openxrActions = ./openxr_actions.json5;
-      dashboard.package = inputs.nixpkgs-xr.packages.${pkgs.stdenv.hostPlatform.system}.wayvr-dashboard;
-      settings = {
-        notification_topics = {
-          DesktopNotification = "Watch";
-        };
-      };
-    };
+    # hm.programs.wlx-overlay-s = {
+    #   enable = true;
+    #   watch = ./watch.yaml;
+    #   openxrActions = ./openxr_actions.json5;
+    #   dashboard.package = inputs.nixpkgs-xr.packages.${pkgs.stdenv.hostPlatform.system}.wayvr-dashboard;
+    #   settings = {
+    #     notification_topics = {
+    #       DesktopNotification = "Watch";
+    #     };
+    #   };
+    # };
   };
 }

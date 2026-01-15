@@ -18,6 +18,9 @@
     impermanence.userDirectories = [
       ".cargo"
       ".gradle"
+      # I hate java development
+      ".jdks"
+      ".java"
       ".local/share/direnv"
     ];
   };

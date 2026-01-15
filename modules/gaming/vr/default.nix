@@ -80,13 +80,13 @@ in
   config = lib.mkIf config.gaming.vr.enable {
 
     # Needed for WiVRn
-    services.avahi = {
-      enable = true;
-      publish = {
-        enable = true;
-        userServices = true;
-      };
-    };
+    # services.avahi = {
+    #   enable = true;
+    #   publish = {
+    #     enable = true;
+    #     userServices = true;
+    #   };
+    # };
 
     environment.systemPackages = [
       pkgs.bs-manager
@@ -216,11 +216,14 @@ in
               exec =
                 lib.getExe
                   inputs.wivrn-connection-manager.packages.${pkgs.stdenv.hostPlatform.system}.wivrn-connection-manager;
-              config = (pkgs.formats.json { }).generate "config.json" {
+              mgr-cfg = (pkgs.formats.json { }).generate "config.json" {
                 on_startup = [
                   {
                     exec = "${inputs.nixpkgs-wayvr.legacyPackages.${pkgs.stdenv.hostPlatform.system}.wayvr}/bin/wayvr";
                     args = [ ];
+                    env = {
+                      PATH = "/run/current-system/sw/bin:${config.hm.home.homeDirectory}/.nix-profile/bin";
+                    };
                   }
                 ];
                 on_connect = [
@@ -230,6 +233,7 @@ in
                       "set-default-sink"
                       "wivrn.sink"
                     ];
+                    env = { };
                   }
                   {
                     exec = "${pkgs.pulseaudio}/bin/pactl";
@@ -237,6 +241,7 @@ in
                       "set-default-source"
                       "wivrn.source"
                     ];
+                    env = { };
                   }
                 ];
                 on_disconnect = [
@@ -246,6 +251,7 @@ in
                       "set-default-sink"
                       cfg.defaultSink
                     ];
+                    env = { };
                   }
                   {
                     exec = "${pkgs.pulseaudio}/bin/pactl";
@@ -253,6 +259,7 @@ in
                       "set-default-source"
                       cfg.defaultSource
                     ];
+                    env = { };
                   }
                 ];
                 kill_timeout = 300;
@@ -261,7 +268,7 @@ in
             (pkgs.writeShellApplication {
               name = "wivrn-autostart";
               text = ''
-                ${exec} -c ${config}
+                ${exec} -c ${mgr-cfg}
               '';
             });
 

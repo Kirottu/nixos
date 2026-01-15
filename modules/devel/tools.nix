@@ -17,6 +17,7 @@
 
     impermanence.userDirectories = [
       ".cargo"
+      ".gradle"
       ".local/share/direnv"
     ];
   };

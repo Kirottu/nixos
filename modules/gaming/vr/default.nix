@@ -219,7 +219,7 @@ in
               mgr-cfg = (pkgs.formats.json { }).generate "config.json" {
                 on_startup = [
                   {
-                    exec = "${inputs.nixpkgs-wayvr.legacyPackages.${pkgs.stdenv.hostPlatform.system}.wayvr}/bin/wayvr";
+                    exec = lib.getExe pkgs.wayvr;
                     args = [ ];
                     env = {
                       PATH = "/run/current-system/sw/bin:${config.hm.home.homeDirectory}/.nix-profile/bin";

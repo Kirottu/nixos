@@ -200,7 +200,7 @@
       enable = true;
       flake = "github:Kirottu/nixos";
       randomizedDelaySec = "45min";
-      dates = "02:00";
+      dates = "Mon *-*-* 02:00:00";
       allowReboot = true;
       rebootWindow = {
         lower = "02:00";

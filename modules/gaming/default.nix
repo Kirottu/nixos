@@ -7,6 +7,7 @@
   imports = [
     ./vr
     ./applications.nix
+    ./fake-frames.nix
   ];
 
   options.gaming.enable = lib.mkEnableOption "Gaming";

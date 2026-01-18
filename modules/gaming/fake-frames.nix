@@ -10,7 +10,7 @@
 
   config = lib.mkIf config.gaming.fake-frames.enable {
     environment.systemPackages = [
-      (pkgs.callPackage myPkgs.lsfg-vk)
+      (pkgs.callPackage myPkgs.lsfg-vk { })
     ];
   };
 }

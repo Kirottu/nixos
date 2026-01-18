@@ -79,6 +79,19 @@ in
         extraPackages = with pkgs; [
           libnotify
         ];
+        gamescopeSession = {
+          enable = true;
+          env = {
+            ENABLE_GAMESCOPE_WSI = "0";
+          };
+          args = [
+            "-O"
+            "DP-2"
+            "--immediate-flips"
+            "-r"
+            "100"
+          ];
+        };
       };
     })
     (lib.mkIf cfg.itch.enable (

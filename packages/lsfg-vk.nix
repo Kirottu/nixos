@@ -4,32 +4,41 @@
   fetchFromGitHub,
   lib,
   vulkan-headers,
+  qt6,
 }:
 llvmPackages.stdenv.mkDerivation rec {
   pname = "lsfg-vk";
-  version = "2.0.0-dev19";
+  version = "2.0.0-dev";
 
   src = fetchFromGitHub {
     owner = "PancakeTAS";
     repo = "lsfg-vk";
     tag = "v${version}";
-    hash = "sha256-hWpuPH7mKbeMaLaRUwtlkNLy4lOnJEe+yd54L7y2kV0=";
+    hash = "sha256-9f1epUbJNr8yaUfWNcVth88UfGP1kRX6+yOcA/60XL8=";
     fetchSubmodules = true;
   };
 
-  postPatch = ''
-    substituteInPlace VkLayer_LS_frame_generation.json \
-      --replace-fail "liblsfg-vk.so" "$out/lib/liblsfg-vk.so"
+  postInstall = ''
+    substituteInPlace "$out/share/vulkan/implicit_layer.d/VkLayer_LSFGVK_frame_generation.json" \
+      --replace-fail "liblsfg-vk-layer.so" "$out/lib/liblsfg-vk-layer.so"
   '';
 
   nativeBuildInputs = [
     llvmPackages.clang-tools
     llvmPackages.libllvm
+    qt6.wrapQtAppsHook
     cmake
   ];
 
   buildInputs = [
+    qt6.qtbase
+    qt6.qtdeclarative
     vulkan-headers
+  ];
+
+  cmakeFlags = [
+    (lib.cmakeBool "LSFGVK_BUILD_UI" true)
+    (lib.cmakeBool "LSFGVK_BUILD_CLI" true)
   ];
 
   meta = {

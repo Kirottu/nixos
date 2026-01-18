@@ -31,6 +31,7 @@ in
       umu-run.enable = true;
       steam.enable = true;
       r2modman.enable = true;
+      fake-frames.enable = true;
     };
     # graphical.eww.enable = true;
     graphical = {

@@ -130,10 +130,12 @@ in
         package = pkgs.libreoffice-fresh;
         userDirectories = [ ".config/libreoffice" ];
       })
-      (lib.utils.mkApp {
-        package = pkgs.librewolf;
-        userDirectories = [ ".librewolf" ];
-      })
+      (lib.mkIf cfg.browsers.librewolf.enable (
+        lib.utils.mkApp {
+          package = pkgs.librewolf;
+          userDirectories = [ ".librewolf" ];
+        }
+      ))
       (lib.utils.mkApp {
         package = pkgs.nextcloud-client;
         userDirectories = [

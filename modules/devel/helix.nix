@@ -10,6 +10,7 @@
         nixfmt-rfc-style
         rust-analyzer
         tinymist
+        ltex-ls-plus
         marksman
         python313Packages.python-lsp-server
         typescript-language-server
@@ -27,10 +28,10 @@
             display-inlay-hints = true;
           };
           inline-diagnostics = {
-            cursor-line = "warning";
+            cursor-line = "hint";
             other-lines = "error";
           };
-          end-of-line-diagnostics = "hint";
+          # end-of-line-diagnostics = "hint";
           auto-format = true;
         };
 
@@ -46,6 +47,9 @@
         language-server.nil.config = {
           autoArchive = true;
         };
+        language-server.ltex-ls.config = {
+          command = "ltex-ls-plus";
+        };
         language = [
           {
             name = "css";
@@ -55,6 +59,13 @@
             name = "nix";
             auto-format = true;
             formatter.command = "nixfmt";
+          }
+          {
+            name = "typst";
+            language-servers = [
+              "tinymist"
+              "ltex-ls-plus"
+            ];
           }
         ];
       };

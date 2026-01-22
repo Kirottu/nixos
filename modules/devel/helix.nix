@@ -35,6 +35,10 @@
           auto-format = true;
         };
 
+        keys.normal.space = {
+          B = "file_picker_in_current_buffer_directory";
+        };
+
         # theme = "adwaita-dark";
       };
       languages = {

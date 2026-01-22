@@ -67,6 +67,13 @@
               "ltex-ls-plus"
             ];
           }
+          {
+            name = "markdown";
+            language-servers = [
+              "marksman"
+              "ltex-ls-plus"
+            ];
+          }
         ];
       };
     };

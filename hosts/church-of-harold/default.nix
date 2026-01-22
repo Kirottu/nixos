@@ -110,6 +110,9 @@ in
         };
       };
     };
+    daemons = {
+      # llm.enable = true;
+    };
     services = {
       udev = {
         # Workaround for premature wakeups

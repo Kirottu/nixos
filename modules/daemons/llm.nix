@@ -22,6 +22,6 @@ in
       host = "0.0.0.0";
     };
 
-    impermanence.directories = [ config.services.open-webui.stateDir ];
+    impermanence.directories = [ "/var/lib/private" ];
   };
 }

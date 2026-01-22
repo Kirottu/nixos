@@ -36,6 +36,7 @@ in
     # graphical.eww.enable = true;
     graphical = {
       yand.output = "DP-3";
+      # browsers.librewolf.enable = true;
       tv = {
         enable = true;
         desktopOutputs = [

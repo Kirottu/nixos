@@ -78,6 +78,7 @@ in
         ];
         extraPackages = with pkgs; [
           libnotify
+          python315
         ];
         gamescopeSession = {
           enable = true;

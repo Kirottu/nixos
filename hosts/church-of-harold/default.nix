@@ -31,12 +31,12 @@ in
       umu-run.enable = true;
       steam.enable = true;
       r2modman.enable = true;
-      fake-frames.enable = true;
+      # fake-frames.enable = true;
     };
     # graphical.eww.enable = true;
     graphical = {
       yand.output = "DP-3";
-      # browsers.librewolf.enable = true;
+      browsers.librewolf.enable = true;
       tv = {
         enable = true;
         desktopOutputs = [
@@ -188,7 +188,7 @@ in
     };
 
     boot = {
-      kernelPackages = pkgs.linuxPackagesFor pkgs.linux_zen;
+      kernelPackages = pkgs.linuxPackagesFor pkgs.linux_latest;
       extraModulePackages = [
         # (pkgs.callPackage ./amdgpu.nix { kernel = config.boot.kernelPackages.kernel; })
       ];

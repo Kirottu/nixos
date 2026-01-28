@@ -20,8 +20,10 @@
         };
       };
       browsers = {
-        zen.enable = true;
-        default = "zen-beta.desktop";
+        # zen.enable = true;
+        # librewolf.enable = true;
+        firefox.enable = true;
+        default = "firefox.desktop";
       };
     };
     sops.secrets."users/pass-hash" = {

@@ -14,6 +14,7 @@ in
     browsers = {
       zen.enable = lib.mkEnableOption "Zen Browser";
       librewolf.enable = lib.mkEnableOption "LibreWolf";
+      firefox.enable = lib.mkEnableOption "Firefox";
       default = lib.mkOption {
         type = lib.types.nonEmptyStr;
         description = "Desktop entry of the default browser";
@@ -134,6 +135,12 @@ in
         lib.utils.mkApp {
           package = pkgs.librewolf;
           userDirectories = [ ".librewolf" ];
+        }
+      ))
+      (lib.mkIf cfg.browsers.firefox.enable (
+        lib.utils.mkApp {
+          package = pkgs.firefox;
+          userDirectories = [ ".mozilla" ];
         }
       ))
       (lib.utils.mkApp {

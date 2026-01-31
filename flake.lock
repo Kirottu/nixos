@@ -323,11 +323,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1769813945,
-        "narHash": "sha256-9ABv9Lo9t6MrFjlnRnU8Zw1C6LVj2+R8PipQ/rxGLHk=",
+        "lastModified": 1769872935,
+        "narHash": "sha256-07HMIGQ/WJeAQJooA7Kkg1SDKxhAiV6eodvOwTX6WKI=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "475921375def3eb930e1f8883f619ff8609accb6",
+        "rev": "f4ad5068ee8e89e4a7c2e963e10dd35cd77b37b7",
         "type": "github"
       },
       "original": {
@@ -622,11 +622,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1769784585,
-        "narHash": "sha256-D4aDfE2DnslGGkS0bo0izPYJ1X8rxYVGzrXEazhHn8c=",
+        "lastModified": 1769824656,
+        "narHash": "sha256-AmtfVtvO6nnW6SqkaPRLvhAtMQrycyaeYYASFunMACY=",
         "owner": "nix-community",
         "repo": "nixpkgs-xr",
-        "rev": "5324b35029c31dfebb48c0c5bce1544385dd8ac1",
+        "rev": "7cdb08fca7f2253a40dbed090f6f44ef01c22fbf",
         "type": "github"
       },
       "original": {
@@ -853,11 +853,11 @@
         "tinted-zed": "tinted-zed"
       },
       "locked": {
-        "lastModified": 1769782950,
-        "narHash": "sha256-bMJPPDyG/BV7Qx0r5JuO9oQG/o/VlnEOFnC8zKhJsBQ=",
+        "lastModified": 1769888473,
+        "narHash": "sha256-4KWbaJwaYnZ60bFyTudZYAKskjr7Sa17R3/yh+oXS7w=",
         "owner": "nix-community",
         "repo": "stylix",
-        "rev": "aad90ca763be126c0ed67c29826bbb9b5ca665d8",
+        "rev": "ae5c0239ae4f82a8c7e33ad8a456535d5a9ba813",
         "type": "github"
       },
       "original": {
@@ -873,11 +873,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1768260017,
-        "narHash": "sha256-r1Y+TQLEC4dNxktRaDpP8vnWOha0MFrYsfrqPhV85BA=",
+        "lastModified": 1769878625,
+        "narHash": "sha256-cOLzS70XjXcxPi4vkTjbvSBOZ5o+CmzkLXX/AgtJMRQ=",
         "owner": "Kirottu",
         "repo": "system76-scheduler-niri",
-        "rev": "0ccb6c4d696c8db7c73153d1dcc2b2a2b2a37a84",
+        "rev": "9fe30d78748bd8f655c3f8ec8b3ce8cd25577182",
         "type": "github"
       },
       "original": {
@@ -1095,11 +1095,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1765116226,
-        "narHash": "sha256-yQDqC1rUP5uUFkmqS8Trjf6JFVpE1qQetRuiZQ5E5zU=",
+        "lastModified": 1769878598,
+        "narHash": "sha256-J/BrvG8ktNepSU7ovDZjRwPM84nxZP7f0sEQ4Kv+yc0=",
         "owner": "Kirottu",
         "repo": "yand",
-        "rev": "7bab710e034ba07efd14871d306e4e85775d95f9",
+        "rev": "4f50c91e1ad249f28b304697bf15c78d89dc6836",
         "type": "github"
       },
       "original": {

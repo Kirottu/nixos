@@ -35,6 +35,11 @@ in
             endpoint = if (cfg.upstream != null) then cfg.upstream else "https://freedns.controld.com/p2";
             timeout = 5000;
           };
+          # "0" = {
+          #   type = "doh";
+          #   endpoint = "https://cloudflare-dns.com/dns-query";
+          #   timeout = 5000;
+          # };
         };
       };
 

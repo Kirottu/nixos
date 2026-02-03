@@ -21,6 +21,7 @@
     ./vaultwarden.nix
     ./grafana.nix
     ./mail.nix
+    ./syncserver.nix
   ];
 
   config = {
@@ -28,6 +29,7 @@
     domain = "kirottu.com";
 
     synapse.enable = true;
+    syncserver.enable = true;
     nextcloud = {
       enable = true;
       monitoredServices = [ "nixos-upgrade" ];

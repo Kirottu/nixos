@@ -483,7 +483,7 @@
 
           window#waybar.top,
           window#waybar.bottom {
-            background: linear-gradient(90deg, transparent 10%, ${l4} 10%, ${l4} 90%, transparent 90%);
+            background: linear-gradient(90deg, transparent 5%, ${l4} 5%, ${l4} 95%, transparent 95%);
           }
 
           @keyframes fade {

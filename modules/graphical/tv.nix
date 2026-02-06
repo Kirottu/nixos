@@ -128,7 +128,9 @@ in
                 ${wsToDesktop}
                 sleep 1
                 ${niri} msg output ${cfg.tvOutput} off
+                sleep 1
                 ${fixDesktopOrder}
+                ${if config.graphical.waybar.enable then "systemctl --user restart waybar" else ""}
                 ${
                   if config.graphical.instant-replay.enable then "systemctl --user start gpu-screen-recorder" else ""
                 }

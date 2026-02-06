@@ -31,7 +31,7 @@ in
       umu-run.enable = true;
       steam.enable = true;
       r2modman.enable = true;
-      # fake-frames.enable = true;
+      fake-frames.enable = true;
     };
     # graphical.eww.enable = true;
     graphical = {
@@ -84,12 +84,21 @@ in
             height = 1080;
             refresh = 74.986000;
           };
+          position = {
+            x = 0;
+            y = 330;
+          };
         };
         outputs."DP-2" = {
           mode = {
-            width = 1920;
-            height = 1080;
-            refresh = 99.930000;
+            width = 2560;
+            height = 1440;
+            refresh = 144.000;
+          };
+          variable-refresh-rate = true;
+          position = {
+            x = 1920;
+            y = 0;
           };
         };
         outputs."DP-3" = {
@@ -97,6 +106,10 @@ in
             width = 1280;
             height = 1024;
             refresh = 75.025002;
+          };
+          position = {
+            x = 4480;
+            y = 230;
           };
         };
         outputs."HDMI-A-1" = {
@@ -107,6 +120,10 @@ in
           };
           scale = 2.0;
           enable = false;
+          position = {
+            x = 5760;
+            y = 0;
+          };
         };
       };
     };

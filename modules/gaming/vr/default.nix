@@ -243,15 +243,15 @@ in
                     ];
                     env = { };
                   }
-                  {
-                    exec = pkgs.writeShellScript "disable-wwan-connect" ''
-                      ${lib.getExe pkgs.openssh} -i ~/.ssh/id_ed25519_router root@192.168.1.1 \
-                        "uci set wireless.radio0.disabled=1; uci commit; wifi reload"
-                    '';
+                  # {
+                  #   exec = pkgs.writeShellScript "disable-wwan-connect" ''
+                  #     ${lib.getExe pkgs.openssh} -i ~/.ssh/id_ed25519_router root@192.168.1.1 \
+                  #       "uci set wireless.radio0.disabled=1; uci commit; wifi reload"
+                  #   '';
 
-                    args = [ ];
-                    env = { };
-                  }
+                  #   args = [ ];
+                  #   env = { };
+                  # }
                 ];
                 on_disconnect = [
                   {
@@ -270,15 +270,15 @@ in
                     ];
                     env = { };
                   }
-                  {
-                    exec = pkgs.writeShellScript "enable-wwan-disconnect" ''
-                      ${lib.getExe pkgs.openssh} -i ~/.ssh/id_ed25519_router root@192.168.1.1 \
-                        "uci set wireless.radio0.disabled=0; uci commit; wifi reload"
-                    '';
+                  # {
+                  #   exec = pkgs.writeShellScript "enable-wwan-disconnect" ''
+                  #     ${lib.getExe pkgs.openssh} -i ~/.ssh/id_ed25519_router root@192.168.1.1 \
+                  #       "uci set wireless.radio0.disabled=0; uci commit; wifi reload"
+                  #   '';
 
-                    args = [ ];
-                    env = { };
-                  }
+                  #   args = [ ];
+                  #   env = { };
+                  # }
                 ];
                 kill_timeout = 300;
               };

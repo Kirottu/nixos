@@ -59,7 +59,7 @@ in
               if [ -f "/tmp/tv.state" ]; then
                 GEOMETRY="3840x2160"
               else
-                GEOMETRY="1920x1080"
+                GEOMETRY="2560x1440"
               fi
 
               ${lib.getExe pkgs.xwayland} -geometry $GEOMETRY -fullscreen -hidpi "$DISPLAY" &

@@ -117,18 +117,17 @@ in
                 }
                 ${niri} msg output ${cfg.tvOutput} on
                 sleep 1
-                ${wsToTv}
-                sleep 1
                 ${desktopMonsOff}
+                sleep 1
+                ${wsToTv}
                 ${fixTvOrder}
               ''
               ''
                 ${desktopMonsOn}
                 sleep 1
-                ${wsToDesktop}
-                sleep 1
                 ${niri} msg output ${cfg.tvOutput} off
                 sleep 1
+                ${wsToDesktop}
                 ${fixDesktopOrder}
                 ${if config.graphical.waybar.enable then "systemctl --user restart waybar" else ""}
                 ${

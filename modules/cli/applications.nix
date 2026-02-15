@@ -96,7 +96,7 @@
       userDirectories = [ ".config/qalculate" ];
     })
     (lib.utils.mkApp {
-      package = pkgs.wineWowPackages.waylandFull;
+      package = pkgs.wineWow64Packages.waylandFull;
       userDirectories = [ ".wine" ];
     })
   ];

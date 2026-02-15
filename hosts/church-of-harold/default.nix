@@ -227,6 +227,8 @@ in
 
     programs.droidcam.enable = true;
 
+    nixpkgs.config.rocmSupport = true;
+
     # Workaround for cursor corruption after suspend
     # hm.programs.niri.settings.debug.disable-cursor-plane = [ ];
 

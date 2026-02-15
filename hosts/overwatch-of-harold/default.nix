@@ -22,6 +22,7 @@
     ./grafana.nix
     ./mail.nix
     ./syncserver.nix
+    ./cinny.nix
   ];
 
   config = {
@@ -36,6 +37,7 @@
     };
     # grafana.enable = true;
     # mail.enable = true;
+    cinny.enable = true;
 
     networking = {
       hostName = "overwatch-of-harold";

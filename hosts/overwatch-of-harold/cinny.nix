@@ -9,10 +9,6 @@ let
     gzip "on";
     gzip_types  "text/plain" "text/html" "application/json" "application/xml" "application/wasm";
     gzip_min_length 256;
-    zstd "on";
-    zstd_comp_level 4;
-    zstd_min_length 256;
-    zstd_types  "text/plain" "text/html" "application/json" "application/xml" "application/wasm";
   '';
 in
 {
@@ -22,7 +18,6 @@ in
     services.nginx.virtualHosts."cinny.${config.domain}" = {
       forceSSL = true;
       enableACME = true;
-      quic = true;
       locations."/" = {
         root = toString pkgs.cinny;
         extraConfig = ''

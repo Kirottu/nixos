@@ -9,7 +9,17 @@ let
   port = 8448;
   matrixDomain = "matrix.${config.domain}";
   url = "https://${matrixDomain}";
-  clientConfig."m.homeserver".base_url = url;
+  clientConfig = {
+    "m.homeserver".base_url = url;
+    "m.identity_server".base_url = "https://vector.im";
+    "org.matrix.msc3575.proxy"."url" = url;
+    "org.matrix.msc4143.rtc_foci" = [
+      {
+        "type" = "livekit";
+        "livekit_service_url" = "https://${matrixDomain}/livekit/jwt";
+      }
+    ];
+  };
   serverConfig."m.server" = "${matrixDomain}:${builtins.toString port}";
   mkWellKnown = data: ''
     default_type application/json;
@@ -60,6 +70,8 @@ let
       "127.0.0.1"
     ];
   };
+
+  keyFile = "/run/livekit.key";
 in
 {
   options.synapse.enable = lib.mkEnableOption "Synapse";
@@ -187,14 +199,29 @@ in
         presence = {
           enabled = false;
         };
-        turn_uris = [
-          "turn:${matrixDomain}:3478?transport=udp"
-          "turn:${matrixDomain}:3478?transport=tcp"
-        ];
-        turn_shared_secret = config.services.coturn.static-auth-secret;
-        turn_user_lifetime = "1h";
-        turn_allow_guests = true;
+        # turn_uris = [
+        #   "turn:${matrixDomain}:3478?transport=udp"
+        #   "turn:${matrixDomain}:3478?transport=tcp"
+        # ];
+        # turn_shared_secret = config.services.coturn.static-auth-secret;
+        # turn_user_lifetime = "1h";
+        # turn_allow_guests = true;
         enable_metrics = config.grafana.enable;
+        # experimental_features = {
+        #   msc3266_enabled = true;
+        #   msc4222_enabled = true;
+        # };
+        # max_event_delay_duration = "24h";
+        # rc_message = {
+        #   per_second = 0.5;
+        #   burst_count = 30;
+        # };
+        # rc_delayed_event_mgmt = {
+        #   per_second = 1;
+        #   burst_count = 20;
+        # };
+        registration_requires_token = true;
+        enable_registration = true;
         log_config = (pkgs.formats.yaml { }).generate "log_config" {
           disable_existing_loggers = false;
           formatters = {
@@ -273,7 +300,35 @@ in
               "[::0]"
             ]
         );
-        locations."~ ^(/_matrix|/_synapse/client)" = proxyPass;
+        locations = {
+          "~ ^(/_matrix|/_synapse/client)" = proxyPass;
+          # "^~ /livekit/jwt/" = {
+
+          #   priority = 400;
+
+          #   proxyPass = "http://[::1]:${toString config.services.lk-jwt-service.port}/";
+
+          # };
+          # "^~ /livekit/sfu/" = {
+
+          #   extraConfig = ''
+          #     proxy_send_timeout 120;
+          #     proxy_read_timeout 120;
+          #     proxy_buffering off;
+
+          #     proxy_set_header Accept-Encoding gzip;
+          #     proxy_set_header Upgrade $http_upgrade;
+          #     proxy_set_header Connection "upgrade";
+          #   '';
+
+          #   priority = 400;
+
+          #   proxyPass = "http://[::1]:${toString config.services.livekit.settings.port}/";
+
+          #   proxyWebsockets = true;
+
+          # };
+        };
 
         extraConfig = ''
           access_log /var/log/nginx/matrix_access.log;
@@ -283,64 +338,115 @@ in
       };
     };
 
-    services.coturn = {
-      enable = true;
-      no-cli = true;
-      no-tcp-relay = true;
-      min-port = 49000;
-      max-port = 50000;
-      use-auth-secret = true;
-      static-auth-secret = inputs.private.secrets.matrix.turn;
-      realm = matrixDomain;
-      cert = "${certDir}/full.pem";
-      pkey = "${certDir}/key.pem";
-      extraConfig = ''
-        # ban private IP ranges
-        no-multicast-peers
-        denied-peer-ip=0.0.0.0-0.255.255.255
-        denied-peer-ip=10.0.0.0-10.255.255.255
-        denied-peer-ip=100.64.0.0-100.127.255.255
-        denied-peer-ip=127.0.0.0-127.255.255.255
-        denied-peer-ip=169.254.0.0-169.254.255.255
-        denied-peer-ip=172.16.0.0-172.31.255.255
-        denied-peer-ip=192.0.0.0-192.0.0.255
-        denied-peer-ip=192.0.2.0-192.0.2.255
-        denied-peer-ip=192.88.99.0-192.88.99.255
-        denied-peer-ip=192.168.0.0-192.168.255.255
-        denied-peer-ip=198.18.0.0-198.19.255.255
-        denied-peer-ip=198.51.100.0-198.51.100.255
-        denied-peer-ip=203.0.113.0-203.0.113.255
-        denied-peer-ip=240.0.0.0-255.255.255.255
-        denied-peer-ip=::1
-        denied-peer-ip=64:ff9b::-64:ff9b::ffff:ffff
-        denied-peer-ip=::ffff:0.0.0.0-::ffff:255.255.255.255
-        denied-peer-ip=100::-100::ffff:ffff:ffff:ffff
-        denied-peer-ip=2001::-2001:1ff:ffff:ffff:ffff:ffff:ffff:ffff
-        denied-peer-ip=2002::-2002:ffff:ffff:ffff:ffff:ffff:ffff:ffff
-        denied-peer-ip=fc00::-fdff:ffff:ffff:ffff:ffff:ffff:ffff:ffff
-        denied-peer-ip=fe80::-febf:ffff:ffff:ffff:ffff:ffff:ffff:ffff
-      '';
-    };
+    #   services.coturn = {
+    #     enable = true;
+    #     no-cli = true;
+    #     no-tcp-relay = true;
+    #     min-port = 49000;
+    #     max-port = 50000;
+    #     use-auth-secret = true;
+    #     static-auth-secret = inputs.private.secrets.matrix.turn;
+    #     realm = matrixDomain;
+    #     cert = "${certDir}/full.pem";
+    #     pkey = "${certDir}/key.pem";
+    #     extraConfig = ''
+    #       external-ip=87.93.140.98
+    #       # ban private IP ranges
+    #       no-multicast-peers
+    #       denied-peer-ip=0.0.0.0-0.255.255.255
+    #       denied-peer-ip=10.0.0.0-10.255.255.255
+    #       denied-peer-ip=100.64.0.0-100.127.255.255
+    #       denied-peer-ip=127.0.0.0-127.255.255.255
+    #       denied-peer-ip=169.254.0.0-169.254.255.255
+    #       denied-peer-ip=172.16.0.0-172.31.255.255
+    #       denied-peer-ip=192.0.0.0-192.0.0.255
+    #       denied-peer-ip=192.0.2.0-192.0.2.255
+    #       denied-peer-ip=192.88.99.0-192.88.99.255
+    #       denied-peer-ip=192.168.0.0-192.168.255.255
+    #       denied-peer-ip=198.18.0.0-198.19.255.255
+    #       denied-peer-ip=198.51.100.0-198.51.100.255
+    #       denied-peer-ip=203.0.113.0-203.0.113.255
+    #       denied-peer-ip=240.0.0.0-255.255.255.255
+    #       denied-peer-ip=::1
+    #       denied-peer-ip=64:ff9b::-64:ff9b::ffff:ffff
+    #       denied-peer-ip=::ffff:0.0.0.0-::ffff:255.255.255.255
+    #       denied-peer-ip=100::-100::ffff:ffff:ffff:ffff
+    #       denied-peer-ip=2001::-2001:1ff:ffff:ffff:ffff:ffff:ffff:ffff
+    #       denied-peer-ip=2002::-2002:ffff:ffff:ffff:ffff:ffff:ffff:ffff
+    #       denied-peer-ip=fc00::-fdff:ffff:ffff:ffff:ffff:ffff:ffff:ffff
+    #       denied-peer-ip=fe80::-febf:ffff:ffff:ffff:ffff:ffff:ffff:ffff
+    #     '';
+    #   };
 
-    users.users."turnserver".extraGroups = [ "nginx" ];
+    #   services.livekit = {
 
-    networking.firewall.allowedUDPPortRanges = [
-      {
-        from = config.services.coturn.min-port;
-        to = config.services.coturn.max-port;
-      }
-    ];
+    #     enable = true;
 
-    security.acme.certs.${config.domain}.postRun =
-      "systemctl restart matrix-synapse.service; systemctl restart coturn.service";
+    #     openFirewall = true;
+    #     settings.room.auto_create = false;
+
+    #     inherit keyFile;
+
+    #   };
+    #   services.lk-jwt-service = {
+
+    #     enable = true;
+
+    #     # can be on the same virtualHost as synapse
+
+    #     livekitUrl = "wss://${matrixDomain}/livekit/sfu";
+
+    #     inherit keyFile;
+
+    #   };
+
+    #   # generate the key when needed
+    #   systemd.services.livekit-key = {
+
+    #     before = [
+    #       "lk-jwt-service.service"
+    #       "livekit.service"
+    #     ];
+
+    #     wantedBy = [ "multi-user.target" ];
+
+    #     path = with pkgs; [
+    #       livekit
+    #       coreutils
+    #       gawk
+    #     ];
+
+    #     script = ''
+    #       echo "Key missing, generating key"
+    #       echo "lk-jwt-service: $(livekit-server generate-keys | tail -1 | awk '{print $3}')" > "${keyFile}"
+    #     '';
+    #     serviceConfig.Type = "oneshot";
+    #     unitConfig.ConditionPathExists = "!${keyFile}";
+
+    #   };
+
+    #   # restrict access to livekit room creation to a homeserver
+    #   systemd.services.lk-jwt-service.environment.LIVEKIT_FULL_ACCESS_HOMESERVERS = matrixDomain;
+
+    #   users.users."turnserver".extraGroups = [ "nginx" ];
+
+    #   networking.firewall.allowedUDPPortRanges = [
+    #     {
+    #       from = config.services.coturn.min-port;
+    #       to = config.services.coturn.max-port;
+    #     }
+    #   ];
+
+    #   security.acme.certs.${config.domain}.postRun =
+    #     "systemctl restart matrix-synapse.service; systemctl restart coturn.service";
     networking.firewall.allowedTCPPorts = [
       port
-      3478
-      5349
+      # 3478
+      # 5349
     ];
     networking.firewall.allowedUDPPorts = [
-      3478
-      5349
+      # 3478
+      # 5349
     ];
   };
 }

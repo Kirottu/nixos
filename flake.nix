@@ -5,6 +5,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgs-stremio.url = "github:NixOS/nixpkgs/b6a8526db03f735b89dd5ff348f53f752e7ddc8e";
     # nixpkgs-wivrn.url = "github:NixOS/nixpkgs/e64102a9f7f35ef2cddaea6f09c1f5077b948296";
+    nixpkgs-small.url = "github:NixOS/nixpkgs/nixos-unstable-small";
 
     home-manager = {
       url = "github:nix-community/home-manager/master";
@@ -132,7 +133,7 @@
             inputs.private.nixosModules.missionary-of-harold
           ];
         };
-        overwatch-of-harold = lib.nixosSystem {
+        overwatch-of-harold = inputs.nixpkgs-small.lib.nixosSystem {
           system = "x86_64-linux";
           specialArgs = {
             inherit

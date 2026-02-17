@@ -1,6 +1,8 @@
 { config, lib, ... }:
 
-  let cfg = config.graphical.niri; in
+let
+  cfg = config.graphical.niri;
+in
 {
   config.hm.programs.niri.settings.window-rules = lib.mkIf cfg.enable [
     {
@@ -9,7 +11,7 @@
     {
       matches = [
         {
-          app-id = "^(webapp-cinny|discord)$";
+          app-id = "^(webapp-cinny|discord|vesktop)$";
         }
       ];
       open-on-workspace = "chat";

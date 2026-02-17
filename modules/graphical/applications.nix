@@ -163,9 +163,12 @@ in
             (mkLink "Videos")
           ];
       })
+      # (lib.utils.mkApp {
+      #   package = pkgs.discord-ptb;
+      #   userDirectories = [ ".config/discordptb" ];
+      # })
       (lib.utils.mkApp {
-        package = pkgs.discord-ptb;
-        userDirectories = [ ".config/discordptb" ];
+        package = pkgs.vesktop;
       })
       (lib.utils.mkApp {
         package = pkgs.gimp3-with-plugins;

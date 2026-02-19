@@ -137,6 +137,7 @@ in
           ACTION=="add" SUBSYSTEM=="pci" ATTR{vendor}=="0x1022" ATTR{device}=="0x1483" ATTR{power/wakeup}="disabled"
         '';
       };
+      ratbagd.enable = true;
       lact.enable = true;
       btrfs.autoScrub.enable = true;
       zerotierone.enable = true;
@@ -200,6 +201,8 @@ in
       directories = [
         "/etc/lact"
         "/var/lib/zerotier-one"
+        "/var/lib/waydroid"
+        "/etc/waydroid-extra"
       ];
       userDirectories = [ ".config/lact" ];
     };
@@ -226,6 +229,9 @@ in
     hardware.amdgpu.overdrive.enable = true;
 
     programs.droidcam.enable = true;
+
+    virtualisation.waydroid.enable = true;
+    networking.nftables.enable = true;
 
     nixpkgs.config.rocmSupport = true;
 

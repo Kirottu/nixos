@@ -11,7 +11,7 @@ in
     {
       matches = [
         {
-          app-id = "^(webapp-cinny|discord|vesktop)$";
+          app-id = "^(webapp-cinny|discord|vesktop|equibop)$";
         }
       ];
       open-on-workspace = "chat";

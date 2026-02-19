@@ -72,7 +72,8 @@
     };
 
     anyrun = {
-      url = "github:anyrun-org/anyrun";
+      # url = "github:anyrun-org/anyrun";
+      url = "github:sents/anyrun/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

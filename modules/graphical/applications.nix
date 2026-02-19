@@ -167,8 +167,11 @@ in
       #   package = pkgs.discord-ptb;
       #   userDirectories = [ ".config/discordptb" ];
       # })
+      # (lib.utils.mkApp {
+      #   package = pkgs.vesktop;
+      # })
       (lib.utils.mkApp {
-        package = pkgs.vesktop;
+        package = pkgs.equibop;
       })
       (lib.utils.mkApp {
         package = pkgs.gimp3-with-plugins;

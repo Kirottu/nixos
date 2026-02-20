@@ -233,7 +233,7 @@ in
     virtualisation.waydroid.enable = true;
     networking.nftables.enable = true;
 
-    nixpkgs.config.rocmSupport = true;
+    # nixpkgs.config.rocmSupport = true;
 
     # Workaround for cursor corruption after suspend
     # hm.programs.niri.settings.debug.disable-cursor-plane = [ ];

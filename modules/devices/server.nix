@@ -21,6 +21,11 @@
       };
     };
 
+    security.acme = {
+      acceptTerms = true;
+      defaults.email = "arnovaara@kirottu.com";
+    };
+
     cli.fish.enable = true;
 
     #prevent OOM on cache fail

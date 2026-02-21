@@ -153,6 +153,21 @@
             inputs.private.nixosModules.overwatch-of-harold
           ];
         };
+        hell-of-harold = inputs.nixpkgs-small.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = {
+            inherit
+              inputs
+              lib
+              privateInputs
+              myPkgs
+              ;
+          };
+          modules = [
+            ./hosts/hell-of-harold
+            inputs.private.nixosModules.hell-of-harold
+          ];
+        };
       };
     };
 }

@@ -12,8 +12,9 @@
       username = config.domain;
       passwordFile = config.sops.secrets."ddclient/password".path;
       domains = [
-        "*.${config.domain}"
-        "@.${config.domain}"
+        "nc.${config.domain}"
+        "vw.${config.domain}"
+        "ffsync.${config.domain}"
       ];
     };
   };

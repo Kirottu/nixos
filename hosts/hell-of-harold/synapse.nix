@@ -213,7 +213,7 @@ in
         experimental_features = {
           msc3266_enabled = true;
           msc4222_enabled = true;
-	};
+        };
         max_event_delay_duration = "24h";
         rc_message = {
           per_second = 0.5;
@@ -420,53 +420,6 @@ in
         to = config.services.coturn.max-port;
       }
     ];
-
-    # My dynamic IP requires this horribleness
-
-    systemd.timers.${realIpUnit} = {
-      wantedBy = [ "timers.target" ];
-      timerConfig = {
-        OnBootSec = config.services.ddclient.interval;
-        OnUnitInactiveSec = config.services.ddclient.interval;
-        Unit = "${realIpUnit}.service";
-      };
-    };
-
-    # Let's track the real IP and how it changes
-    impermanence.files = [ realIpFile ];
-
-    systemd.services.${realIpUnit} = {
-      path = [
-        pkgs.curl
-      ];
-      script = ''
-        real_ip=$(curl -s https://api.ipify.org)
-        former_ip=$(cat ${realIpFile})
-
-        if [ "$real_ip" = "" ]; then
-          echo "Not connected to the internet"
-        elif [[ "$former_ip" == *"$real_ip"* ]]; then
-          echo "Real IP up to date"
-        else
-          echo "Updating real IP & restarting services that depend on it"
-          echo "$real_ip" > ${realIpFile}
-          systemctl restart coturn
-	  systemctl restart livekit
-        fi
-      '';
-      after = [ "network.target" ];
-      serviceConfig = {
-        Type = "oneshot";
-      };
-    };
-
-    systemd.services.coturn.serviceConfig.ExecStart = lib.mkForce (
-      pkgs.writeShellScript "coturn-wrapper" ''
-        real_ip=$(cat ${realIpFile})
-        ${lib.getExe' pkgs.coturn "turnserver"} -c /run/coturn/turnserver.cfg -X "$real_ip"
-      ''
-    );
-    systemd.services.coturn.serviceConfig.Type = lib.mkForce "simple";
 
     security.acme.certs.${config.domain}.postRun =
       "systemctl restart matrix-synapse.service; systemctl restart coturn.service";

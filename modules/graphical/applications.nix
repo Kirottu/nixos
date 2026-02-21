@@ -274,15 +274,6 @@ in
         };
       })
       (lib.utils.mkApp {
-        package = pkgs.openssh;
-        userDirectories = [
-          {
-            directory = ".ssh";
-            mode = "0700";
-          }
-        ];
-      })
-      (lib.utils.mkApp {
         package = pkgs.libqalculate; # TODO: HM module
         userDirectories = [ ".config/qalculate" ];
       })

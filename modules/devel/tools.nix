@@ -1,6 +1,11 @@
-{ pkgs, ... }:
 {
-  config = {
+  pkgs,
+  lib,
+  config,
+  ...
+}:
+{
+  config = lib.mkIf (config.devices.class == "laptop" || config.devices.class == "desktop") {
     hm.programs.direnv = {
       enable = true;
       nix-direnv.enable = true;

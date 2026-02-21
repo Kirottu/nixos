@@ -3,6 +3,7 @@
   lib,
   inputs,
   pkgs,
+  utils,
   ...
 }:
 let
@@ -71,7 +72,9 @@ let
     ];
   };
 
-  keyFile = "/run/livekit.key";
+  livekitKeyFile = "/run/livekit.key";
+  realIpUnit = "real-ip";
+  realIpFile = "/var/lib/real-ip";
 in
 {
   options.synapse.enable = lib.mkEnableOption "Synapse";
@@ -199,27 +202,27 @@ in
         presence = {
           enabled = false;
         };
-        # turn_uris = [
-        #   "turn:${matrixDomain}:3478?transport=udp"
-        #   "turn:${matrixDomain}:3478?transport=tcp"
-        # ];
-        # turn_shared_secret = config.services.coturn.static-auth-secret;
-        # turn_user_lifetime = "1h";
-        # turn_allow_guests = true;
+        turn_uris = [
+          "turn:${matrixDomain}:3478?transport=udp"
+          "turn:${matrixDomain}:3478?transport=tcp"
+        ];
+        turn_shared_secret = config.services.coturn.static-auth-secret;
+        turn_user_lifetime = "1h";
+        turn_allow_guests = true;
         enable_metrics = config.grafana.enable;
-        # experimental_features = {
-        #   msc3266_enabled = true;
-        #   msc4222_enabled = true;
-        # };
-        # max_event_delay_duration = "24h";
-        # rc_message = {
-        #   per_second = 0.5;
-        #   burst_count = 30;
-        # };
-        # rc_delayed_event_mgmt = {
-        #   per_second = 1;
-        #   burst_count = 20;
-        # };
+        experimental_features = {
+          msc3266_enabled = true;
+          msc4222_enabled = true;
+	};
+        max_event_delay_duration = "24h";
+        rc_message = {
+          per_second = 0.5;
+          burst_count = 30;
+        };
+        rc_delayed_event_mgmt = {
+          per_second = 1;
+          burst_count = 20;
+        };
         registration_requires_token = true;
         enable_registration = true;
         log_config = (pkgs.formats.yaml { }).generate "log_config" {
@@ -302,32 +305,25 @@ in
         );
         locations = {
           "~ ^(/_matrix|/_synapse/client)" = proxyPass;
-          # "^~ /livekit/jwt/" = {
+          "^~ /livekit/jwt/" = {
+            priority = 400;
+            proxyPass = "http://[::1]:${toString config.services.lk-jwt-service.port}/";
+          };
+          "^~ /livekit/sfu/" = {
+            extraConfig = ''
+              proxy_send_timeout 120;
+              proxy_read_timeout 120;
+              proxy_buffering off;
 
-          #   priority = 400;
+              proxy_set_header Accept-Encoding gzip;
+              proxy_set_header Upgrade $http_upgrade;
+              proxy_set_header Connection "upgrade";
+            '';
 
-          #   proxyPass = "http://[::1]:${toString config.services.lk-jwt-service.port}/";
-
-          # };
-          # "^~ /livekit/sfu/" = {
-
-          #   extraConfig = ''
-          #     proxy_send_timeout 120;
-          #     proxy_read_timeout 120;
-          #     proxy_buffering off;
-
-          #     proxy_set_header Accept-Encoding gzip;
-          #     proxy_set_header Upgrade $http_upgrade;
-          #     proxy_set_header Connection "upgrade";
-          #   '';
-
-          #   priority = 400;
-
-          #   proxyPass = "http://[::1]:${toString config.services.livekit.settings.port}/";
-
-          #   proxyWebsockets = true;
-
-          # };
+            priority = 400;
+            proxyPass = "http://[::1]:${toString config.services.livekit.settings.port}/";
+            proxyWebsockets = true;
+          };
         };
 
         extraConfig = ''
@@ -338,115 +334,150 @@ in
       };
     };
 
-    #   services.coturn = {
-    #     enable = true;
-    #     no-cli = true;
-    #     no-tcp-relay = true;
-    #     min-port = 49000;
-    #     max-port = 50000;
-    #     use-auth-secret = true;
-    #     static-auth-secret = inputs.private.secrets.matrix.turn;
-    #     realm = matrixDomain;
-    #     cert = "${certDir}/full.pem";
-    #     pkey = "${certDir}/key.pem";
-    #     extraConfig = ''
-    #       external-ip=87.93.140.98
-    #       # ban private IP ranges
-    #       no-multicast-peers
-    #       denied-peer-ip=0.0.0.0-0.255.255.255
-    #       denied-peer-ip=10.0.0.0-10.255.255.255
-    #       denied-peer-ip=100.64.0.0-100.127.255.255
-    #       denied-peer-ip=127.0.0.0-127.255.255.255
-    #       denied-peer-ip=169.254.0.0-169.254.255.255
-    #       denied-peer-ip=172.16.0.0-172.31.255.255
-    #       denied-peer-ip=192.0.0.0-192.0.0.255
-    #       denied-peer-ip=192.0.2.0-192.0.2.255
-    #       denied-peer-ip=192.88.99.0-192.88.99.255
-    #       denied-peer-ip=192.168.0.0-192.168.255.255
-    #       denied-peer-ip=198.18.0.0-198.19.255.255
-    #       denied-peer-ip=198.51.100.0-198.51.100.255
-    #       denied-peer-ip=203.0.113.0-203.0.113.255
-    #       denied-peer-ip=240.0.0.0-255.255.255.255
-    #       denied-peer-ip=::1
-    #       denied-peer-ip=64:ff9b::-64:ff9b::ffff:ffff
-    #       denied-peer-ip=::ffff:0.0.0.0-::ffff:255.255.255.255
-    #       denied-peer-ip=100::-100::ffff:ffff:ffff:ffff
-    #       denied-peer-ip=2001::-2001:1ff:ffff:ffff:ffff:ffff:ffff:ffff
-    #       denied-peer-ip=2002::-2002:ffff:ffff:ffff:ffff:ffff:ffff:ffff
-    #       denied-peer-ip=fc00::-fdff:ffff:ffff:ffff:ffff:ffff:ffff:ffff
-    #       denied-peer-ip=fe80::-febf:ffff:ffff:ffff:ffff:ffff:ffff:ffff
-    #     '';
-    #   };
+    services.coturn = {
+      enable = true;
+      no-cli = true;
+      no-tcp-relay = true;
+      min-port = 49000;
+      max-port = 50000;
+      use-auth-secret = true;
+      static-auth-secret = inputs.private.secrets.matrix.turn;
+      realm = matrixDomain;
+      cert = "${certDir}/full.pem";
+      pkey = "${certDir}/key.pem";
+      extraConfig = ''
+        # ban private IP ranges
+        no-multicast-peers
+        denied-peer-ip=0.0.0.0-0.255.255.255
+        denied-peer-ip=10.0.0.0-10.255.255.255
+        denied-peer-ip=100.64.0.0-100.127.255.255
+        denied-peer-ip=127.0.0.0-127.255.255.255
+        denied-peer-ip=169.254.0.0-169.254.255.255
+        denied-peer-ip=172.16.0.0-172.31.255.255
+        denied-peer-ip=192.0.0.0-192.0.0.255
+        denied-peer-ip=192.0.2.0-192.0.2.255
+        denied-peer-ip=192.88.99.0-192.88.99.255
+        denied-peer-ip=192.168.0.0-192.168.255.255
+        denied-peer-ip=198.18.0.0-198.19.255.255
+        denied-peer-ip=198.51.100.0-198.51.100.255
+        denied-peer-ip=203.0.113.0-203.0.113.255
+        denied-peer-ip=240.0.0.0-255.255.255.255
+        denied-peer-ip=::1
+        denied-peer-ip=64:ff9b::-64:ff9b::ffff:ffff
+        denied-peer-ip=::ffff:0.0.0.0-::ffff:255.255.255.255
+        denied-peer-ip=100::-100::ffff:ffff:ffff:ffff
+        denied-peer-ip=2001::-2001:1ff:ffff:ffff:ffff:ffff:ffff:ffff
+        denied-peer-ip=2002::-2002:ffff:ffff:ffff:ffff:ffff:ffff:ffff
+        denied-peer-ip=fc00::-fdff:ffff:ffff:ffff:ffff:ffff:ffff:ffff
+        denied-peer-ip=fe80::-febf:ffff:ffff:ffff:ffff:ffff:ffff:ffff
+      '';
+    };
 
-    #   services.livekit = {
+    services.livekit = {
+      enable = true;
+      openFirewall = true;
+      settings = {
+        rtc.use_external_ip = true;
+      };
+      settings.room.auto_create = false;
+      keyFile = livekitKeyFile;
+    };
+    services.lk-jwt-service = {
+      enable = true;
+      # can be on the same virtualHost as synapse
+      livekitUrl = "wss://${matrixDomain}/livekit/sfu";
+      keyFile = livekitKeyFile;
+    };
 
-    #     enable = true;
+    # generate the key when needed
+    systemd.services.livekit-key = {
+      before = [
+        "lk-jwt-service.service"
+        "livekit.service"
+      ];
+      wantedBy = [ "multi-user.target" ];
+      path = with pkgs; [
+        livekit
+        coreutils
+        gawk
+      ];
+      script = ''
+        echo "Key missing, generating key"
+        echo "lk-jwt-service: $(livekit-server generate-keys | tail -1 | awk '{print $3}')" > "${livekitKeyFile}"
+      '';
+      serviceConfig.Type = "oneshot";
+      unitConfig.ConditionPathExists = "!${livekitKeyFile}";
+    };
 
-    #     openFirewall = true;
-    #     settings.room.auto_create = false;
+    # restrict access to livekit room creation to a homeserver
+    systemd.services.lk-jwt-service.environment.LIVEKIT_FULL_ACCESS_HOMESERVERS = config.domain;
 
-    #     inherit keyFile;
+    users.users."turnserver".extraGroups = [ "nginx" ];
 
-    #   };
-    #   services.lk-jwt-service = {
+    networking.firewall.allowedUDPPortRanges = [
+      {
+        from = config.services.coturn.min-port;
+        to = config.services.coturn.max-port;
+      }
+    ];
 
-    #     enable = true;
+    # My dynamic IP requires this horribleness
 
-    #     # can be on the same virtualHost as synapse
+    systemd.timers.${realIpUnit} = {
+      wantedBy = [ "timers.target" ];
+      timerConfig = {
+        OnBootSec = config.services.ddclient.interval;
+        OnUnitInactiveSec = config.services.ddclient.interval;
+        Unit = "${realIpUnit}.service";
+      };
+    };
 
-    #     livekitUrl = "wss://${matrixDomain}/livekit/sfu";
+    # Let's track the real IP and how it changes
+    impermanence.files = [ realIpFile ];
 
-    #     inherit keyFile;
+    systemd.services.${realIpUnit} = {
+      path = [
+        pkgs.curl
+      ];
+      script = ''
+        real_ip=$(curl -s https://api.ipify.org)
+        former_ip=$(cat ${realIpFile})
 
-    #   };
+        if [ "$real_ip" = "" ]; then
+          echo "Not connected to the internet"
+        elif [[ "$former_ip" == *"$real_ip"* ]]; then
+          echo "Real IP up to date"
+        else
+          echo "Updating real IP & restarting services that depend on it"
+          echo "$real_ip" > ${realIpFile}
+          systemctl restart coturn
+	  systemctl restart livekit
+        fi
+      '';
+      after = [ "network.target" ];
+      serviceConfig = {
+        Type = "oneshot";
+      };
+    };
 
-    #   # generate the key when needed
-    #   systemd.services.livekit-key = {
+    systemd.services.coturn.serviceConfig.ExecStart = lib.mkForce (
+      pkgs.writeShellScript "coturn-wrapper" ''
+        real_ip=$(cat ${realIpFile})
+        ${lib.getExe' pkgs.coturn "turnserver"} -c /run/coturn/turnserver.cfg -X "$real_ip"
+      ''
+    );
+    systemd.services.coturn.serviceConfig.Type = lib.mkForce "simple";
 
-    #     before = [
-    #       "lk-jwt-service.service"
-    #       "livekit.service"
-    #     ];
-
-    #     wantedBy = [ "multi-user.target" ];
-
-    #     path = with pkgs; [
-    #       livekit
-    #       coreutils
-    #       gawk
-    #     ];
-
-    #     script = ''
-    #       echo "Key missing, generating key"
-    #       echo "lk-jwt-service: $(livekit-server generate-keys | tail -1 | awk '{print $3}')" > "${keyFile}"
-    #     '';
-    #     serviceConfig.Type = "oneshot";
-    #     unitConfig.ConditionPathExists = "!${keyFile}";
-
-    #   };
-
-    #   # restrict access to livekit room creation to a homeserver
-    #   systemd.services.lk-jwt-service.environment.LIVEKIT_FULL_ACCESS_HOMESERVERS = matrixDomain;
-
-    #   users.users."turnserver".extraGroups = [ "nginx" ];
-
-    #   networking.firewall.allowedUDPPortRanges = [
-    #     {
-    #       from = config.services.coturn.min-port;
-    #       to = config.services.coturn.max-port;
-    #     }
-    #   ];
-
-    #   security.acme.certs.${config.domain}.postRun =
-    #     "systemctl restart matrix-synapse.service; systemctl restart coturn.service";
+    security.acme.certs.${config.domain}.postRun =
+      "systemctl restart matrix-synapse.service; systemctl restart coturn.service";
     networking.firewall.allowedTCPPorts = [
       port
-      # 3478
-      # 5349
+      3478
+      5349
     ];
     networking.firewall.allowedUDPPorts = [
-      # 3478
-      # 5349
+      3478
+      5349
     ];
   };
 }

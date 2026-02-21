@@ -203,8 +203,8 @@
     system.autoUpgrade = {
       enable = true;
       flake = "github:Kirottu/nixos";
-      randomizedDelaySec = "45min";
-      dates = "Mon *-*-* 02:00:00";
+      randomizedDelaySec = "30min";
+      dates = "Mon,Wed,Fri *-*-* 03:00:00";
       allowReboot = true;
       rebootWindow = {
         lower = "02:00";
@@ -257,6 +257,9 @@
 
     # Fix for niri-flake compiling niri if that is set at all
     hm.programs.niri.settings = lib.mkForce null;
+    # Helix is failing currently
+    hm.programs.helix.enable = lib.mkForce false;
+    environment.systemPackages = [ pkgs.neovim ];
 
     system.stateVersion = "25.05";
     hm.home.stateVersion = "25.05";

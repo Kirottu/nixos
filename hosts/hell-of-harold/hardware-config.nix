@@ -28,7 +28,7 @@
   boot.extraModulePackages = [ ];
 
   impermanence.persistentFs = {
-    device = "/dev/disk/by-label/nixos";
+    device = "/dev/disk/by-uuid/5d8a7912-69d9-427b-9356-aa526bc1805d";
     fsType = "btrfs";
     neededForBoot = true;
     options = [
@@ -39,7 +39,7 @@
   };
 
   fileSystems."/nix" = {
-    device = "/dev/disk/by-label/nixos";
+    device = "/dev/disk/by-uuid/5d8a7912-69d9-427b-9356-aa526bc1805d";
     fsType = "btrfs";
     options = [
       "subvol=nix"
@@ -49,7 +49,7 @@
   };
 
   fileSystems."/swap" = {
-    device = "/dev/disk/by-label/nixos";
+    device = "/dev/disk/by-uuid/5d8a7912-69d9-427b-9356-aa526bc1805d";
     fsType = "btrfs";
     options = [
       "subvol=swap"
@@ -58,7 +58,7 @@
   };
 
   fileSystems."/boot" = {
-    device = "/dev/disk/by-label/boot";
+    device = "/dev/disk/by-uuid/1d6def69-ab32-4ce6-bc8e-749d92829a37";
     fsType = "ext4";
   };
 

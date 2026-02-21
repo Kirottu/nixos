@@ -24,13 +24,6 @@
       ];
     };
 
-    mainUser = {
-      extraOptions = {
-        openssh.authorizedKeys.keys = [
-          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMPOjg1JbWhzSwNSIqy3CK3psQJutXxZHrN1tid1Utkj harold@overwatch-of-harold"
-        ];
-      };
-    };
     services.postgresql = {
       enable = true;
     };

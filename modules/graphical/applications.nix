@@ -29,6 +29,21 @@ in
     lib.mkMerge [
       {
         environment.systemPackages = with pkgs; [
+
+          imagemagick
+          tree
+          killall
+          file
+          libnotify
+          usbutils
+          cloc
+          wget
+          unzip
+          p7zip
+          unrar-wrapper
+          yt-dlp
+          dig
+          nettools
           nautilus
           # Video thumbnails
           ffmpeg-headless
@@ -257,6 +272,23 @@ in
           programs.wireshark.enable = true;
           mainUser.extraGroups = [ "wireshark" ];
         };
+      })
+      (lib.utils.mkApp {
+        package = pkgs.openssh;
+        userDirectories = [
+          {
+            directory = ".ssh";
+            mode = "0700";
+          }
+        ];
+      })
+      (lib.utils.mkApp {
+        package = pkgs.libqalculate; # TODO: HM module
+        userDirectories = [ ".config/qalculate" ];
+      })
+      (lib.utils.mkApp {
+        package = pkgs.wineWow64Packages.waylandFull;
+        userDirectories = [ ".wine" ];
       })
     ]
   );

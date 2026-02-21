@@ -13,6 +13,8 @@
     devices.class = "server";
     domain = "kirottu.com";
 
+    networking.hostName = "hell-of-harold";
+
     boot.loader.grub.enable = true;
     boot.loader.grub.device = "/dev/sda";
 

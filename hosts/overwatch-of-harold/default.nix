@@ -147,22 +147,6 @@
 
     services.btrfs.autoScrub.enable = true;
 
-    system.autoUpgrade = {
-      enable = true;
-      flake = "github:Kirottu/nixos";
-      randomizedDelaySec = "30min";
-      dates = "Mon,Wed,Fri *-*-* 03:00:00";
-      allowReboot = true;
-      rebootWindow = {
-        lower = "02:00";
-        upper = "04:00";
-      };
-    };
-
-    systemd.services.nixos-upgrade.environment = {
-      GIT_SSH_COMMAND = "ssh -i /etc/ssh/ssh_host_ed25519_key";
-    };
-
     systemd.timers.updateFlake = {
       enable = true;
       wantedBy = [ "timers.target" ];

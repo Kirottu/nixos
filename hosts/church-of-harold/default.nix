@@ -15,6 +15,10 @@ in
   config = {
     devices.class = "desktop";
 
+    # Bootloader.
+    boot.loader.systemd-boot.enable = true;
+    boot.loader.efi.canTouchEfiVariables = true;
+
     # openrazer.enable = true;
     networking = {
       hostName = "church-of-harold";

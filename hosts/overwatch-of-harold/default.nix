@@ -23,6 +23,10 @@
     devices.class = "server";
     domain = "kirottu.com";
 
+    # Bootloader.
+    boot.loader.systemd-boot.enable = true;
+    boot.loader.efi.canTouchEfiVariables = true;
+
     synapse.enable = true;
     syncserver.enable = true;
     nextcloud = {

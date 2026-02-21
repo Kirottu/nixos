@@ -13,6 +13,9 @@
     devices.class = "server";
     domain = "kirottu.com";
 
+    boot.loader.grub.enable = true;
+    boot.loader.grub.device = "/dev/sda";
+
     system.stateVersion = "25.05";
     hm.home.stateVersion = "25.05";
   };

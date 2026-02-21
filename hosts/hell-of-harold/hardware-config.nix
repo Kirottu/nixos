@@ -15,13 +15,13 @@
   ];
 
   boot.initrd.availableKernelModules = [
-    "xhci_pci"
-    "ehci_pci"
     "ahci"
-    "usbhid"
-    "uas"
-    "usb_storage"
+    "xhci_pci"
+    "virtio_pci"
+    "virtio_scsi"
     "sd_mod"
+    "sr_mod"
+    "ext4"
   ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ ];

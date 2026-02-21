@@ -186,8 +186,6 @@
       };
     };
 
-    # Fix for niri-flake compiling niri if that is set at all
-    hm.programs.niri.settings = lib.mkForce null;
     # Helix is failing currently
     hm.programs.helix.enable = lib.mkForce false;
     environment.systemPackages = [ pkgs.neovim ];

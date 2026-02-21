@@ -48,7 +48,7 @@ let
         handlers = [
           "journal"
         ];
-        level = "INFO";
+        level = "WARNING";
       };
       version = 1;
     };
@@ -62,19 +62,7 @@ let
     '';
   };
 
-  mkMetrics = port: {
-    inherit port;
-    type = "metrics";
-    tls = false;
-    resources = [ ];
-    bind_addresses = [
-      "127.0.0.1"
-    ];
-  };
-
   livekitKeyFile = "/run/livekit.key";
-  realIpUnit = "real-ip";
-  realIpFile = "/var/lib/real-ip";
 in
 {
   options.synapse.enable = lib.mkEnableOption "Synapse";
@@ -88,7 +76,6 @@ in
       workers = {
         "federation_sender" = {
           worker_log_config = workerLogConfig "federation-sender";
-          worker_listeners = lib.optional config.grafana.enable (mkMetrics 9001);
         };
         "events_persister" = {
           worker_log_config = workerLogConfig "events-persister";
@@ -103,9 +90,7 @@ in
                 }
               ];
             }
-
-          ]
-          ++ lib.optional config.grafana.enable (mkMetrics 9002);
+          ];
         };
         "receipts_writer" = {
           worker_log_config = workerLogConfig "receipts-writer";
@@ -118,7 +103,6 @@ in
                 {
                   names = [ "replication" ];
                 }
-
               ];
             }
             {
@@ -133,8 +117,7 @@ in
                 }
               ];
             }
-          ]
-          ++ lib.optional config.grafana.enable (mkMetrics 9003);
+          ];
         };
       };
       settings = {
@@ -172,8 +155,8 @@ in
               }
             ];
           }
-        ]
-        ++ lib.optional config.grafana.enable (mkMetrics 9000);
+        ];
+
         instance_map = {
           main = {
             host = "::1";
@@ -209,7 +192,6 @@ in
         turn_shared_secret = config.services.coturn.static-auth-secret;
         turn_user_lifetime = "1h";
         turn_allow_guests = true;
-        enable_metrics = config.grafana.enable;
         experimental_features = {
           msc3266_enabled = true;
           msc4222_enabled = true;
@@ -243,7 +225,7 @@ in
             handlers = [
               "journal"
             ];
-            level = "INFO";
+            level = "WARNING";
           };
           version = 1;
         };

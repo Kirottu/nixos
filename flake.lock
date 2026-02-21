@@ -379,7 +379,7 @@
     },
     "home-manager_4": {
       "inputs": {
-        "nixpkgs": "nixpkgs_5"
+        "nixpkgs": "nixpkgs_6"
       },
       "locked": {
         "lastModified": 1748227609,
@@ -702,6 +702,22 @@
     },
     "nixpkgs_5": {
       "locked": {
+        "lastModified": 1764667669,
+        "narHash": "sha256-7WUCZfmqLAssbDqwg9cUDAXrSoXN79eEEq17qhTNM/Y=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "418468ac9527e799809c900eda37cbff999199b6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_6": {
+      "locked": {
         "lastModified": 1748026106,
         "narHash": "sha256-6m1Y3/4pVw1RWTsrkAK2VMYSzG4MMIj7sqUy7o8th1o=",
         "owner": "NixOS",
@@ -826,6 +842,7 @@
         "stylix": "stylix",
         "system76-scheduler-niri": "system76-scheduler-niri",
         "wivrn-connection-manager": "wivrn-connection-manager",
+        "wrappers": "wrappers",
         "yand": "yand",
         "zen-browser": "zen-browser"
       }
@@ -1068,6 +1085,24 @@
       "original": {
         "owner": "Kirottu",
         "repo": "wivrn-connection-manager",
+        "type": "github"
+      }
+    },
+    "wrappers": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_5"
+      },
+      "locked": {
+        "lastModified": 1771451129,
+        "narHash": "sha256-THH/4ykNzg5DRzKFMX1PI+OG4SIvo/roMRKeo+Gq+FU=",
+        "owner": "lassulus",
+        "repo": "wrappers",
+        "rev": "3c61ecaa13e5b25be07d55730b64ad41f2ef763f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "lassulus",
+        "repo": "wrappers",
         "type": "github"
       }
     },

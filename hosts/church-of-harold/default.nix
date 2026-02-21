@@ -15,7 +15,7 @@ in
   config = {
     devices.class = "desktop";
 
-    openrazer.enable = true;
+    # openrazer.enable = true;
     networking = {
       hostName = "church-of-harold";
     };

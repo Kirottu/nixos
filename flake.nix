@@ -41,6 +41,10 @@
       url = "github:nix-community/nixpkgs-xr";
     };
 
+    wrappers = {
+      url = "github:lassulus/wrappers";
+    };
+
     impermanence.url = "github:nix-community/impermanence";
 
     # My bits and bops

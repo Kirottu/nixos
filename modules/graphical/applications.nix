@@ -174,6 +174,26 @@ in
         package = pkgs.equibop;
       })
       (lib.utils.mkApp {
+        package = inputs.wrappers.lib.wrapPackage {
+          inherit pkgs;
+          package = pkgs.element-desktop.override {
+            element-web = pkgs.element-web.override {
+              conf = {
+                features = {
+                  feature_video_rooms = true;
+                  feature_group_calls = true;
+                  feature_element_call_video_rooms = true;
+                };
+              };
+            };
+          };
+          flags = {
+            "--password-store" = "gnome-libsecret";
+          };
+          flagSeparator = "=";
+        };
+      })
+      (lib.utils.mkApp {
         package = pkgs.gimp3-with-plugins;
         userDirectories = [
           ".config/GIMP"

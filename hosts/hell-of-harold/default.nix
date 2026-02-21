@@ -13,7 +13,7 @@
     devices.class = "server";
     domain = "kirottu.com";
 
-    system.stateVersion = "25.11";
-    hm.home.stateVersion = "25.11";
+    system.stateVersion = "25.05";
+    hm.home.stateVersion = "25.05";
   };
 }

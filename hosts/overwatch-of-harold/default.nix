@@ -26,7 +26,7 @@
     boot.loader.systemd-boot.enable = true;
     boot.loader.efi.canTouchEfiVariables = true;
 
-    synapse.enable = true;
+    # synapse.enable = true;
     syncserver.enable = true;
     nextcloud = {
       enable = true;

@@ -24,6 +24,24 @@
       ];
     };
 
+    systemd.network.enable = true;
+    networking.useNetworkd = true;
+    systemd.network.networks."10-wan" = {
+      networkConfig.DHCP = "no";
+      matchConfig.Name = "enp1*";
+      address = [
+        "89.167.75.62/32"
+        "2a01:4f9:c014:5536::/64"
+      ];
+      routes = [
+        {
+          Gateway = "172.31.1.1";
+          GatewayOnLink = true;
+        }
+        { Gateway = "fe80::1"; }
+      ];
+    };
+
     services.postgresql = {
       enable = true;
     };

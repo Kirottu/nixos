@@ -15,6 +15,7 @@
         "nc.${config.domain}"
         "vw.${config.domain}"
         "ffsync.${config.domain}"
+        "collabora.${config.domain}"
       ];
     };
   };

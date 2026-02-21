@@ -35,6 +35,14 @@
       enable = true;
     };
 
+    services.nginx = {
+      enable = true;
+      virtualHosts."${config.domain}" = {
+        enableACME = true;
+        forceSSL = true;
+      };
+    };
+
     networking.hostName = "hell-of-harold";
 
     boot.loader.grub.enable = true;

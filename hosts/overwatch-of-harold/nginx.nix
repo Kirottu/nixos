@@ -7,14 +7,14 @@
       defaults.email = "arnovaara@kirottu.com";
     };
 
-    # services.nginx = {
-    #   enable = true;
-    #   virtualHosts.${config.domain} = {
-    #     forceSSL = true;
-    #     enableACME = true;
-    #     reuseport = true;
-    #   };
-    # };
+    services.nginx = {
+      enable = true;
+      # virtualHosts.${config.domain} = {
+      #   forceSSL = true;
+      #   enableACME = true;
+      #   reuseport = true;
+      # };
+    };
 
     users.users."nginx".extraGroups = [ "acme" ];
   };

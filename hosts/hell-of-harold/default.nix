@@ -15,7 +15,7 @@
     devices.class = "server";
     domain = "kirottu.com";
 
-    # synapse.enable = true;
+    synapse.enable = true;
 
     impermanence = {
       enable = true;

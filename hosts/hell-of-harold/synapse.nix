@@ -254,7 +254,17 @@ in
         locations."= /.well-known/matrix/server".extraConfig = mkWellKnown serverConfig;
         locations."= /.well-known/matrix/client".extraConfig = mkWellKnown clientConfig;
         #for some reason clients insist on not using the sub domain
-        locations."~ ^(/_matrix|/_synapse/client)" = proxyPass;
+        # locations."~ ^(/_matrix|/_synapse/client)" = proxyPass;
+      };
+      virtualHosts."_" = {
+        listen = [
+          {
+            addr = "127.0.0.1";
+            port = 800;
+            ssl = false;
+          }
+        ];
+        locations."/".root = toString pkgs.synapse-admin;
       };
       virtualHosts.${matrixDomain} = {
         enableACME = true;

@@ -253,8 +253,8 @@ in
       virtualHosts.${config.domain} = {
         locations."= /.well-known/matrix/server".extraConfig = mkWellKnown serverConfig;
         locations."= /.well-known/matrix/client".extraConfig = mkWellKnown clientConfig;
-        #for some reason clients insist on not using the sub domain
-        # locations."~ ^(/_matrix|/_synapse/client)" = proxyPass;
+        #for some reason clients insist on not using the subdomain
+        locations."~ ^(/_matrix|/_synapse/client)" = proxyPass;
       };
       virtualHosts."_" = {
         listen = [

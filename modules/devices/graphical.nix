@@ -15,7 +15,7 @@
         enable = true;
         webapps.cinny = {
           title = "Cinny";
-          url = "https://cinny.kirottu.com";
+          url = "https://app.cinny.in";
           icon = ./cinny.png;
         };
       };

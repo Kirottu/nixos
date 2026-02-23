@@ -802,6 +802,22 @@
         "type": "github"
       }
     },
+    "personal-site": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1771852595,
+        "narHash": "sha256-GaFEcGFUcYxPjWLLZnl6hrXEiRklOohB74sOSecCEzI=",
+        "owner": "Kirottu",
+        "repo": "kirottu.com",
+        "rev": "6b6ccf9119d8a5534d5ff024b8fd75d5aee6a84c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Kirottu",
+        "repo": "kirottu.com",
+        "type": "github"
+      }
+    },
     "private": {
       "inputs": {
         "nixpkgs": [
@@ -837,6 +853,7 @@
         "nixpkgs-stremio": "nixpkgs-stremio",
         "nixpkgs-xr": "nixpkgs-xr",
         "persist-retro": "persist-retro",
+        "personal-site": "personal-site",
         "private": "private",
         "sops-nix": "sops-nix",
         "stylix": "stylix",

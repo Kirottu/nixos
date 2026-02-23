@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  inputs,
   lib,
   ...
 }:
@@ -51,10 +52,7 @@
       virtualHosts."${config.domain}" = {
         enableACME = true;
         forceSSL = true;
-        locations."/".root = builtins.fetchGit {
-          url = "https://github.com/Kirottu/kirottu.com";
-          ref = "master";
-        };
+        locations."/".root = inputs.personal-site;
       };
     };
 

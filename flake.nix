@@ -86,6 +86,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    personal-site = {
+      url = "github:Kirottu/kirottu.com";
+      flake = false;
+    };
+
     # anyrun-master = {
     #   url = "github:anyrun-org/anyrun";
     #   inputs.nixpkgs.follows = "nixpkgs";

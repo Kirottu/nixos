@@ -51,6 +51,10 @@
       virtualHosts."${config.domain}" = {
         enableACME = true;
         forceSSL = true;
+        locations."/".root = builtins.fetchGit {
+          url = "https://github.com/Kirottu/kirottu.com";
+          ref = "master";
+        };
       };
     };
 

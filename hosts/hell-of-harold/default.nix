@@ -14,9 +14,13 @@
 
   config = {
     devices.class = "server";
-    domain = "kirottu.com";
+    server.domain = "kirottu.com";
 
     synapse.enable = true;
+
+    server.turn = {
+      secret = inputs.private.secrets.matrix.secret;
+    };
 
     impermanence = {
       enable = true;

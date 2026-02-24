@@ -9,6 +9,7 @@
     ./home
     ./net
     ./security
+    ./server
     ./theming
     ./perf
     ./daemons

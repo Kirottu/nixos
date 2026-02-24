@@ -20,7 +20,7 @@
 
   config = {
     devices.class = "server";
-    domain = "kirottu.com";
+    server.domain = "kirottu.com";
 
     # Bootloader.
     boot.loader.systemd-boot.enable = true;

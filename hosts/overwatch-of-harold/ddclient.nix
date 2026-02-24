@@ -13,9 +13,6 @@
       passwordFile = config.sops.secrets."ddclient/password".path;
       domains = [
         "nc.${config.domain}"
-        "vw.${config.domain}"
-        "ffsync.${config.domain}"
-        "collabora.${config.domain}"
       ];
     };
   };

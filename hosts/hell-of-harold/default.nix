@@ -19,7 +19,7 @@
     synapse.enable = true;
 
     server.turn = {
-      secret = inputs.private.secrets.matrix.secret;
+      secret = inputs.private.secrets.turn.shared-secret;
     };
 
     impermanence = {

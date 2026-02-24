@@ -17,7 +17,7 @@ in
       default = "turn.${config.server.domain}";
     };
   };
-  config = lib.mkIf cfg.turn {
+  config = lib.mkIf cfg.enable {
     services.coturn =
       let
         certDir = config.security.acme.certs.${cfg.realm}.directory;

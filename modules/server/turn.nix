@@ -77,10 +77,10 @@ in
       5349
     ];
 
-    security.acme.certs.${cfg.realm} = {
-      # insert here the right configuration to obtain a certificate
-      postRun = "systemctl restart coturn.service";
-      group = "turnserver";
+    users.users."turnserver".extraGroups = [ "nginx" ];
+
+    services.nginx.virtualHosts.${cfg.realm} = {
+      enableACME = true;
     };
   };
 }

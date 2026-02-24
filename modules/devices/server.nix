@@ -5,7 +5,7 @@
 }:
 {
   options = {
-    server.domain = lib.mkOption {
+    domain = lib.mkOption {
       type = lib.types.str;
     };
   };

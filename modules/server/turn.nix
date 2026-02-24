@@ -14,7 +14,7 @@ in
     };
     realm = lib.mkOption {
       type = lib.types.nonEmptyStr;
-      default = "turn.${config.server.domain}";
+      default = "turn.${config.domain}";
     };
   };
   config = lib.mkIf cfg.enable {

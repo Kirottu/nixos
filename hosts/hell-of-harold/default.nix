@@ -14,7 +14,7 @@
 
   config = {
     devices.class = "server";
-    server.domain = "kirottu.com";
+    domain = "kirottu.com";
 
     synapse.enable = true;
 

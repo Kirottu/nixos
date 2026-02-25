@@ -54,7 +54,6 @@ in
           sirikali
           pavucontrol
           kdiskmark
-          papers
           (pkgs.writeShellApplication {
             name = "xwayland-rootful";
             text = ''

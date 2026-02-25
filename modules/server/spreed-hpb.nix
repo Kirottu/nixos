@@ -33,6 +33,7 @@ in
       hostName = "talk.${config.domain}";
       configureNginx = true;
       settings = {
+        http.listen = "127.0.0.1:9000";
         turn = {
           servers = [
             "turn:${config.server.turn.realm}:3478?transport=udp"

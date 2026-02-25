@@ -123,7 +123,7 @@ in
       };
       settings = {
         server_name = config.domain;
-        public_baseurl = "https://${config.domain}";
+        public_baseurl = "https://${matrixDomain}";
         listeners = [
           {
             port = 8008;
@@ -184,7 +184,7 @@ in
           client_timeout = "300s";
         };
         presence = {
-          enabled = false;
+          enabled = true;
         };
         turn_uris = [
           "turn:${config.server.turn.realm}:3478?transport=udp"

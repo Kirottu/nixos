@@ -29,7 +29,7 @@
         "turn/secret" = {
           sopsFile = ../../secrets/hell-of-harold.yaml;
           group = "keys";
-          mode = 0440;
+          mode = "0440";
         };
         "spreed-hpb/hashkey" = block;
         "spreed-hpb/blockkey" = block;

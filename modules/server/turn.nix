@@ -9,8 +9,8 @@ in
 {
   options.server.turn = {
     enable = lib.mkEnableOption "Coturn";
-    secret = lib.mkOption {
-      type = lib.types.nonEmptyStr;
+    secretFile = lib.mkOption {
+      type = lib.types.path;
     };
     realm = lib.mkOption {
       type = lib.types.nonEmptyStr;

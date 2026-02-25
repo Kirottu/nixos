@@ -1,6 +1,6 @@
 {
   imports = [
     ./turn.nix
-    ./spreed.nix
+    ./spreed-hpb.nix
   ];
 }

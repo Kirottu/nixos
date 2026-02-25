@@ -67,7 +67,7 @@ in
   options.synapse.enable = lib.mkEnableOption "Synapse";
 
   config = lib.mkIf config.synapse.enable {
-    impermanence.directories = [ "/var/lib/matrix-synapse" ];
+    impermanence.directories = [ config.services.matrix-synapse.dataDir ];
 
     server.turn.enable = true;
 
@@ -190,7 +190,7 @@ in
           "turn:${config.server.turn.realm}:3478?transport=udp"
           "turn:${config.server.turn.realm}:3478?transport=tcp"
         ];
-        turn_shared_secret = config.server.turn.realm;
+        turn_shared_secret_path = config.server.turn.secretFile;
         turn_user_lifetime = "1h";
         turn_allow_guests = true;
         experimental_features = {

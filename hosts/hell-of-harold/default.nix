@@ -18,8 +18,30 @@
 
     synapse.enable = true;
 
+    sops.secrets =
+      let
+        block = {
+          sopsFile = ../../secrets/hell-of-harold.yaml;
+        };
+      in
+
+      {
+        "turn/secret" = block;
+        "spreed-hpb/hashkey" = block;
+        "spreed-hpb/blockkey" = block;
+        "spreed-hpb/internalsecret" = block;
+        "spreed-hpb/nextcloudsecret" = block;
+      };
+    server.spreed-hpb = {
+      enable = true;
+      hashkeyFile = config.sops.secrets."spreed-hpb/hashkey".path;
+      blockkeyFile = config.sops.secrets."spreed-hpb/blockkey".path;
+      nextcloudsecretFile = config.sops.secrets."spreed-hpb/nextcloudsecret".path;
+      internalsecretFile = config.sops.secrets."spreed-hpb/internalsecret".path;
+    };
+
     server.turn = {
-      secret = inputs.private.secrets.turn.shared-secret;
+      secretFile = config.sops.secrets."turn/secret".path;
     };
 
     impermanence = {

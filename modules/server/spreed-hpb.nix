@@ -30,6 +30,7 @@ in
 
     services.nextcloud-spreed-signaling = {
       enable = true;
+      hostName = "talk.${config.domain}";
       configureNginx = true;
       settings = {
         turn = {
@@ -51,6 +52,11 @@ in
         ];
         secretFile = cfg.nextcloudsecretFile;
       };
+    };
+
+    services.nginx.virtualHosts.${config.services.nextcloud-spreed-signaling.hostName} = {
+      enableACME = true;
+      forceSSL = true;
     };
   };
 }

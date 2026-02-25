@@ -34,13 +34,13 @@ in
       configureNginx = true;
       settings = {
         http.listen = "127.0.0.1:9000";
-        turn = {
-          servers = [
-            "turn:${config.server.turn.realm}:3478?transport=udp"
-            "turn:${config.server.turn.realm}:3478?transport=tcp"
-          ];
-          secretFile = config.server.turn.secretFile;
-        };
+        # turn = {
+        #   servers = [
+        #     "turn:${config.server.turn.realm}:3478?transport=udp"
+        #     "turn:${config.server.turn.realm}:3478?transport=tcp"
+        #   ];
+        #   secretFile = config.server.turn.secretFile;
+        # };
         clients.internalsecretFile = cfg.internalsecretFile;
         sessions = {
           hashkeyFile = cfg.hashkeyFile;

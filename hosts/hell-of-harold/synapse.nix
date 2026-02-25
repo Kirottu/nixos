@@ -358,6 +358,8 @@ in
     # restrict access to livekit room creation to a homeserver
     systemd.services.lk-jwt-service.environment.LIVEKIT_FULL_ACCESS_HOMESERVERS = config.domain;
 
+    users.users."matrix-synapse".extraGroups = [ "keys" ];
+
     security.acme.certs.${config.domain}.postRun =
       "systemctl restart matrix-synapse.service; systemctl restart coturn.service";
     networking.firewall.allowedTCPPorts = [

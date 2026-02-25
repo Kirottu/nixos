@@ -22,11 +22,14 @@
       let
         block = {
           sopsFile = ../../secrets/hell-of-harold.yaml;
+          owner = config.services.nextcloud-spreed-signaling.user;
         };
       in
-
       {
-        "turn/secret" = block;
+        "turn/secret" = {
+          sopsFile = ../../secrets/hell-of-harold.yaml;
+          group = "keys";
+        };
         "spreed-hpb/hashkey" = block;
         "spreed-hpb/blockkey" = block;
         "spreed-hpb/internalsecret" = block;

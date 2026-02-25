@@ -29,6 +29,7 @@ in
     impermanence.directories = [ config.services.nextcloud-spreed-signaling.stateDir ];
 
     services.nextcloud-spreed-signaling = {
+      enable = true;
       configureNginx = true;
       settings = {
         turn = {

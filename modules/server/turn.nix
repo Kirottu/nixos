@@ -77,7 +77,10 @@ in
       5349
     ];
 
-    users.users."turnserver".extraGroups = [ "nginx" ];
+    users.users."turnserver".extraGroups = [
+      "nginx"
+      "keys"
+    ];
 
     services.nginx.virtualHosts.${cfg.realm} = {
       enableACME = true;

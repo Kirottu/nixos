@@ -29,7 +29,7 @@ in
         min-port = 49000;
         max-port = 50000;
         use-auth-secret = true;
-        static-auth-secret = cfg.secret;
+        static-auth-secret-file = cfg.secretFile;
         realm = cfg.realm;
         cert = "${certDir}/full.pem";
         pkey = "${certDir}/key.pem";

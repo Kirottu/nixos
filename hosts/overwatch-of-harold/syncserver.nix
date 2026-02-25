@@ -13,7 +13,7 @@ in
 
   config = lib.mkIf cfg.enable {
     sops.secrets."syncserver/secrets" = {
-      sopsFile = ../../secrets/server.yaml;
+      sopsFile = ../../secrets/overwatch-of-harold.yaml;
     };
 
     services.mysql.package = pkgs.mariadb;

@@ -28,10 +28,10 @@ in
 
     sops.secrets = {
       "nextcloud/adminpass" = {
-        sopsFile = ../../secrets/server.yaml;
+        sopsFile = ../../secrets/overwatch-of-harold.yaml;
       };
       "nextcloud/dbpass" = {
-        sopsFile = ../../secrets/server.yaml;
+        sopsFile = ../../secrets/overwatch-of-harold.yaml;
       };
     };
 

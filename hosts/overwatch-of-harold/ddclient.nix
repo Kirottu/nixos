@@ -2,7 +2,7 @@
 {
   config = {
     sops.secrets."ddclient/password" = {
-      sopsFile = ../../secrets/server.yaml;
+      sopsFile = ../../secrets/overwatch-of-harold.yaml;
     };
 
     services.ddclient = {

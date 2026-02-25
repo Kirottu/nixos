@@ -186,8 +186,8 @@
     };
 
     # Helix is failing currently
-    hm.programs.helix.enable = lib.mkForce false;
-    environment.systemPackages = [ pkgs.neovim ];
+    # hm.programs.helix.enable = lib.mkForce false;
+    # environment.systemPackages = [ pkgs.neovim ];
 
     system.stateVersion = "25.05";
     hm.home.stateVersion = "25.05";

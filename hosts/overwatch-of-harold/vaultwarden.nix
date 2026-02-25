@@ -11,7 +11,7 @@ in
       "/var/lib/vaultwarden"
     ];
 
-    sops.secrets."vaultwarden/env".sopsFile = ../../secrets/server.yaml;
+    sops.secrets."vaultwarden/env".sopsFile = ../../secrets/overwatch-of-harold.yaml;
 
     services.vaultwarden = {
       enable = true;

@@ -2,13 +2,18 @@ keys:
   - &church-of-harold age19ez654t09650gmatew4v5e7ueselyygnr644p0hj954egfmp9gcq5wppf5
   - &missionary-of-harold age1eks5th67wk6g2jwgrvdjye6wagk7juygduyyze3g97uzfpmdwqzstw32tg
   - &overwatch-of-harold age1f6a6e7wdn06z89h2ff3ux8vdlt0z90tkk0kw97mcl6fep644uugsj0neyl
+  - &hell-of-harold age16pc326kyzvsjes4dg5z6qh79lztf073u6utqpp6x82pdjnj3quqs69m9qm
 creation_rules:
   - path_regex: secrets/(users)\.yaml$
     key_groups:
       - age:
         - *church-of-harold
         - *missionary-of-harold
-  - path_regex: secrets/server\.yaml$
+  - path_regex: secrets/overwatch-of-harold\.yaml$
     key_groups:
       - age:
         - *overwatch-of-harold
+  - path_regex: secrets/hell-of-harold\.yaml$
+    key_groups:
+      - age:
+        - *hell-of-harold

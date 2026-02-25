@@ -233,6 +233,8 @@ in
       };
     };
 
+    services.synapse-auto-compressor.enable = true;
+
     services.nginx = {
       upstreams = {
         "matrix-synapse".servers = {
@@ -320,9 +322,9 @@ in
     services.livekit = {
       enable = true;
       openFirewall = true;
-      settings = {
-        rtc.use_external_ip = true;
-      };
+      # settings = {
+      #   rtc.use_external_ip = true;
+      # };
       settings.room.auto_create = false;
       keyFile = livekitKeyFile;
     };

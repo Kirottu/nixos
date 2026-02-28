@@ -14,10 +14,19 @@ in
   config = lib.mkIf cfg.enable {
     impermanence.directories = [ config.services.murmur.stateDir ];
 
-    services.murmur = {
-      enable = true;
-      openFirewall = true;
-      welcometext = "Epämäärämääräistä möminää ja suolaista paskapuhumista.";
-    };
+    services.murmur =
+
+      let
+        certDir = config.security.acme.certs.${cfg.realm}.directory;
+      in
+      {
+        enable = true;
+        openFirewall = true;
+        sslCert = "${certDir}/full.pem";
+        sslKey = "${certDir}/key.pem";
+        welcometext = "Epämäärämääräistä möminää ja suolaista paskapuhumista.";
+      };
+
+    users.users."murmur".extraGroups = [ "nginx" ];
   };
 }

@@ -36,16 +36,18 @@
         "spreed-hpb/internalsecret" = block;
         "spreed-hpb/nextcloudsecret" = block;
       };
-    server.spreed-hpb = {
-      enable = true;
-      hashkeyFile = config.sops.secrets."spreed-hpb/hashkey".path;
-      blockkeyFile = config.sops.secrets."spreed-hpb/blockkey".path;
-      nextcloudsecretFile = config.sops.secrets."spreed-hpb/nextcloudsecret".path;
-      internalsecretFile = config.sops.secrets."spreed-hpb/internalsecret".path;
-    };
-
-    server.turn = {
-      secretFile = config.sops.secrets."turn/secret".path;
+    server = {
+      spreed-hpb = {
+        enable = true;
+        hashkeyFile = config.sops.secrets."spreed-hpb/hashkey".path;
+        blockkeyFile = config.sops.secrets."spreed-hpb/blockkey".path;
+        nextcloudsecretFile = config.sops.secrets."spreed-hpb/nextcloudsecret".path;
+        internalsecretFile = config.sops.secrets."spreed-hpb/internalsecret".path;
+      };
+      turn = {
+        secretFile = config.sops.secrets."turn/secret".path;
+      };
+      mumble.enable = true;
     };
 
     impermanence = {

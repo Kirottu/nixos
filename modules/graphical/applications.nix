@@ -188,6 +188,9 @@ in
         package = pkgs.equibop;
       })
       (lib.utils.mkApp {
+        package = pkgs.mumble;
+      })
+      (lib.utils.mkApp {
         package = inputs.wrappers.lib.wrapPackage {
           inherit pkgs;
           package = pkgs.element-desktop.override {

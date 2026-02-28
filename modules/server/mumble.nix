@@ -17,7 +17,7 @@ in
     services.murmur =
 
       let
-        certDir = config.security.acme.certs.${cfg.realm}.directory;
+        certDir = config.security.acme.certs.${config.domain}.directory;
       in
       {
         enable = true;

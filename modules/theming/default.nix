@@ -76,7 +76,7 @@
         {
           fonts.packages = with pkgs; [
             noto-fonts-cjk-sans
-            noto-fonts
+            # noto-fonts
             nerd-fonts.symbols-only
             nerd-fonts.hack
           ];
@@ -138,14 +138,14 @@
             base16Scheme = config.theming.colorScheme;
 
             fonts = {
-              serif = {
-                package = pkgs.noto-fonts;
-                name = "Noto Serif";
-              };
-              sansSerif = {
-                package = pkgs.noto-fonts;
-                name = "Noto Sans";
-              };
+              # serif = {
+              #   package = pkgs.noto-fonts;
+              #   name = "Noto Serif";
+              # };
+              # sansSerif = {
+              #   package = pkgs.noto-fonts;
+              #   name = "Noto Sans";
+              # };
               monospace = {
                 package = pkgs.nerd-fonts.hack;
                 name = "Hack Nerd Font";

@@ -14,7 +14,7 @@ llvmPackages.stdenv.mkDerivation rec {
     owner = "PancakeTAS";
     repo = "lsfg-vk";
     tag = "v${version}";
-    hash = "sha256-6J9uRA8e72uB4dunvfZpTyjEtU32bJz5rTx6d4rZPXo=";
+    hash = "sha256-ygNmidny1n+M54aJ36wsYbgpaO/+I0mbZ8jaCESo2rM=";
     fetchSubmodules = true;
   };
 

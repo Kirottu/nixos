@@ -27,6 +27,8 @@ in
         welcometext = "Epämäärämääräistä möminää ja suolaista paskapuhumista.";
       };
 
+    security.acme.certs.${config.domain}.reloadServices = [ "coturn.service" ];
+
     users.users."murmur".extraGroups = [ "nginx" ];
   };
 }

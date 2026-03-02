@@ -86,6 +86,6 @@ in
       enableACME = true;
     };
 
-    security.acme.certs.${cfg.realm}.postRun = "systemctl restart coturn.service";
+    security.acme.certs.${cfg.realm}.reloadServices = [ "coturn.service" ];
   };
 }

@@ -17,7 +17,7 @@ let
     "org.matrix.msc4143.rtc_foci" = [
       {
         "type" = "livekit";
-        "livekit_service_url" = "https://${matrixDomain}/livekit/jwt";
+        "livekit_service_url" = "https://${config.server.matrix-rtc.domain}/livekit/jwt";
       }
     ];
   };
@@ -60,8 +60,6 @@ let
       proxy_http_version 1.1;
     '';
   };
-
-  livekitKeyFile = "/run/livekit.key";
 in
 {
   options.synapse.enable = lib.mkEnableOption "Synapse";
@@ -70,6 +68,11 @@ in
     impermanence.directories = [ config.services.matrix-synapse.dataDir ];
 
     server.turn.enable = true;
+
+    server.matrix-rtc = {
+      enable = true;
+      homeservers = [ config.domain ];
+    };
 
     services.matrix-synapse = {
       enable = true;
@@ -290,25 +293,6 @@ in
         );
         locations = {
           "~ ^(/_matrix|/_synapse/client)" = proxyPass;
-          "^~ /livekit/jwt/" = {
-            priority = 400;
-            proxyPass = "http://[::1]:${toString config.services.lk-jwt-service.port}/";
-          };
-          "^~ /livekit/sfu/" = {
-            extraConfig = ''
-              proxy_send_timeout 120;
-              proxy_read_timeout 120;
-              proxy_buffering off;
-
-              proxy_set_header Accept-Encoding gzip;
-              proxy_set_header Upgrade $http_upgrade;
-              proxy_set_header Connection "upgrade";
-            '';
-
-            priority = 400;
-            proxyPass = "http://[::1]:${toString config.services.livekit.settings.port}/";
-            proxyWebsockets = true;
-          };
         };
 
         extraConfig = ''
@@ -318,45 +302,6 @@ in
 
       };
     };
-
-    services.livekit = {
-      enable = true;
-      openFirewall = true;
-      # settings = {
-      #   rtc.use_external_ip = true;
-      # };
-      settings.room.auto_create = false;
-      keyFile = livekitKeyFile;
-    };
-    services.lk-jwt-service = {
-      enable = true;
-      # can be on the same virtualHost as synapse
-      livekitUrl = "wss://${matrixDomain}/livekit/sfu";
-      keyFile = livekitKeyFile;
-    };
-
-    # generate the key when needed
-    systemd.services.livekit-key = {
-      before = [
-        "lk-jwt-service.service"
-        "livekit.service"
-      ];
-      wantedBy = [ "multi-user.target" ];
-      path = with pkgs; [
-        livekit
-        coreutils
-        gawk
-      ];
-      script = ''
-        echo "Key missing, generating key"
-        echo "lk-jwt-service: $(livekit-server generate-keys | tail -1 | awk '{print $3}')" > "${livekitKeyFile}"
-      '';
-      serviceConfig.Type = "oneshot";
-      unitConfig.ConditionPathExists = "!${livekitKeyFile}";
-    };
-
-    # restrict access to livekit room creation to a homeserver
-    systemd.services.lk-jwt-service.environment.LIVEKIT_FULL_ACCESS_HOMESERVERS = config.domain;
 
     users.users."matrix-synapse".extraGroups = [ "keys" ];
 

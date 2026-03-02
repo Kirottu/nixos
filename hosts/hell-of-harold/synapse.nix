@@ -257,7 +257,7 @@ in
         locations."= /.well-known/matrix/server".extraConfig = mkWellKnown serverConfig;
         locations."= /.well-known/matrix/client".extraConfig = mkWellKnown clientConfig;
         #for some reason clients insist on not using the subdomain
-        locations."~ ^(/_matrix|/_synapse/client)" = proxyPass;
+        # locations."~ ^(/_matrix|/_synapse/client)" = proxyPass;
       };
       virtualHosts.${matrixDomain} = {
         enableACME = true;
@@ -360,8 +360,6 @@ in
 
     users.users."matrix-synapse".extraGroups = [ "keys" ];
 
-    security.acme.certs.${config.domain}.postRun =
-      "systemctl restart matrix-synapse.service; systemctl restart coturn.service";
     networking.firewall.allowedTCPPorts = [
       port
     ];

@@ -85,5 +85,7 @@ in
     services.nginx.virtualHosts.${cfg.realm} = {
       enableACME = true;
     };
+
+    security.acme.certs.${cfg.realm}.postRun = "systemctl restart coturn.service";
   };
 }

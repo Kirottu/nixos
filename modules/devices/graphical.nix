@@ -14,8 +14,8 @@
       webapps = {
         enable = true;
         webapps.cinny = {
-          title = "Cinny";
-          url = "https://app.cinny.in";
+          title = "Sable";
+          url = "https://app.sable.moe";
           icon = ./cinny.png;
         };
       };

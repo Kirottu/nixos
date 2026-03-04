@@ -29,7 +29,7 @@ in
     lib.mkMerge [
       {
         environment.systemPackages = with pkgs; [
-
+          papers
           imagemagick
           tree
           killall

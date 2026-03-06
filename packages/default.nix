@@ -5,4 +5,5 @@
   it87 = import ./it87.nix;
   lsfg-vk = import ./lsfg-vk.nix;
   sable = import ./sable.nix;
+  sable-tauri = import ./sable-tauri.nix;
 }

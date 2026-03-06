@@ -194,6 +194,9 @@ in
         package = pkgs.callPackage myPkgs.sable { };
       })
       (lib.utils.mkApp {
+        package = pkgs.callPackage myPkgs.sable-tauri { };
+      })
+      (lib.utils.mkApp {
         package = inputs.wrappers.lib.wrapPackage {
           inherit pkgs;
           package = pkgs.element-desktop.override {

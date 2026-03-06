@@ -397,8 +397,8 @@
           }
           #clock {
             background:
-              linear-gradient(135deg, transparent 25px, ${l1} 25px, ${l1} 60%, transparent 60%),
-              linear-gradient(-45deg, ${transition-l2} 25px, ${l1} 25px, ${l1} 50%, transparent 50%);
+              linear-gradient(135deg, transparent 25px, ${l1} 25px, ${l1} 80%, transparent 80%),
+              linear-gradient(-45deg, ${transition-l2} 25px, ${l1} 25px, ${l1} 80%, transparent 80%);
           }
           #workspaces {
             background:

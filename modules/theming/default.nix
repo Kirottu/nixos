@@ -142,10 +142,10 @@
               #   package = pkgs.noto-fonts;
               #   name = "Noto Serif";
               # };
-              # sansSerif = {
-              #   package = pkgs.noto-fonts;
-              #   name = "Noto Sans";
-              # };
+              sansSerif = {
+                package = pkgs.inter;
+                name = "Inter";
+              };
               monospace = {
                 package = pkgs.nerd-fonts.hack;
                 name = "Hack Nerd Font";

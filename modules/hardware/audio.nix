@@ -14,7 +14,7 @@
     (lib.mkIf config.audio.pipewire.enable {
       environment.systemPackages = with pkgs; [
         pwvucontrol
-        helvum
+        crosspipe
         pulseaudio
       ];
 

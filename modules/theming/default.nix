@@ -126,7 +126,7 @@
               alacritty.enable = true;
             };
 
-            iconTheme = {
+            icons = {
               enable = true;
               dark = icon-theme;
               package = pkgs.papirus-icon-theme;

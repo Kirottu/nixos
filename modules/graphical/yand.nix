@@ -27,6 +27,7 @@ in
         width = 400;
         spacing = 10;
         timeout = 5;
+        layer = "top";
         output = lib.mkIf (cfg.output != null) cfg.output;
       };
       style =

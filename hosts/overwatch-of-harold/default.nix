@@ -9,7 +9,6 @@
     ./hardware-configuration.nix
     ../../modules
     ./nextcloud.nix
-    ./nginx.nix
     ./ddclient.nix
     ./vaultwarden.nix
     ./grafana.nix

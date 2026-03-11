@@ -4,5 +4,6 @@
     ./spreed-hpb.nix
     ./mumble.nix
     ./matrix-rtc.nix
+    ./nginx.nix
   ];
 }

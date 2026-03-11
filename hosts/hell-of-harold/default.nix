@@ -80,7 +80,6 @@
     };
 
     services.nginx = {
-      enable = true;
       virtualHosts."${config.domain}" = {
         enableACME = true;
         forceSSL = true;

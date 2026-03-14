@@ -90,7 +90,13 @@
     virt.distrobox.enable = true;
     daemons.kidex.enable = true;
 
-    mainUser.extraGroups = [ "adbusers" ];
+    mainUser.extraGroups = [
+      "adbusers"
+      "plugdev"
+      "video"
+      "input"
+      "audio"
+    ];
 
     boot.kernel.sysctl."kernel.sysrq" = 1;
   };

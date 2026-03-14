@@ -33,7 +33,7 @@
       };
       extraOptions = lib.mkOption {
         type = lib.types.attrs;
-        default = {};
+        default = { };
       };
     };
   };
@@ -42,21 +42,20 @@
     # TODO: Assertion to ensure one password method exists
     users = {
       mutableUsers = false;
-      users.${config.mainUser.userName} = lib.mkMerge [{
-        isNormalUser = true;
-        hashedPassword = lib.mkIf (config.mainUser.hashedPassword != null) config.mainUser.hashedPassword;
-        hashedPasswordFile = lib.mkIf (
-          config.mainUser.hashedPasswordFile != null
-        ) config.mainUser.hashedPasswordFile;
-        shell = config.mainUser.shell;
-        extraGroups = config.mainUser.extraGroups ++ [
-          "wheel"
-          "video"
-          "input"
-          "audio"
-        ];
-      }
-      config.mainUser.extraOptions];
+      users.${config.mainUser.userName} = lib.mkMerge [
+        {
+          isNormalUser = true;
+          hashedPassword = lib.mkIf (config.mainUser.hashedPassword != null) config.mainUser.hashedPassword;
+          hashedPasswordFile = lib.mkIf (
+            config.mainUser.hashedPasswordFile != null
+          ) config.mainUser.hashedPasswordFile;
+          shell = config.mainUser.shell;
+          extraGroups = config.mainUser.extraGroups ++ [
+            "wheel"
+          ];
+        }
+        config.mainUser.extraOptions
+      ];
     };
   };
 }

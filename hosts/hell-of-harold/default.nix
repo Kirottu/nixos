@@ -47,7 +47,10 @@
       turn = {
         secretFile = config.sops.secrets."turn/secret".path;
       };
-      mumble.enable = true;
+      mumble = {
+        enable = true;
+        botamusique.enable = true;
+      };
     };
 
     impermanence = {

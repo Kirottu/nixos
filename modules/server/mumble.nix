@@ -51,11 +51,11 @@ in
       description = "Mumzic";
       home = mumzicState;
       createHome = true;
-      uid = config.ids.uids."mumzic";
+      uid = 116; # Free
       group = "mumzic";
     };
     users.groups."mumzic" = lib.mkIf cfg.musicbot.enable {
-      gid = config.ids.gids."mumzic";
+      gid = 116; # Free
     };
 
     systemd.services.mumzic = lib.mkIf cfg.musicbot.enable {

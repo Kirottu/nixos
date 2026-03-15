@@ -68,7 +68,9 @@ in
       environment.HOME = "/var/lib/mumzic";
 
       serviceConfig = {
-        ExecStart = "${lib.getExe (pkgs.callPackage myPkgs.mumzic { })} -username 'MANKKA SAATANA'";
+        ExecStart = "${
+          lib.getExe (pkgs.callPackage myPkgs.mumzic { })
+        } -username 'MANKKA SAATANA' -server ${config.domain}";
         Restart = "always"; # the bot exits when the server connection is lost
 
         User = "mumzic";

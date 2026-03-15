@@ -100,6 +100,9 @@ in
         ProtectSystem = "strict";
         RestrictNamespaces = true;
         RestrictRealtime = true;
+        ReadWritePaths = [
+          mumzicState
+        ];
         RestrictAddressFamilies = [
           "AF_INET"
           "AF_INET6"

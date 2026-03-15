@@ -58,9 +58,14 @@ in
         ExecStart = "${lib.getExe (pkgs.callPackage myPkgs.mumzic { })} -username 'MANKKA SAATANA'";
         Restart = "always"; # the bot exits when the server connection is lost
 
+        User = "mumzic";
+        Group = "mumzic";
+        WorkingDirectory = "/var/lib/mumzic";
+        RuntimeDirectory = "mumzic";
+        RuntimeDirectoryMode = "0700";
+
         # Hardening
         CapabilityBoundingSet = [ "" ];
-        DynamicUser = true;
         IPAddressDeny = [
           "link-local"
           "multicast"
@@ -86,14 +91,12 @@ in
           "AF_INET"
           "AF_INET6"
         ];
-        StateDirectory = "botamusique";
         SystemCallArchitectures = "native";
         SystemCallFilter = [
           "@system-service @resources"
           "~@privileged"
         ];
         UMask = "0077";
-        WorkingDirectory = "/var/lib/mumzic";
       };
     };
   };

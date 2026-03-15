@@ -49,7 +49,7 @@
       };
       mumble = {
         enable = true;
-        musicbot.enable = true;
+        # musicbot.enable = true;
       };
     };
 

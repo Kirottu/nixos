@@ -7,6 +7,7 @@
 }:
 let
   cfg = config.server.mumble;
+  mumzicState = "/var/lib/mumzic";
 in
 {
   options.server.mumble = {
@@ -17,8 +18,8 @@ in
   config = lib.mkIf cfg.enable {
     impermanence.directories = [
       config.services.murmur.stateDir
-      "/var/lib/mumzic"
-    ];
+    ]
+    ++ lib.optional cfg.musicbot.enable mumzicState;
 
     services.murmur =
 
@@ -45,7 +46,19 @@ in
     #     comment = "Jumalauta jätkät halusitte radion niin tässähän se olis";
     #   };
     # };
-    systemd.services.mumzic = {
+
+    users.users."mumzic" = lib.mkIf cfg.musicbot.enable {
+      description = "Mumzic";
+      home = mumzicState;
+      createHome = true;
+      uid = config.ids.uids."mumzic";
+      group = "mumzic";
+    };
+    users.groups."mumzic" = lib.mkIf cfg.musicbot.enable {
+      gid = config.ids.gids."mumzic";
+    };
+
+    systemd.services.mumzic = lib.mkIf cfg.musicbot.enable {
       after = [
         "network.target"
         "murmur.service"

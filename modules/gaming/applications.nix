@@ -53,10 +53,16 @@ in
         })
         {
           services.udev = {
-            packages = [ pkgs.dolphin-emu ];
-            extraRules = ''
-              SUBSYSTEM=="usb", ATTRS{idVendor}=="057e", ATTRS{idProduct}=="0305", TAG+="uaccess"
-            '';
+            packages = [
+              pkgs.dolphin-emu
+              (pkgs.writeTextFile {
+                name = "dolphin-usb-rule";
+                text = ''
+                  SUBSYSTEM=="usb", ATTRS{idVendor}=="057e", ATTRS{idProduct}=="0305", TAG+="uaccess"
+                '';
+                destination = "/lib/udev/rules.d/52-dolphin-btusb.rules";
+              })
+            ];
           };
         }
       ]

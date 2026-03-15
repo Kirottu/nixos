@@ -1,6 +1,8 @@
 {
   config,
   lib,
+  pkgs,
+  myPkgs,
   ...
 }:
 let
@@ -13,7 +15,10 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    impermanence.directories = [ config.services.murmur.stateDir ];
+    impermanence.directories = [
+      config.services.murmur.stateDir
+      "/var/lib/mumzic"
+    ];
 
     services.murmur =
 
@@ -26,6 +31,7 @@ in
         sslCert = "${certDir}/full.pem";
         sslKey = "${certDir}/key.pem";
         welcometext = "Epämäärämääräistä möminää ja suolaista paskapuhumista.";
+        bandwidth = 128000;
       };
 
     security.acme.certs.${config.domain}.reloadServices = [ "murmur.service" ];
@@ -39,5 +45,56 @@ in
     #     comment = "Jumalauta jätkät halusitte radion niin tässähän se olis";
     #   };
     # };
+    systemd.services.mumzic = {
+      after = [
+        "network.target"
+        "murmur.service"
+      ];
+      wantedBy = [ "multi-user.target" ];
+
+      environment.HOME = "/var/lib/mumzic";
+
+      serviceConfig = {
+        ExecStart = "${lib.getExe (pkgs.callPackage myPkgs.mumzic { })} -username 'MANKKA SAATANA'";
+        Restart = "always"; # the bot exits when the server connection is lost
+
+        # Hardening
+        CapabilityBoundingSet = [ "" ];
+        DynamicUser = true;
+        IPAddressDeny = [
+          "link-local"
+          "multicast"
+        ];
+        LockPersonality = true;
+        MemoryDenyWriteExecute = true;
+        ProcSubset = "pid";
+        PrivateDevices = true;
+        PrivateUsers = true;
+        PrivateTmp = true;
+        ProtectClock = true;
+        ProtectControlGroups = true;
+        ProtectHome = true;
+        ProtectHostname = true;
+        ProtectKernelLogs = true;
+        ProtectKernelModules = true;
+        ProtectKernelTunables = true;
+        ProtectProc = "invisible";
+        ProtectSystem = "strict";
+        RestrictNamespaces = true;
+        RestrictRealtime = true;
+        RestrictAddressFamilies = [
+          "AF_INET"
+          "AF_INET6"
+        ];
+        StateDirectory = "botamusique";
+        SystemCallArchitectures = "native";
+        SystemCallFilter = [
+          "@system-service @resources"
+          "~@privileged"
+        ];
+        UMask = "0077";
+        WorkingDirectory = "/var/lib/mumzic";
+      };
+    };
   };
 }

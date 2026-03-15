@@ -2,7 +2,11 @@
   buildGoModule,
   pkg-config,
   fetchFromGitHub,
-  lib,
+  ffmpeg,
+  yt-dlp,
+  sqlite,
+  opusfile,
+  libogg,
 }:
 buildGoModule rec {
   pname = "mumzic";
@@ -12,8 +16,24 @@ buildGoModule rec {
     owner = "iotku";
     repo = "mumzic";
     rev = "96af8d2e540adc34ddff5f782283cc3b4914d34a";
-    hash = lib.fakeHash;
+    hash = "sha256-u8GrsA6jxJvoAF/GB2kE5bMstoE1IfOl4heqvULlfNY=";
   };
 
-  vendorHash = lib.fakeHash;
+  nativeBuildInputs = [
+    pkg-config
+  ];
+
+  buildInputs = [
+    ffmpeg
+    yt-dlp
+    sqlite
+    opusfile
+    libogg
+  ];
+
+  vendorHash = "sha256-E87DC5jN+bxRhiluPLz1g9vBTdRskge4JmLgeFrYQQE=";
+
+  meta = {
+    mainProgram = "mumzic";
+  };
 }

@@ -6,4 +6,5 @@
   lsfg-vk = import ./lsfg-vk.nix;
   sable = import ./sable.nix;
   sable-tauri = import ./sable-tauri.nix;
+  mumzic = import ./mumzic.nix;
 }

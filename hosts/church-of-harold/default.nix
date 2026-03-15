@@ -230,6 +230,10 @@ in
       ];
     };
 
+    environment.systemPackages = [
+      (pkgs.callPackage myPkgs.mumzic { })
+    ];
+
     hardware.amdgpu.overdrive.enable = true;
 
     programs.droidcam.enable = true;

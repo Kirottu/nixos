@@ -9,7 +9,7 @@ in
 {
   options.server.mumble = {
     enable = lib.mkEnableOption "Murmur for Mumble";
-    botamusique.enable = lib.mkEnableOption "Music bot";
+    musicbot.enable = lib.mkEnableOption "Music bot";
   };
 
   config = lib.mkIf cfg.enable {
@@ -32,12 +32,12 @@ in
 
     users.users."murmur".extraGroups = [ "nginx" ];
 
-    services.botamusique = lib.mkIf cfg.botamusique.enable {
-      enable = true;
-      settings.bot = {
-        username = "MANKKA SAATANA";
-        comment = "Jumalauta jätkät halusitte radion niin tässähän se olis";
-      };
-    };
+    # services.botamusique = lib.mkIf cfg.botamusique.enable {
+    #   enable = true;
+    #   settings.bot = {
+    #     username = "MANKKA SAATANA";
+    #     comment = "Jumalauta jätkät halusitte radion niin tässähän se olis";
+    #   };
+    # };
   };
 }

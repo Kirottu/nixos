@@ -5,25 +5,28 @@
   ...
 }:
 let
-  ncDomain = "nc.${config.domain}";
   collaboraDomain = "collabora.${config.domain}";
   wopiUpdater = "nextcloud-update-wopi";
   service-notifier = "nextcloud-service-notify@";
 
-  cfg = config.nextcloud;
+  cfg = config.server.nextcloud;
 in
 {
-  options.nextcloud = {
+  options.server.nextcloud = {
     enable = lib.mkEnableOption "Nextcloud";
     monitoredServices = lib.mkOption {
       type = lib.types.listOf lib.types.str;
       default = [ ];
     };
+    domain = lib.mkOption {
+      type = lib.types.nonEmptyStr;
+      default = "nc.${config.domain}";
+    };
   };
 
   config = {
     impermanence.directories = [
-      "/var/lib/nextcloud"
+      config.services.nextcloud.home
     ];
 
     sops.secrets = {
@@ -39,7 +42,7 @@ in
       enable = true;
       package = pkgs.nextcloud33;
       https = true;
-      hostName = ncDomain;
+      hostName = cfg.domain;
       maxUploadSize = "5G";
       database.createLocally = true;
       configureRedis = true;
@@ -156,7 +159,7 @@ in
 
         storage.wopi = {
           "@allow" = true;
-          host = [ ncDomain ];
+          host = [ cfg.domain ];
         };
 
         logging.disable_server_audit = true;
@@ -166,7 +169,7 @@ in
     };
 
     services.nginx = {
-      virtualHosts.${ncDomain} = {
+      virtualHosts.${cfg.domain} = {
         forceSSL = true;
         enableACME = true;
       };

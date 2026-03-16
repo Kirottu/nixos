@@ -8,13 +8,6 @@
   imports = [
     ./hardware-configuration.nix
     ../../modules
-    ./nextcloud.nix
-    ./ddclient.nix
-    ./vaultwarden.nix
-    ./grafana.nix
-    ./mail.nix
-    ./syncserver.nix
-    ./cinny.nix
   ];
 
   config = {
@@ -25,11 +18,37 @@
     boot.loader.systemd-boot.enable = true;
     boot.loader.efi.canTouchEfiVariables = true;
 
+    sops.secrets = {
+      "ddclient/password" = {
+        sopsFile = ../../secrets/overwatch-of-harold.yaml;
+      };
+      "vaultwarden/env".sopsFile = ../../secrets/overwatch-of-harold.yaml;
+      "syncserver/secrets" = {
+        sopsFile = ../../secrets/overwatch-of-harold.yaml;
+      };
+    };
+
     # synapse.enable = true;
-    syncserver.enable = true;
-    nextcloud = {
-      enable = true;
-      monitoredServices = [ "nixos-upgrade" ];
+    server = {
+      syncserver = {
+        enable = true;
+        secrets = config.sops.secrets."syncserver/secrets".path;
+      };
+      nextcloud = {
+        enable = true;
+        monitoredServices = [ "nixos-upgrade" ];
+      };
+      ddclient = {
+        enable = true;
+        passwordFile = config.sops.secrets."ddclient/password".path;
+        domains = [
+          config.server.nextcloud.domain
+        ];
+      };
+      vaultwarden = {
+        enable = true;
+        secrets = config.sops.secrets."vaultwaden/env".path;
+      };
     };
     # grafana.enable = true;
     # mail.enable = true;

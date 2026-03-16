@@ -8,15 +8,12 @@
 {
   imports = [
     ./hardware-config.nix
-    ./synapse.nix
     ../../modules
   ];
 
   config = {
     devices.class = "server";
     domain = "kirottu.com";
-
-    synapse.enable = true;
 
     sops.secrets =
       let
@@ -51,6 +48,7 @@
         enable = true;
         # musicbot.enable = true;
       };
+      synapse.enable = true;
     };
 
     impermanence = {

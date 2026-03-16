@@ -5,16 +5,22 @@
   ...
 }:
 let
-  cfg = config.syncserver;
+  cfg = config.server.syncserver;
   hostname = "ffsync.${config.domain}";
 in
 {
-  options.syncserver.enable = lib.mkEnableOption "Firefox Syncserver";
+  options.server.syncserver = {
+    enable = lib.mkEnableOption "Firefox Syncserver";
+    secrets = lib.mkOption {
+      type = lib.types.path;
+    };
+  };
 
   config = lib.mkIf cfg.enable {
-    sops.secrets."syncserver/secrets" = {
-      sopsFile = ../../secrets/overwatch-of-harold.yaml;
-    };
+
+    impermanence.directories = [
+      config.services.mysql.dataDir
+    ];
 
     services.mysql.package = pkgs.mariadb;
 
@@ -26,7 +32,7 @@ in
         enableTLS = true;
         enableNginx = true;
       };
-      secrets = config.sops.secrets."syncserver/secrets".path;
+      secrets = cfg.secrets;
     };
   };
 }

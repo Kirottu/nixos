@@ -12,7 +12,6 @@ let
   url = "https://${matrixDomain}";
   clientConfig = {
     "m.homeserver".base_url = url;
-    "m.identity_server".base_url = "https://vector.im";
     "org.matrix.msc3575.proxy"."url" = url;
     "org.matrix.msc4143.rtc_foci" = [
       {
@@ -60,11 +59,12 @@ let
       proxy_http_version 1.1;
     '';
   };
+  cfg = config.server.synapse;
 in
 {
-  options.synapse.enable = lib.mkEnableOption "Synapse";
+  options.server.synapse.enable = lib.mkEnableOption "Synapse";
 
-  config = lib.mkIf config.synapse.enable {
+  config = lib.mkIf cfg.enable {
     impermanence.directories = [ config.services.matrix-synapse.dataDir ];
 
     server.turn.enable = true;

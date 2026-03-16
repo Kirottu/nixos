@@ -1,21 +1,28 @@
 {
   config,
+  lib,
   ...
 }:
 let
   vwDomain = "vw.${config.domain}";
+  cfg = config.server.vaultwarden;
 in
 {
+  options.server.vaultwarden = {
+    enable = lib.mkEnableOption "Vaultwarden";
+    secrets = lib.mkOption {
+      type = lib.types.path;
+    };
+  };
+
   config = {
     impermanence.directories = [
       "/var/lib/vaultwarden"
     ];
 
-    sops.secrets."vaultwarden/env".sopsFile = ../../secrets/overwatch-of-harold.yaml;
-
     services.vaultwarden = {
       enable = true;
-      environmentFile = config.sops.secrets."vaultwarden/env".path;
+      environmentFile = cfg.secrets;
       config = {
         DOMAIN = "https://${vwDomain}";
         SIGNUPS_ALLOWED = false;

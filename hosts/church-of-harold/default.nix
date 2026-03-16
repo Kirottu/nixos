@@ -1,5 +1,6 @@
 {
   pkgs,
+  inputs,
   config,
   myPkgs,
   ...
@@ -10,7 +11,7 @@ in
 {
   imports = [
     ./hardware-configuration.nix
-    ../../modules
+    (inputs.import-tree ../../modules)
   ];
   config = {
     devices.class = "desktop";

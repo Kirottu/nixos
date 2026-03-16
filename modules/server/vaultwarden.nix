@@ -15,7 +15,7 @@ in
     };
   };
 
-  config = {
+  config = lib.mkIf cfg.enable {
     impermanence.directories = [
       "/var/lib/vaultwarden"
     ];

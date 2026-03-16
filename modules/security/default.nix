@@ -3,10 +3,6 @@
   ...
 }:
 {
-  imports = [
-    ./sops.nix
-  ];
-
   security = {
     sudo = {
       enable = false;

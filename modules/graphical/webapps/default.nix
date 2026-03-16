@@ -2,6 +2,7 @@
   pkgs,
   lib,
   config,
+  myPkgs,
   ...
 }:
 {
@@ -73,7 +74,7 @@
             {
               mozilla.firefoxNativeMessagingHosts = [
                 (
-                  (pkgs.callPackage ./open-in-native-client.nix {
+                  (pkgs.callPackage myPkgs.open-in {
                     bins = [ pkgs.xdg-utils ];
                   })
                 )

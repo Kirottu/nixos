@@ -13,7 +13,7 @@
   config = lib.mkIf config.graphical.waybar.enable {
     hm.programs.waybar =
       let
-        theme = import ./${config.theming.theme}.nix {
+        theme = import ./_${config.theming.theme}.nix {
           inherit
             config
             lib

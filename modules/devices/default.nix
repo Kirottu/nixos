@@ -10,12 +10,4 @@
       ];
     };
   };
-
-  imports = [
-    ./desktop.nix
-    ./laptop.nix
-    ./graphical.nix
-    ./server.nix
-    ./base.nix
-  ];
 }

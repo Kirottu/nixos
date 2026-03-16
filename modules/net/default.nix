@@ -7,11 +7,6 @@
 {
   options.net.networkmanager.enable = lib.mkEnableOption "NetworkManager";
 
-  imports = [
-    ./stubby.nix
-    ./ctrld.nix
-  ];
-
   config = lib.mkIf config.net.networkmanager.enable {
     networking.networkmanager = {
       enable = true;

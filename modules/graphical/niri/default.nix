@@ -16,9 +16,6 @@
 
   imports = [
     inputs.niri.nixosModules.niri
-    ./binds.nix
-    ./settings.nix
-    ./rules.nix
   ];
 
   config = lib.mkIf config.graphical.niri.enable {

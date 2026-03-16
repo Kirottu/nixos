@@ -6,8 +6,6 @@
 }:
 {
   imports = [
-    ./users.nix
-    ./xdg.nix
     inputs.home-manager.nixosModules.home-manager
     (lib.modules.mkAliasOptionModule [ "hm" ] [ "home-manager" "users" config.mainUser.userName ])
   ];

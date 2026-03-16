@@ -7,4 +7,5 @@
   sable = import ./sable.nix;
   sable-tauri = import ./sable-tauri.nix;
   mumzic = import ./mumzic.nix;
+  open-in = import ./open-in;
 }

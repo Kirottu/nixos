@@ -8,6 +8,7 @@
   options = {
     domain = lib.mkOption {
       type = lib.types.str;
+      default = "";
     };
   };
 

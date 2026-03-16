@@ -45,6 +45,8 @@
       url = "github:lassulus/wrappers";
     };
 
+    import-tree.url = "github:vic/import-tree";
+
     impermanence.url = "github:nix-community/impermanence";
 
     # My bits and bops

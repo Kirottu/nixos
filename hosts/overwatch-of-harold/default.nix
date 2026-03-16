@@ -1,13 +1,14 @@
 {
   config,
   pkgs,
+  inputs,
   lib,
   ...
 }:
 {
   imports = [
     ./hardware-configuration.nix
-    ../../modules
+    (inputs.import-tree ../../modules)
   ];
 
   config = {

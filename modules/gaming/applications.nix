@@ -17,10 +17,6 @@ in
     itch.enable = lib.mkEnableOption "itch";
   };
 
-  imports = [
-    ./minecraft
-  ];
-
   config = lib.mkMerge [
     {
       programs.gamescope = {

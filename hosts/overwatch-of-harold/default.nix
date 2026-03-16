@@ -27,6 +27,9 @@
       "syncserver/secrets" = {
         sopsFile = ../../secrets/overwatch-of-harold.yaml;
       };
+      "nextcloud/adminpass" = {
+        sopsFile = ../../secrets/overwatch-of-harold.yaml;
+      };
     };
 
     # synapse.enable = true;
@@ -38,6 +41,7 @@
       nextcloud = {
         enable = true;
         monitoredServices = [ "nixos-upgrade" ];
+        adminPass = config.sops.secrets."nextcloud/adminpass".path;
       };
       ddclient = {
         enable = true;

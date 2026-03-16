@@ -22,21 +22,18 @@ in
       type = lib.types.nonEmptyStr;
       default = "nc.${config.domain}";
     };
+    adminPass = lib.mkOption {
+      type = lib.types.path;
+    };
+    dbPass = lib.mkOption {
+      type = lib.types.path;
+    };
   };
 
-  config = {
+  config = lib.mkIf cfg.enable {
     impermanence.directories = [
       config.services.nextcloud.home
     ];
-
-    sops.secrets = {
-      "nextcloud/adminpass" = {
-        sopsFile = ../../secrets/overwatch-of-harold.yaml;
-      };
-      "nextcloud/dbpass" = {
-        sopsFile = ../../secrets/overwatch-of-harold.yaml;
-      };
-    };
 
     services.nextcloud = {
       enable = true;
@@ -56,7 +53,7 @@ in
       };
       config = {
         adminuser = "Kirottu";
-        adminpassFile = config.sops.secrets."nextcloud/adminpass".path;
+        adminpassFile = cfg.adminPass;
         dbtype = "pgsql";
       };
       appstoreEnable = true;

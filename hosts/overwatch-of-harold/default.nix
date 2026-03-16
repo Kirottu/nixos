@@ -23,7 +23,9 @@
       "ddclient/password" = {
         sopsFile = ../../secrets/overwatch-of-harold.yaml;
       };
-      "vaultwarden/env".sopsFile = ../../secrets/overwatch-of-harold.yaml;
+      "vaultwarden/env" = {
+        sopsFile = ../../secrets/overwatch-of-harold.yaml;
+      };
       "syncserver/secrets" = {
         sopsFile = ../../secrets/overwatch-of-harold.yaml;
       };
@@ -52,7 +54,7 @@
       };
       vaultwarden = {
         enable = true;
-        secrets = config.sops.secrets."vaultwaden/env".path;
+        secrets = config.sops.secrets."vaultwarden/env".path;
       };
     };
     # grafana.enable = true;

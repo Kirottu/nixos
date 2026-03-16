@@ -70,10 +70,6 @@
     services.unbound = {
       enable = true;
       settings = {
-        remote-control = lib.mkIf config.grafana.enable {
-          control-enable = true;
-          control-interface = "/run/unbound/unbound.socket";
-        };
         server = {
           interface = [ "0.0.0.0" ];
           prefetch = "yes";

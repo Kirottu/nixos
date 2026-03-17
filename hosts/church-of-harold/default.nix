@@ -23,6 +23,11 @@ in
     # openrazer.enable = true;
     networking = {
       hostName = "church-of-harold";
+      extraHosts = ''
+        0.0.0.0 paradise-s1.battleye.com
+        0.0.0.0 test-s1.battleye.com
+        0.0.0.0 paradiseenhanced-s1.battleye.com
+      '';
     };
     gaming = {
       vr = {

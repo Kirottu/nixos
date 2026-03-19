@@ -200,6 +200,10 @@ in
           msc3266_enabled = true;
           msc4222_enabled = true;
         };
+        media_retention = {
+          local_media_lifetime = "30d";
+          remote_media_lifetime = "7d";
+        };
         max_event_delay_duration = "24h";
         rc_message = {
           per_second = 0.5;

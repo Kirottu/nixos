@@ -233,6 +233,8 @@ in
       # '';
       kernelParams = [
         "mitigations=off"
+        # Hardware accelerated scheduling maybe?
+        "amdgpu.mes=1"
       ];
     };
 

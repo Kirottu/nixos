@@ -190,9 +190,9 @@ in
       (lib.utils.mkApp {
         package = pkgs.mumble;
       })
-      (lib.utils.mkApp {
-        package = pkgs.callPackage myPkgs.sable { };
-      })
+      # (lib.utils.mkApp {
+      #   package = pkgs.callPackage myPkgs.sable { };
+      # })
       # (lib.utils.mkApp {
       #   package = pkgs.callPackage myPkgs.sable-tauri { };
       # })

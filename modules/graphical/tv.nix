@@ -71,10 +71,11 @@ in
       (lib.mkIf config.graphical.niri.enable (
         let
           niri = lib.getExe pkgs.niri;
-          workspaces = config.hm.programs.niri.settings.workspaces;
+          workspaces = config.hm.wayland.windowManager.niri.settings.workspace;
+          getName = workspace: (builtins.elemAt workspace._args 0);
           wsToTv = lib.concatStrings (
-            lib.mapAttrsToList (name: value: ''
-              ${niri} msg action move-workspace-to-monitor --reference ${name} ${cfg.tvOutput}
+            builtins.map (ws: ''
+              ${niri} msg action move-workspace-to-monitor --reference ${getName ws} ${cfg.tvOutput}
             '') workspaces
           );
           desktopMonsOff = lib.concatStrings (
@@ -88,25 +89,25 @@ in
             '') cfg.desktopOutputs
           );
           wsToDesktop = lib.concatStrings (
-            lib.mapAttrsToList (name: value: ''
-              ${niri} msg action move-workspace-to-monitor --reference ${name} ${value.open-on-output}
+            builtins.map (ws: ''
+              ${niri} msg action move-workspace-to-monitor --reference ${getName ws} ${ws.open-on-output}
             '') workspaces
           );
           fixDesktopOrder = lib.concatStrings (
             lib.flatten (
               builtins.map (
                 output:
-                lib.imap (i: attrs: ''
-                  ${niri} msg action move-workspace-to-index --reference ${attrs.name} ${toString i}
-                '') (builtins.filter (attrs: attrs.value.open-on-output == output) (lib.attrsToList workspaces))
+                lib.imap (i: ws: ''
+                  ${niri} msg action move-workspace-to-index --reference ${getName ws} ${toString i}
+                '') (builtins.filter (ws: ws.open-on-output == output) workspaces)
 
               ) cfg.desktopOutputs
             )
           );
           fixTvOrder = lib.concatStrings (
-            lib.imap (i: attrs: ''
-              ${niri} msg action move-workspace-to-index --reference ${attrs.name} ${toString i}
-            '') (lib.attrsToList workspaces)
+            lib.imap (i: ws: ''
+              ${niri} msg action move-workspace-to-index --reference ${getName ws} ${toString i}
+            '') workspaces
           );
 
           script =
@@ -136,8 +137,10 @@ in
               '';
         in
         {
-          hm.programs.niri.settings.binds = with config.hm.lib.niri.actions; {
-            "Mod+T".action = spawn "${script}";
+          hm.wayland.windowManager.niri.settings.binds = {
+            "Mod+T" = {
+              spawn = "${script}";
+            };
           };
         }
       ))

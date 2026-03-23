@@ -6,11 +6,12 @@
       defaultEditor = true;
       extraPackages = with pkgs; [
         vscode-langservers-extracted
-        nil
-        nixfmt-rfc-style
+        nixd
+        nixfmt
         rust-analyzer
         tinymist
         ltex-ls-plus
+        zls
         marksman
         python313Packages.python-lsp-server
         typescript-language-server
@@ -54,6 +55,9 @@
         language-server.ltex-ls.config = {
           command = "ltex-ls-plus";
         };
+        language-server.nixd = {
+          command = "nixd";
+        };
         language = [
           {
             name = "css";
@@ -63,6 +67,7 @@
             name = "nix";
             auto-format = true;
             formatter.command = "nixfmt";
+            language-servers = [ "nixd" ];
           }
           {
             name = "typst";

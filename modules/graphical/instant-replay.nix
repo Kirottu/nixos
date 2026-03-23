@@ -45,17 +45,16 @@ in
       };
     };
 
-    hm.programs.niri.settings.binds = lib.mkIf config.graphical.niri.enable (
-      with config.hm.lib.niri.actions;
-      {
-        "Mod+P".action = spawn "${pkgs.writeShellScript "instant-replay" ''
+    hm.wayland.windowManager.niri.settings.binds = lib.mkIf config.graphical.niri.enable {
+      "Mod+P" = {
+        spawn = "${pkgs.writeShellScript "instant-replay" ''
           pkill -SIGRTMIN+3 -f gpu-screen-recorder -H
           sleep 0.1
           FILE=$(journalctl --user -e -u gpu-screen-recorder -n 1 -o cat | tr -d '\n')
           ffmpeg -i $FILE -c:v copy -c:a aac -ac 2 -filter_complex amerge=inputs=${builtins.toString (builtins.length cfg.audioSources)} "$FILE-merged.mp4"
           ${pkgs.libnotify}/bin/notify-send "Replay saved" "Replay saved as $FILE"
         ''}";
-      }
-    );
+      };
+    };
   };
 }

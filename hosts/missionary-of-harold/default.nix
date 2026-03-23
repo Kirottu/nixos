@@ -32,22 +32,32 @@
     graphical = {
       yand.output = "eDP-1";
       niri.extraOptions = {
-        workspaces."1-chat" = {
-          open-on-output = "eDP-1";
-          name = "chat";
-        };
+        workspace = [
+          {
+            _args = [ "1-chat" ];
+            open-on-output = "eDP-1";
+            name = "chat";
+          }
 
-        workspaces."3-games" = {
-          open-on-output = "eDP-1";
-          name = "games";
-        };
+          {
+            _args = [ "3-games" ];
+            open-on-output = "eDP-1";
+            name = "games";
+          }
 
-        workspaces."2-web" = {
-          open-on-output = "eDP-1";
-          name = "web";
-        };
+          {
+            _args = [ "2-web" ];
+            open-on-output = "eDP-1";
+            name = "web";
+          }
+        ];
 
-        outputs."eDP-1".scale = 1.0;
+        output = [
+          {
+            _args = [ "eDP-1" ];
+            scale = 1.0;
+          }
+        ];
       };
     };
 

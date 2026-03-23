@@ -33,7 +33,7 @@ in
       vr = {
         enable = true;
         defaultSink = desktopSink;
-        defaultSource = "alsa_input.usb-Razer_Inc_Razer_Seiren_Mini_UC2211L03503596-00.mono-fallback";
+        defaultSource = "alsa_input.pci-0000_0a_00.4.analog-stereo";
       };
       dolphin-emu.enable = true;
       heroic.enable = true;
@@ -69,76 +69,75 @@ in
         ];
       };
       niri.extraOptions = {
-        workspaces."chat" = {
-          open-on-output = "DP-3";
-        };
-        workspaces."games" = {
-          open-on-output = "DP-2";
-        };
-        workspaces."vr" = {
-          open-on-output = "DP-1";
-        };
-        workspaces."web-dp1" = {
-          open-on-output = "DP-1";
-        };
-        workspaces."web-dp2" = {
-          open-on-output = "DP-2";
-        };
-        workspaces."web-dp3" = {
-          open-on-output = "DP-3";
-        };
+        workspace = [
+          {
+            _args = [ "chat" ];
+            open-on-output = "DP-3";
+          }
+          {
+            _args = [ "games" ];
+            open-on-output = "DP-2";
+          }
+          {
+            _args = [ "vr" ];
+            open-on-output = "DP-1";
+          }
+          {
+            _args = [ "web-dp1" ];
+            open-on-output = "DP-1";
+          }
+          {
+            _args = [ "web-dp2" ];
+            open-on-output = "DP-2";
+          }
+          {
+            _args = [ "web-dp3" ];
+            open-on-output = "DP-3";
+          }
+        ];
 
-        outputs."DP-1" = {
-          mode = {
-            width = 1920;
-            height = 1080;
-            refresh = 74.986000;
-          };
-          position = {
-            x = 0;
-            y = 330;
-          };
-        };
-        outputs."DP-2" = {
-          mode = {
-            width = 2560;
-            height = 1440;
-            refresh = 144.000;
-          };
-          variable-refresh-rate = true;
-          position = {
-            x = 1920;
-            y = 0;
-          };
-        };
-        outputs."DP-3" = {
-          mode = {
-            width = 1280;
-            height = 1024;
-            refresh = 75.025002;
-          };
-          position = {
-            x = 4480;
-            y = 230;
-          };
-        };
-        outputs."HDMI-A-1" = {
-          mode = {
-            width = 3840;
-            height = 2160;
-            refresh = 60.0;
-          };
-          scale = 2.0;
-          enable = false;
-          position = {
-            x = 5760;
-            y = 0;
-          };
-        };
+        output = [
+          {
+            _args = [ "DP-1" ];
+            mode = "1920x1080@74.986000";
+            position._props = {
+              x = 0;
+              y = 330;
+            };
+          }
+          {
+            _args = [ "DP-2" ];
+            mode = "2560x1440@144.000";
+            variable-refresh-rate = [ ];
+            position._props = {
+              x = 1920;
+              y = 0;
+            };
+          }
+          {
+            _args = [ "DP-3" ];
+            mode = "1280x1024@75.025002";
+            position._props = {
+              x = 4480;
+              y = 230;
+            };
+          }
+          {
+            _args = [ "HDMI-A-1" ];
+            mode = "3840x2160@60.0";
+            scale = 2.0;
+            off = [ ];
+            position._props = {
+              x = 5760;
+              y = 0;
+            };
+          }
+        ];
       };
+
     };
     daemons = {
-      # llm.enable = true;
+      llm.enable = true;
     };
     services = {
       udev = {

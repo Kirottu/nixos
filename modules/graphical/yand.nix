@@ -40,6 +40,7 @@ in
 
             .notification {
               background: linear-gradient(135deg, ${l1} 250px, ${l2} 250px, ${l2} 300px, ${l1} 300px);
+              opacity: 0.5;
               margin: 10px;
               box-shadow: 0 0 5px black;
               border-radius: 0;

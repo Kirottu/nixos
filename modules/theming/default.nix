@@ -41,7 +41,7 @@ in
       default =
         {
           diagonals = ./color-schemes/adwaita-dark.yaml;
-          bliss = ./color-schemes/nord-light.yaml;
+          bliss = ./color-schemes/adwaita-dark.yaml;
         }
         .${config.theming.theme};
     };
@@ -76,7 +76,7 @@ in
       default =
         {
           diagonals = "dark";
-          bliss = "light";
+          bliss = "dark";
         }
         .${config.theming.theme};
     };
@@ -179,6 +179,14 @@ in
               dark = icon-theme;
               package = pkgs.papirus-icon-theme;
             };
+            opacity =
+              {
+                diagonals = { };
+                bliss = {
+                  terminal = 0.80;
+                };
+              }
+              .${cfg.theme};
           };
           stylix = {
             enable = true;

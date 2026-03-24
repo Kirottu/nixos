@@ -57,57 +57,63 @@
           ];
         in
         with config.theming.themeAttrs;
-        lib.mergeAttrs
-          {
-            format = lib.concatStrings [
-              "[](${l1})"
-              "$directory"
-              "[](fg:${l1} bg:${l2})"
-              "$git_branch$git_status"
-              "[](fg:${l2} bg:${l3})"
-              "$package"
-              (lib.concatStrings (builtins.map (mod: "$" + mod) middle_modules))
-              "[](fg:${l3} bg:${l4})"
-              "$nix_shell$time"
-              "[](fg:${l4})\n$character"
-            ];
+        {
+          diagonals =
+            lib.mergeAttrs
+              {
+                format = lib.concatStrings [
+                  "[](${l1})"
+                  "$directory"
+                  "[](fg:${l1} bg:${l2})"
+                  "$git_branch$git_status"
+                  "[](fg:${l2} bg:${l3})"
+                  "$package"
+                  (lib.concatStrings (builtins.map (mod: "$" + mod) middle_modules))
+                  "[](fg:${l3} bg:${l4})"
+                  "$nix_shell$time"
+                  "[](fg:${l4})\n$character"
+                ];
 
-            directory = {
-              style = "bg:${l1}";
-              format = "[ $path ]($style)";
-            };
-
-            git_branch = {
-              style = "bg:${l2}";
-              format = "[ $symbol$branch(:$remote_branch) ]($style)";
-            };
-            git_status = {
-              style = "bg:${l2}";
-              format = "([\\[$all_status$ahead_behind\\] ]($style))";
-            };
-
-            package = {
-              format = "[ $symbol$version ]($style)";
-              style = "bg:${l3}";
-            };
-
-            nix_shell = {
-              style = "bg:${l4}";
-              format = "[ $symbol$state( \\($name\\)) ]($style)";
-            };
-
-          }
-          (
-            builtins.listToAttrs (
-              builtins.map (mod: {
-                name = mod;
-                value = {
-                  style = "bg:${l3}";
-                  format = "[ via $symbol($version) ]($style)";
+                directory = {
+                  style = "bg:${l1}";
+                  format = "[ $path ]($style)";
                 };
-              }) middle_modules
-            )
-          );
+
+                git_branch = {
+                  style = "bg:${l2}";
+                  format = "[ $symbol$branch(:$remote_branch) ]($style)";
+                };
+                git_status = {
+                  style = "bg:${l2}";
+                  format = "([\\[$all_status$ahead_behind\\] ]($style))";
+                };
+
+                package = {
+                  format = "[ $symbol$version ]($style)";
+                  style = "bg:${l3}";
+                };
+
+                nix_shell = {
+                  style = "bg:${l4}";
+                  format = "[ $symbol$state( \\($name\\)) ]($style)";
+                };
+
+              }
+              (
+                builtins.listToAttrs (
+                  map (mod: {
+                    name = mod;
+                    value = {
+                      style = "bg:${l3}";
+                      format = "[ via $symbol($version) ]($style)";
+                    };
+                  }) middle_modules
+                )
+              );
+          bliss = {
+          };
+        }
+        .${config.theming.theme};
     };
   };
 }

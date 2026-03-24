@@ -9,6 +9,34 @@ let
 in
 {
   config.hm.wayland.windowManager.niri.settings = lib.mkIf cfg.enable (
+    let
+      lockfile = "/tmp/niri-overview";
+      overview-script =
+        barShow: barHide:
+        "${pkgs.writeShellScript "niri-overview" ''
+          if [ ! -f ${lockfile} ]; then
+            touch ${lockfile}
+            niri msg action open-overview
+            ${barShow}
+            anyrun
+            rm ${lockfile}
+            niri msg action close-overview
+          else
+            anyrun close
+          fi
+        ''}";
+      overview-monitor = "niri msg -j event-stream | ${pkgs.writeShellScript "niri-overview-monitor" ''
+        while read line; do
+          overview=$(echo $line | ${lib.getExe pkgs.jq} '.OverviewOpenedOrClosed.is_open')
+
+          if [ $overview = "false" ] && [ -f ${lockfile} ]; then
+            rm ${lockfile}
+            anyrun close
+          fi
+        done                                            
+      ''}";
+
+    in
     lib.mkMerge [
       config.graphical.niri.extraOptions
       {
@@ -175,21 +203,11 @@ in
             };
             overview =
               let
-                lockfile = "/tmp/niri-overview";
               in
               {
                 spawn-sh-at-startup = [
                   [
-                    "niri msg -j event-stream | ${pkgs.writeShellScript "niri-overview-monitor" ''
-                      while read line; do
-                        overview=$(echo $line | ${lib.getExe pkgs.jq} '.OverviewOpenedOrClosed.is_open')
-
-                        if [ $overview = "false" ] && [ -f ${lockfile} ]; then
-                          rm ${lockfile}
-                          anyrun close
-                        fi
-                      done                                            
-                    ''}"
+                    overview-monitor
                   ]
                 ];
                 overview = {
@@ -201,25 +219,177 @@ in
                     _props = {
                       repeat = false;
                     };
-                    spawn = "${pkgs.writeShellScript "niri-overview" ''
-                      if [ ! -f ${lockfile} ]; then
-                        touch ${lockfile}
-                        niri msg action open-overview
-                        killall -SIGUSR1 .waybar-wrapped
-                        anyrun
-                        killall -SIGUSR1 .waybar-wrapped
-                        rm ${lockfile}
-                        niri msg action close-overview
-                      else
-                        anyrun close
-                      fi
-                    ''}";
+                    spawn = overview-script "killall -SIGUSR1 .waybar-wrapped" "killall -SIGUSR1 .waybar-wrapped";
                   };
                 };
               };
           }
           .${config.theming.themeAttrs.subtheme}
         ];
+        bliss = {
+          animations = {
+            workspace-switch = {
+              spring._props = {
+                damping-ratio = 0.80;
+                stiffness = 523;
+                epsilon = 0.0001;
+              };
+            };
+            window-open = {
+              duration-ms = 1400;
+              curve = "ease-out-expo";
+              custom-shader = ''
+                float ease_curve(float x) {
+                    return x < 0.5 ? 4.0*x*x*x : 1.0 - pow(-2.0*x + 2.0, 3.0)/2.0;
+                }
+
+                vec4 open_color(vec3 coords_geo, vec3 size_geo) {
+                    float t = niri_clamped_progress;
+                    float prog = ease_curve(t);
+
+                    // bottom-right corner
+                    vec2 start = vec2(1.0, 1.0);
+
+                    // compute distance along diagonal from corner
+                    vec2 p = coords_geo.xy;
+                    vec2 dir = vec2(-1.0, -1.0); // vector toward top-left
+                    float dist = dot(p - start, dir);
+
+                    // normalize distance to max diagonal (from corner to opposite)
+                    float max_diag = 2.0;
+                    float norm_dist = dist / max_diag;
+
+                    // pixels not yet reached by sweep are invisible
+                    if (norm_dist > prog) {
+                        return vec4(0.0);
+                    }
+
+                    // sample normally
+                    vec3 coords_tex = niri_geo_to_tex * coords_geo;
+                    vec4 col = texture2D(niri_tex, coords_tex.xy);
+
+                    return col;
+                }'';
+            };
+
+            window-close = {
+              duration-ms = 1400;
+              curve = "ease-out-expo";
+              custom-shader = ''
+                // ease-in-out cubic curve helper
+                float ease_curve(float x) {
+                    return x < 0.5 ? 4.0*x*x*x : 1.0 - pow(-2.0*x + 2.0, 3.0)/2.0;
+                }
+
+                vec4 close_color(vec3 coords_geo, vec3 size_geo) {
+                    float t = niri_clamped_progress;
+
+
+                    float prog = ease_curve(t);
+
+                    // choose corner: 0=top-left,1=top-right,2=bottom-left,3=bottom-right
+
+                    int corner = 0; 
+                    vec2 start;
+                    if (corner == 0) start = vec2(0.0,0.0);
+                    else if (corner == 1) start = vec2(1.0,0.0);
+                    else if (corner == 2) start = vec2(0.0,1.0);
+                    else start = vec2(1.0,1.0);
+
+
+                    // compute distance along diagonal from corner
+
+                    vec2 p = coords_geo.xy;
+                    float dist = dot(p - start, vec2(1.0,1.0));
+
+                    // normalize distance to max diagonal
+                    float max_diag = 2.0; // max of vec2(1,1)
+                    float norm_dist = dist / max_diag;
+
+
+                    // If pixel is behind the sweeping line, make it invisible
+
+                    if (norm_dist <= prog) {
+                        return vec4(0.0);
+                    }
+
+                    // sample normally
+                    vec3 coords_tex = niri_geo_to_tex * coords_geo;
+                    vec4 col = texture2D(niri_tex, coords_tex.xy);
+
+                    return col;
+                }'';
+            };
+
+            # horizontal-view-movement = {
+            #   spring._props = {
+            #     damping-ratio = 0.85;
+            #     stiffness = 423;
+            #     epsilon = 0.0001;
+            #   };
+            # };
+            # window-movement = {
+            #   spring._props = {
+            #     damping-ratio = 0.75;
+            #     stiffness = 323;
+            #     epsilon = 0.0001;
+            #   };
+            # };
+            window-resize = {
+              custom-shader = ''
+                vec4 resize_color(vec3 coords_curr_geo, vec3 size_curr_geo) {
+                    vec3 coords_tex_next = niri_geo_to_tex_next * coords_curr_geo;
+                    vec4 color = texture2D(niri_tex_next, coords_tex_next.st);
+                    return color;
+                }
+              '';
+            };
+            config-notification-open-close = {
+              spring._props = {
+                damping-ratio = 0.65;
+                stiffness = 923;
+                epsilon = 0.001;
+              };
+            };
+            screenshot-ui-open = {
+              duration-ms = 200;
+              curve = "ease-out-quad";
+            };
+            overview-open-close = {
+              spring._props = {
+                damping-ratio = 0.85;
+                stiffness = 800;
+                epsilon = 0.0001;
+              };
+            };
+          };
+
+          layout.background-color = "transparent";
+          spawn-sh-at-startup = [
+            [
+              overview-monitor
+            ]
+          ];
+          overview = {
+            workspace-shadow = {
+              off = [ ];
+            };
+            zoom = 0.75;
+          };
+          binds = {
+            "Mod+D" = {
+              _props = {
+                repeat = false;
+              };
+              spawn =
+                let
+                  bar = config.hm.programs.ironbar.settings.name;
+                in
+                overview-script "ironbar bar ${bar} show" "ironbar bar ${bar} hide";
+            };
+          };
+
+        };
       }
       .${config.theming.theme}
     ]

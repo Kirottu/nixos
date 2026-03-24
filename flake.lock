@@ -1238,15 +1238,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1772806935,
-        "narHash": "sha256-ZKQ5xzfVAwokqzQMj9TbJC68oQnsG8Nr5/eIiNkh5nk=",
+        "lastModified": 1774365997,
+        "narHash": "sha256-ZnrV3rtyBmat4e/0am0HGKG796oGLnyz8wILsP9XkUc=",
         "owner": "Kirottu",
         "repo": "yand",
-        "rev": "ca5ce8cc461991783e229b7bc3bbdf9a0a288aba",
+        "rev": "79ec6c6115af74621222a7faee4d352deb956b8b",
         "type": "github"
       },
       "original": {
         "owner": "Kirottu",
+        "ref": "windowing-rewrite",
         "repo": "yand",
         "type": "github"
       }

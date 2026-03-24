@@ -79,6 +79,9 @@ in
                 min-width: 0px;
               }
             '';
+            bliss = ''
+
+            '';
           }
           .${config.theming.theme};
       };

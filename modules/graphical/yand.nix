@@ -21,20 +21,21 @@ in
       inputs.yand.homeModules.yand
     ];
 
-    hm.services.yand = {
-      enable = true;
-      settings = {
-        width = 400;
-        spacing = 10;
-        margin = 5;
-        timeout = 5;
-        layer = "Top";
-        output = lib.mkIf (cfg.output != null) cfg.output;
-      };
-      style =
-        with config.theming.themeAttrs;
-        {
-          diagonals = ''
+    hm.services.yand = lib.mkMerge [
+      {
+        enable = true;
+      }
+      {
+        diagonals = {
+          settings = {
+            width = 400;
+            spacing = 10;
+            margin = 5;
+            timeout = 5;
+            layer = "Top";
+            output = lib.mkIf (cfg.output != null) cfg.output;
+          };
+          style = with config.theming.themeAttrs; ''
             window {
               background: transparent;
             }
@@ -76,11 +77,54 @@ in
             .icon {
               margin: 5px;
             }      '';
-          bliss = ''
+        };
+        bliss = {
+          settings = {
+            width = 400;
+            spacing = 10;
+            margin = 10;
+            timeout = 5;
+            layer = "Top";
+            output = lib.mkIf (cfg.output != null) cfg.output;
+          };
+          style = ''
+            window {
+              border-radius: 20px;
+              background-color: #ffffff90;
+              color: black;
+            }
+
+            .summary {
+              margin: 5px;
+              font-size: 11pt;
+            }
+
+            .body {
+              margin: 5px;
+            }
+
+            .action {
+              border-radius: 0;
+              border-right: 1px solid @borders;
+            }
+
+            .action:first-child {
+              border-bottom-left-radius: 20px;
+            }
+
+            .action:last-child {
+              border-bottom-right-radius: 20px;
+              border-right: none;
+            }
+
+            .icon {
+              margin: 5px;
+            }
 
           '';
-        }
-        .${config.theming.theme};
-    };
+        };
+      }
+      .${config.theming.theme}
+    ];
   };
 }

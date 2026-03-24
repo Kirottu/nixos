@@ -182,7 +182,63 @@ in
             .${subtheme}
           ];
           bliss = ''
+            window {
+              background: transparent;
+              border-radius: 20px;
+              color: black;
+            }
 
+            text {
+              min-height: 40px;
+              padding-left: 40px;
+              padding-right: 40px;
+              border-top-right-radius: 20px;
+              border-top-left-radius: 20px;
+            }
+
+            box.main {
+              border-radius: 20px;
+              background-color: #ffffff40;
+            }
+
+            box.matches {
+              background-color: #ffffff40;
+              border-radius: 20px;
+            }
+
+            .plugin {
+              background: transparent;
+            }
+
+            .plugin:not(:last-child) {
+              padding-bottom: 5px;
+            }
+
+            .match {
+              padding: 2.5px;
+              color: black;
+              border-radius: 20px;
+            }
+
+            @keyframes fade {
+              0% {
+                opacity: 0;
+              }
+
+              100% {
+                opacity: 1;
+              }
+            }
+
+            .match:selected {
+              background-color: #99ccff;
+              animation: fade 0.1s linear;
+            }
+
+            label.match.description {
+              font-size: 10px;
+              color: #222222;
+            }
           '';
         }
         .${config.theming.theme};

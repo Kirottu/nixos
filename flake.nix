@@ -20,8 +20,8 @@
       url = "git+https://codeberg.org/BANanaD3V/niri-nix";
     };
 
-    zen-browser = {
-      url = "github:0xc000022070/zen-browser-flake";
+    ironbar = {
+      url = "github:JakeStanger/ironbar";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -59,7 +59,7 @@
 
     # My bits and bops
     yand = {
-      url = "github:Kirottu/yand";
+      url = "github:Kirottu/yand/windowing-rewrite";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

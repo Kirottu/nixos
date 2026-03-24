@@ -128,6 +128,7 @@ in
               decorations = "None";
             };
           };
+
         };
       })
       (lib.mkIf cfg.browsers.zen.enable {

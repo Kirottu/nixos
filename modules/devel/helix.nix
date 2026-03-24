@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 {
   config = {
     hm.programs.helix = {
@@ -13,9 +13,11 @@
         ltex-ls-plus
         zls
         marksman
+        clang-tools
         python313Packages.python-lsp-server
         typescript-language-server
         omnisharp-roslyn
+        inputs.codel.packages.x86_64-linux.default
       ];
       settings = {
         editor = {
@@ -58,7 +60,17 @@
         language-server.nixd = {
           command = "nixd";
         };
+        language-server.codel = {
+          command = "codel";
+        };
         language = [
+          {
+            name = "rust";
+            language-servers = [
+              "rust-analyzer"
+              "codel"
+            ];
+          }
           {
             name = "css";
             language-servers = [ "vscode-css-language-server" ];

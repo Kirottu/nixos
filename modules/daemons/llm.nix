@@ -61,6 +61,7 @@ in
 
         in
         {
+          globalTTL = 120;
           # Merge all model configs into one attrset
           models = lib.foldl (acc: m: acc // buildModel m) { } modelList;
         };

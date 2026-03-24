@@ -2,7 +2,10 @@
   config = {
     hm.programs.git = {
       enable = true;
-      signing.signByDefault = true;
+      signing = {
+        signByDefault = true;
+        format = "openpgp";
+      };
       settings = {
         user.name = "Arno Vaara";
         user.email = "arnovaara@kirottu.com";

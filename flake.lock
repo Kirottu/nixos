@@ -112,6 +112,27 @@
         "type": "github"
       }
     },
+    "codel": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1774219361,
+        "narHash": "sha256-BhmbvfrFK5xgDUYaUKIwWkT1n+p/q0pCC0PVekEHtBw=",
+        "ref": "main",
+        "rev": "478e5a6e6598948f346969441286c364e1f9d4e9",
+        "revCount": 3,
+        "type": "git",
+        "url": "ssh://git@zimward.moe/~/lsp"
+      },
+      "original": {
+        "ref": "main",
+        "type": "git",
+        "url": "ssh://git@zimward.moe/~/lsp"
+      }
+    },
     "ctrld": {
       "inputs": {
         "nixpkgs": [
@@ -908,6 +929,7 @@
     "root": {
       "inputs": {
         "anyrun": "anyrun",
+        "codel": "codel",
         "ctrld": "ctrld",
         "hm-modules": "hm-modules",
         "home-manager": "home-manager",

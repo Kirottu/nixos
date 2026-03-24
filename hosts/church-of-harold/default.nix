@@ -1,6 +1,7 @@
 {
   pkgs,
   inputs,
+  lib,
   config,
   myPkgs,
   ...
@@ -252,6 +253,8 @@ in
     hm.programs.git.signing.key = "B0640016A4BADA0FFBDBD1A57A14996A0D0109CC";
 
     wiibt.enable = true;
+
+    theming.theme = lib.mkForce "bliss";
 
     system.stateVersion = "24.11"; # Did you read the comment?
     hm.home.stateVersion = "24.11";

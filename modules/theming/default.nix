@@ -5,11 +5,15 @@
   pkgs,
   ...
 }:
+let
+  cfg = config.theming;
+in
 {
   options.theming = {
     theme = lib.mkOption {
       type = lib.types.enum [
         "diagonals"
+        "bliss"
       ];
       default = "diagonals";
       description = "What overall theme should be applied";
@@ -26,6 +30,7 @@
             # Subthemes: vertical, overview
             subtheme = "vertical";
           };
+          bliss = { };
         }
         .${config.theming.theme};
       description = "Additional attributes for theme";
@@ -33,20 +38,47 @@
     colorScheme = lib.mkOption {
       type = lib.types.path;
       description = "Base16 color scheme to use";
-      default = { diagonals = ./color-schemes/adwaita-dark.yaml; }.${config.theming.theme};
+      default =
+        {
+          diagonals = ./color-schemes/adwaita-dark.yaml;
+          bliss = ./color-schemes/nord-light.yaml;
+        }
+        .${config.theming.theme};
     };
     wallpaper = lib.mkOption {
       type = lib.types.path;
       description = "Wallpaper to be used for desktop & lock screen";
-      default = { diagonals = ./images/marker-of-harold.png; }.${config.theming.theme};
+      default =
+        {
+          diagonals = ./images/marker-of-harold.png;
+          bliss = ./images/harold-overlook-small.png;
+        }
+        .${config.theming.theme};
     };
     plymouth = {
       enable = lib.mkEnableOption "Plymouth";
       logo = lib.mkOption {
         type = lib.types.path;
         description = "Plymouth boot screen logo";
-        default = { diagonals = ./images/marker-resized.png; }.${config.theming.theme};
+        default =
+          {
+            diagonals = ./images/marker-resized.png;
+            bliss = ./images/harold-512.png;
+          }
+          .${config.theming.theme};
       };
+    };
+    polarity = lib.mkOption {
+      type = lib.types.enum [
+        "light"
+        "dark"
+      ];
+      default =
+        {
+          diagonals = "dark";
+          bliss = "light";
+        }
+        .${config.theming.theme};
     };
   };
 
@@ -60,18 +92,24 @@
         let
           icon-theme = "Papirus-Dark";
 
-          qtctConfig = ''
-            [Fonts]
-            fixed="Hack Nerd Font,11,-1,5,50,0,0,0,0,0,Regular"
-            general="Noto Sans,11,-1,5,50,0,0,0,0,0"
+          qtctConfig = lib.concatStrings (
+            [
+              ''
+                [Fonts]
+                fixed="Hack Nerd Font,11,-1,5,50,0,0,0,0,0,Regular"
+                general="Noto Sans,11,-1,5,50,0,0,0,0,0"
 
-            [Appearance]
-            style=Breeze
-            standard_dialogs=xdgdesktopportal
-            icon_theme=${icon-theme}
-            custom_palette=true
-            color_scheme_path=${pkgs.libsForQt5.qt5ct}/share/qt5ct/colors/darker.conf
-          '';
+                [Appearance]
+                style=Breeze
+                standard_dialogs=xdgdesktopportal
+                icon_theme=${icon-theme}
+                custom_palette=true
+              ''
+            ]
+            ++ lib.optional (cfg.polarity == "dark") ''
+              color_scheme_path=${pkgs.libsForQt5.qt5ct}/share/qt5ct/colors/darker.conf
+            ''
+          );
         in
         {
           fonts.packages = with pkgs; [
@@ -100,22 +138,32 @@
           # TODO: Should probably be upstreamed
           hm.dconf.settings = {
             "org/gnome/desktop/interface" = {
-              color-scheme = "prefer-dark";
+              color-scheme =
+                {
+                  light = "prefer-light";
+                  dark = "prefer-dark";
+                }
+                .${cfg.polarity};
             };
           };
           gtk.iconCache.enable = true;
 
           hm.stylix = {
-            base16Scheme = config.theming.colorScheme;
-            polarity = "dark";
+            base16Scheme = cfg.colorScheme;
+            polarity = cfg.polarity;
             enable = true;
             autoEnable = false;
 
-            image = config.theming.wallpaper;
+            image = cfg.wallpaper;
 
             cursor = {
               package = pkgs.bibata-cursors;
-              name = "Bibata-Original-Classic";
+              name =
+                {
+                  dark = "Bibata-Original-Classic";
+                  light = "Bibata-Original-Ice";
+                }
+                .${cfg.polarity};
               size = 24;
             };
 
@@ -135,7 +183,7 @@
           stylix = {
             enable = true;
             autoEnable = false;
-            base16Scheme = config.theming.colorScheme;
+            base16Scheme = cfg.colorScheme;
 
             fonts = {
               # serif = {
@@ -164,14 +212,14 @@
             };
 
             targets = {
-              plymouth = lib.mkIf config.theming.plymouth.enable {
+              plymouth = lib.mkIf cfg.plymouth.enable {
                 enable = true;
-                logo = config.theming.plymouth.logo;
+                logo = cfg.plymouth.logo;
                 logoAnimated = false;
               };
             };
           };
-          boot = lib.mkIf config.theming.plymouth.enable {
+          boot = lib.mkIf cfg.plymouth.enable {
             plymouth = {
               enable = true;
             };
@@ -190,7 +238,7 @@
       {
         stylix = {
           enable = true;
-          base16Scheme = config.theming.colorScheme;
+          base16Scheme = cfg.colorScheme;
           autoEnable = false;
         };
       };

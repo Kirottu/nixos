@@ -89,6 +89,10 @@
     };
     virt.distrobox.enable = true;
     daemons.kidex.enable = true;
+    services.mullvad-vpn = {
+      enable = true;
+      package = pkgs.mullvad-vpn;
+    };
 
     mainUser.extraGroups = [
       "adbusers"

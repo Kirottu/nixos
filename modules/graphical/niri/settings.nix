@@ -178,10 +178,8 @@ in
                 lockfile = "/tmp/niri-overview";
               in
               {
-                spawn-at-startup = [
+                spawn-sh-at-startup = [
                   [
-                    "sh"
-                    "-c"
                     "niri msg -j event-stream | ${pkgs.writeShellScript "niri-overview-monitor" ''
                       while read line; do
                         overview=$(echo $line | ${lib.getExe pkgs.jq} '.OverviewOpenedOrClosed.is_open')

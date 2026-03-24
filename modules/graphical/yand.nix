@@ -26,6 +26,7 @@ in
       settings = {
         width = 400;
         spacing = 10;
+        margin = 5;
         timeout = 5;
         layer = "Top";
         output = lib.mkIf (cfg.output != null) cfg.output;
@@ -40,8 +41,8 @@ in
 
             .notification {
               background: linear-gradient(135deg, ${l1} 250px, ${l2} 250px, ${l2} 300px, ${l1} 300px);
-              opacity: 0.5;
-              margin: 10px;
+              opacity: 1.0;
+              margin: 5px;
               box-shadow: 0 0 5px black;
               border-radius: 0;
             }
@@ -75,6 +76,9 @@ in
             .icon {
               margin: 5px;
             }      '';
+          bliss = ''
+
+          '';
         }
         .${config.theming.theme};
     };

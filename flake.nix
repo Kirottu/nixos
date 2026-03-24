@@ -52,6 +52,11 @@
 
     impermanence.url = "github:nix-community/impermanence";
 
+    codel = {
+      url = "git+ssh://git@zimward.moe/~/lsp?ref=main";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # My bits and bops
     yand = {
       url = "github:Kirottu/yand";

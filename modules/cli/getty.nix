@@ -40,6 +40,12 @@
                            ##                                                 
           [0m
         '';
+        bliss = ''
+
+          In these lands, shall the light of Harold shine upon us all.
+
+          TODO
+        '';
       }
       .${config.theming.theme};
 

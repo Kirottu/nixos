@@ -45,6 +45,9 @@ in
                 };
               }
               .${config.theming.themeAttrs.subtheme};
+            bliss = {
+              fraction = 0.3;
+            };
           }
           .${config.theming.theme};
         width.absolute = 800;
@@ -178,6 +181,9 @@ in
             }
             .${subtheme}
           ];
+          bliss = ''
+
+          '';
         }
         .${config.theming.theme};
     };

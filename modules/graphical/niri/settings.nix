@@ -19,6 +19,7 @@ in
             niri msg action open-overview
             ${barShow}
             anyrun
+            ${barHide}
             rm ${lockfile}
             niri msg action close-overview
           else
@@ -228,13 +229,13 @@ in
         ];
         bliss = {
           animations = {
-            workspace-switch = {
-              spring._props = {
-                damping-ratio = 0.80;
-                stiffness = 523;
-                epsilon = 0.0001;
-              };
-            };
+            # workspace-switch = {
+            #   spring._props = {
+            #     damping-ratio = 0.80;
+            #     stiffness = 523;
+            #     epsilon = 0.0001;
+            #   };
+            # };
             window-open = {
               duration-ms = 1400;
               curve = "ease-out-expo";
@@ -383,9 +384,17 @@ in
               };
               spawn =
                 let
-                  bar = config.hm.programs.ironbar.settings.name;
+                  bar = config.hm.programs.ironbar.config.name;
                 in
-                overview-script "ironbar bar ${bar} show" "ironbar bar ${bar} hide";
+                overview-script
+                  ''
+                    ironbar bar ${bar} show
+                    yand set-offset 60
+                  ''
+                  ''
+                    ironbar bar ${bar} hide
+                    yand set-offset 0
+                  '';
             };
           };
 

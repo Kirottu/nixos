@@ -90,7 +90,12 @@ in
     lib.mkIfElse config.graphical.enable
       (
         let
-          icon-theme = "Papirus-Dark";
+          icon-theme =
+            {
+              bliss = "Papirus-Light";
+              diagonals = "Papirus-Dark";
+            }
+            .${cfg.theme};
 
           qtctConfig = lib.concatStrings (
             [

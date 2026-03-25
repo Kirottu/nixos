@@ -6,6 +6,7 @@
     nixpkgs-stremio.url = "github:NixOS/nixpkgs/b6a8526db03f735b89dd5ff348f53f752e7ddc8e";
     # nixpkgs-wivrn.url = "github:NixOS/nixpkgs/e64102a9f7f35ef2cddaea6f09c1f5077b948296";
     nixpkgs-small.url = "github:NixOS/nixpkgs/nixos-unstable-small";
+    nixpkgs-llama-swap.url = "github:Stebalien/Nixpkgs/steb/update-llama-swap";
 
     home-manager = {
       url = "github:nix-community/home-manager/master";
@@ -48,12 +49,13 @@
       url = "github:lassulus/wrappers";
     };
 
-    import-tree.url = "github:vic/import-tree";
+    # import-tree.url = "github:vic/import-tree";
 
     impermanence.url = "github:nix-community/impermanence";
 
     codel = {
-      url = "git+ssh://git@zimward.moe/~/lsp?ref=main";
+      # url = "git+ssh://git@zimward.moe/~/lsp?ref=main";
+      url = "github:zimward/codel";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -120,6 +122,12 @@
       lib = import ./lib { inherit inputs lib; };
       privateInputs = inputs.private.inputs;
       myPkgs = import ./packages;
+      inherit (inputs.nixpkgs.lib.fileset) toList fileFilter;
+      import-tree =
+        path:
+        toList (fileFilter (file: file.hasExt "nix" && !(inputs.nixpkgs.lib.hasPrefix "_" file.name)) path);
+
+      modules = import-tree ./modules;
     in
     {
       nixosConfigurations = {
@@ -136,7 +144,8 @@
           modules = [
             ./hosts/church-of-harold
             inputs.private.nixosModules.church-of-harold
-          ];
+          ]
+          ++ modules;
         };
         missionary-of-harold = lib.nixosSystem {
           system = "x86_64-linux";
@@ -151,7 +160,8 @@
           modules = [
             ./hosts/missionary-of-harold
             inputs.private.nixosModules.missionary-of-harold
-          ];
+          ]
+          ++ modules;
         };
         overwatch-of-harold = inputs.nixpkgs-small.lib.nixosSystem {
           system = "x86_64-linux";
@@ -166,7 +176,8 @@
           modules = [
             ./hosts/overwatch-of-harold
             inputs.private.nixosModules.overwatch-of-harold
-          ];
+          ]
+          ++ modules;
         };
         hell-of-harold = inputs.nixpkgs-small.lib.nixosSystem {
           system = "x86_64-linux";
@@ -181,7 +192,8 @@
           modules = [
             ./hosts/hell-of-harold
             inputs.private.nixosModules.hell-of-harold
-          ];
+          ]
+          ++ modules;
         };
       };
     };

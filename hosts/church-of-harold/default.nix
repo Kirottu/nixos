@@ -12,7 +12,6 @@ in
 {
   imports = [
     ./hardware-configuration.nix
-    (inputs.import-tree ../../modules)
   ];
   config = {
     devices.class = "desktop";

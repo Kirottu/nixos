@@ -50,6 +50,7 @@ in
               _children = [
                 { match._props.namespace = "yand"; }
                 { match._props.namespace = "anyrun"; }
+                { match._props.namespace = "ironbar"; }
               ];
 
               geometry-corner-radius = 20;

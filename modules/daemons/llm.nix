@@ -1,6 +1,7 @@
 {
   pkgs,
   config,
+  inputs,
   lib,
   ...
 }:
@@ -24,9 +25,10 @@ in
 
     services.llama-swap = {
       enable = true;
+      package = inputs.nixpkgs-llama-swap.legacyPackages.${pkgs.stdenv.hostPlatform.system}.llama-swap;
       settings =
         let
-          llama-cpp = pkgs.llama-cpp-rocm;
+          llama-cpp = pkgs.llama-cpp-vulkan;
           llama-server = lib.getExe' llama-cpp "llama-server";
 
           # Helper: build model config from (name, { filename, isMoe ? false })
@@ -61,7 +63,8 @@ in
 
         in
         {
-          globalTTL = 120;
+          globalTTL = 60;
+          healthCheckTimeout = 15;
           # Merge all model configs into one attrset
           models = lib.foldl (acc: m: acc // buildModel m) { } modelList;
         };

@@ -10,7 +10,6 @@
     graphical = {
       enable = true;
       niri.enable = true;
-      waybar.enable = true;
       webapps = {
         enable = true;
         webapps.cinny = {

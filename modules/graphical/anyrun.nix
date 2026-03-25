@@ -46,7 +46,7 @@ in
               }
               .${config.theming.themeAttrs.subtheme};
             bliss = {
-              fraction = 0.3;
+              fraction = 0.25;
             };
           }
           .${config.theming.theme};
@@ -202,7 +202,7 @@ in
             }
 
             box.matches {
-              background-color: #ffffff40;
+              background-color: #ffffff60;
               border-radius: 20px;
             }
 

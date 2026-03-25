@@ -1,24 +1,33 @@
-{ pkgs, inputs, ... }:
+{
+  pkgs,
+  inputs,
+  config,
+  ...
+}:
 {
   config = {
     hm.programs.helix = {
       enable = true;
       defaultEditor = true;
-      extraPackages = with pkgs; [
-        vscode-langservers-extracted
-        nixd
-        nixfmt
-        rust-analyzer
-        tinymist
-        ltex-ls-plus
-        zls
-        marksman
-        clang-tools
-        python313Packages.python-lsp-server
-        typescript-language-server
-        omnisharp-roslyn
-        inputs.codel.packages.x86_64-linux.default
-      ];
+      extraPackages =
+        with pkgs;
+        [
+          vscode-langservers-extracted
+          nixd
+          nixfmt
+          rust-analyzer
+          tinymist
+          ltex-ls-plus
+          zls
+          marksman
+          clang-tools
+          python313Packages.python-lsp-server
+          typescript-language-server
+          omnisharp-roslyn
+        ]
+        ++
+          lib.optional config.daemons.llm.enable
+            inputs.codel.packages.${pkgs.stdenv.hostPlatform.system}.default;
       settings = {
         editor = {
           cursor-shape = {

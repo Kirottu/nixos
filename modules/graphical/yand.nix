@@ -82,7 +82,8 @@ in
           settings = {
             width = 400;
             spacing = 10;
-            margin = 10;
+            margin_anchor = 10;
+            margin_side = 10;
             timeout = 5;
             layer = "Top";
             output = lib.mkIf (cfg.output != null) cfg.output;
@@ -96,6 +97,7 @@ in
 
             .summary {
               margin: 5px;
+              margin-left: 10px;
               font-size: 11pt;
             }
 

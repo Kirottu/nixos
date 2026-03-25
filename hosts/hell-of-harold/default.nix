@@ -8,7 +8,6 @@
 {
   imports = [
     ./hardware-config.nix
-    (inputs.import-tree ../../modules)
   ];
 
   config = {

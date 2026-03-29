@@ -229,22 +229,22 @@ in
           ".config/inkscape"
         ];
       })
-      (lib.utils.mkApp {
-        # package = pkgs.callPackage myPkgs.stremio { };
-        package = inputs.nixpkgs-stremio.legacyPackages.${pkgs.stdenv.hostPlatform.system}.stremio;
-        # package = pkgs.stremio;
-        userDirectories = [
-          ".config/Smart Code ltd"
-          ".local/share/Smart Code ltd"
-          ".local/share/stremio"
-          ".stremio-server"
-        ];
-        extraOptions = {
-          nixpkgs.config.permittedInsecurePackages = [
-            "qtwebengine-5.15.19"
-          ];
-        };
-      })
+      # (lib.utils.mkApp {
+      #   # package = pkgs.callPackage myPkgs.stremio { };
+      #   package = inputs.nixpkgs-stremio.legacyPackages.${pkgs.stdenv.hostPlatform.system}.stremio;
+      #   # package = pkgs.stremio;
+      #   userDirectories = [
+      #     ".config/Smart Code ltd"
+      #     ".local/share/Smart Code ltd"
+      #     ".local/share/stremio"
+      #     ".stremio-server"
+      #   ];
+      #   extraOptions = {
+      #     nixpkgs.config.permittedInsecurePackages = [
+      #       "qtwebengine-5.15.19"
+      #     ];
+      #   };
+      # })
       # {
       #   impermanence.userDirectories = [
       #     ".config/Smart Code ltd"

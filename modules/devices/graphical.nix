@@ -92,6 +92,7 @@
       enable = true;
       package = pkgs.mullvad-vpn;
     };
+    impermanence.directories = [ "/etc/mullvad-vpn" ];
 
     mainUser.extraGroups = [
       "adbusers"

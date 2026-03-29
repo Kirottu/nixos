@@ -746,22 +746,6 @@
         "type": "github"
       }
     },
-    "nixpkgs-stremio": {
-      "locked": {
-        "lastModified": 1762596750,
-        "narHash": "sha256-rXXuz51Bq7DHBlfIjN7jO8Bu3du5TV+3DSADBX7/9YQ=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "b6a8526db03f735b89dd5ff348f53f752e7ddc8e",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "b6a8526db03f735b89dd5ff348f53f752e7ddc8e",
-        "type": "github"
-      }
-    },
     "nixpkgs-xr": {
       "inputs": {
         "flake-compat": "flake-compat_3",
@@ -1018,7 +1002,6 @@
         "nixpkgs": "nixpkgs_5",
         "nixpkgs-llama-swap": "nixpkgs-llama-swap",
         "nixpkgs-small": "nixpkgs-small",
-        "nixpkgs-stremio": "nixpkgs-stremio",
         "nixpkgs-xr": "nixpkgs-xr",
         "persist-retro": "persist-retro",
         "personal-site": "personal-site",
@@ -1332,16 +1315,15 @@
         ]
       },
       "locked": {
-        "lastModified": 1774446495,
-        "narHash": "sha256-ECOWwz2Gl1aqzOFaW17bo9EWrcr4bkABqAroclmlzYQ=",
+        "lastModified": 1774461777,
+        "narHash": "sha256-+4f+f2qzzE5yypyFZosSyztpuqeFCDSSDuuk5rSu18M=",
         "owner": "Kirottu",
         "repo": "yand",
-        "rev": "94863bb10f67385c375bb854bb0eb893916be8e6",
+        "rev": "4b00acd65fb67ff5b50e0a329ddd35e2055a80c7",
         "type": "github"
       },
       "original": {
         "owner": "Kirottu",
-        "ref": "windowing-rewrite",
         "repo": "yand",
         "type": "github"
       }

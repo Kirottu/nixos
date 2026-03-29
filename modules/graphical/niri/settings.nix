@@ -345,24 +345,24 @@ in
                 }
               '';
             };
-            config-notification-open-close = {
-              spring._props = {
-                damping-ratio = 0.65;
-                stiffness = 923;
-                epsilon = 0.001;
-              };
-            };
-            screenshot-ui-open = {
-              duration-ms = 200;
-              curve = "ease-out-quad";
-            };
-            overview-open-close = {
-              spring._props = {
-                damping-ratio = 0.85;
-                stiffness = 800;
-                epsilon = 0.0001;
-              };
-            };
+            # config-notification-open-close = {
+            #   spring._props = {
+            #     damping-ratio = 0.65;
+            #     stiffness = 923;
+            #     epsilon = 0.001;
+            #   };
+            # };
+            # screenshot-ui-open = {
+            #   duration-ms = 200;
+            #   curve = "ease-out-quad";
+            # };
+            # overview-open-close = {
+            #   spring._props = {
+            #     damping-ratio = 0.85;
+            #     stiffness = 800;
+            #     epsilon = 0.0001;
+            #   };
+            # };
           };
 
           layout.background-color = "transparent";

@@ -3,7 +3,6 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    nixpkgs-stremio.url = "github:NixOS/nixpkgs/b6a8526db03f735b89dd5ff348f53f752e7ddc8e";
     # nixpkgs-wivrn.url = "github:NixOS/nixpkgs/e64102a9f7f35ef2cddaea6f09c1f5077b948296";
     nixpkgs-small.url = "github:NixOS/nixpkgs/nixos-unstable-small";
     nixpkgs-llama-swap.url = "github:Stebalien/Nixpkgs/steb/update-llama-swap";
@@ -61,7 +60,7 @@
 
     # My bits and bops
     yand = {
-      url = "github:Kirottu/yand/windowing-rewrite";
+      url = "github:Kirottu/yand";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

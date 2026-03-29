@@ -253,6 +253,12 @@ in
 
     wiibt.enable = true;
 
+    environment.systemPackages = [
+      (pkgs.zoom-us.override {
+        gnomeXdgDesktopPortalSupport = true;
+      })
+    ];
+
     theming.theme = lib.mkForce "bliss";
 
     system.stateVersion = "24.11"; # Did you read the comment?

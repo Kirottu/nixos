@@ -71,6 +71,8 @@
       # blacklistedKernelModules = [ "rtw88_8821ce" ];
     };
 
+    impermanence.userDirectories = [ "Shitposting" ];
+
     system.stateVersion = "24.11"; # Did you read the comment?
     hm.home.stateVersion = "24.11";
   };

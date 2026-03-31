@@ -33,21 +33,16 @@
       niri.extraOptions = {
         workspace = [
           {
-            _args = [ "1-chat" ];
+            _args = [ "chat" ];
             open-on-output = "eDP-1";
-            name = "chat";
           }
-
           {
-            _args = [ "3-games" ];
+            _args = [ "web" ];
             open-on-output = "eDP-1";
-            name = "games";
           }
-
           {
-            _args = [ "2-web" ];
+            _args = [ "games" ];
             open-on-output = "eDP-1";
-            name = "web";
           }
         ];
 

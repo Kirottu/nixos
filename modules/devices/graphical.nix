@@ -77,7 +77,7 @@
     bluetooth.enable = true;
     theming = {
       plymouth.enable = true;
-      theme = "diagonals";
+      theme = "bliss";
       themeAttrs = {
         l4 = "#1a000d";
         l3 = "#33001a";

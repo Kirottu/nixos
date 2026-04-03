@@ -48,9 +48,6 @@
       "/etc/ssh"
     ];
 
-    # Fix for niri-flake compiling niri if that is set at all
-    hm.programs.niri.settings = lib.mkForce null;
-
     services.logrotate.checkConfig = false;
 
     system.autoUpgrade = {

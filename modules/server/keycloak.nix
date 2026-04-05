@@ -43,5 +43,15 @@ in
         recommendedProxySettings = true;
       };
     };
+
+    services.postgresql = {
+      ensureDatabases = [ config.services.keycloak.database.name ];
+      ensureUsers = [
+        {
+          name = config.services.keycloak.database.username;
+          ensureDBOwnership = true;
+        }
+      ];
+    };
   };
 }

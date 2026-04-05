@@ -48,6 +48,7 @@
         # musicbot.enable = true;
       };
       synapse.enable = true;
+      keycloak.enable = true;
     };
 
     impermanence = {

@@ -6,6 +6,7 @@
 }:
 let
   cfg = config.server.keycloak;
+  port = 9001;
 in
 {
   options.server.keycloak = {
@@ -21,9 +22,9 @@ in
       enable = true;
       settings = {
         http-enabled = true;
-        http-port = 9001;
+        http-port = port;
         hostname = "https://${cfg.hostname}";
-        hostname-admin = "http://localhost:${config.services.keycloak.settings.http-port}";
+        hostname-admin = "http://localhost:${port}";
         proxy-headers = "xforwarded";
       };
       initialAdminPassword = "changeme";
@@ -40,7 +41,7 @@ in
       enableACME = true;
       forceSSL = true;
       locations."~ ^(/realms|/resources|/.well-known)" = {
-        proxyPass = "http://[::1]:${toString config.services.keycloak.settings.http-port}";
+        proxyPass = "http://[::1]:${toString port}";
         recommendedProxySettings = true;
       };
     };

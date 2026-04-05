@@ -24,7 +24,7 @@ in
         http-enabled = true;
         http-port = port;
         hostname = "https://${cfg.hostname}";
-        hostname-admin = "http://localhost:${port}";
+        hostname-admin = "http://localhost:${toString port}";
         proxy-headers = "xforwarded";
       };
       initialAdminPassword = "changeme";

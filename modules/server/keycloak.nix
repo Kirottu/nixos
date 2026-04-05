@@ -23,7 +23,7 @@ in
         http-enabled = true;
         http-port = 9001;
         hostname = "https://${cfg.hostname}";
-        hostname-admin = "http://localhost";
+        hostname-admin = "http://localhost:${config.services.keycloak.settings.http-port}";
         proxy-headers = "xforwarded";
       };
       initialAdminPassword = "changeme";

@@ -23,6 +23,7 @@ in
         http-enabled = true;
         http-port = 9001;
         hostname = "https://${cfg.hostname}";
+        hostname-admin = "http://localhost";
         proxy-headers = "xforwarded";
       };
       initialAdminPassword = "changeme";

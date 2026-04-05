@@ -39,7 +39,7 @@ in
       enableACME = true;
       forceSSL = true;
       locations."~ ^(/realms|/resources|/.well-known)" = {
-        proxyPass = "http://[::1]:${config.services.keycloak.settings.http-port}";
+        proxyPass = "http://[::1]:${toString config.services.keycloak.settings.http-port}";
         recommendedProxySettings = true;
       };
     };

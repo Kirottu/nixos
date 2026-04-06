@@ -20,10 +20,10 @@ in
     dbPassFile = lib.mkOption {
       type = lib.types.path;
     };
-    principals = lib.mkOption {
-      type = lib.types.listOf lib.types.attrs;
-      default = [ ];
-    };
+    # principals = lib.mkOption {
+    #   type = lib.types.listOf lib.types.attrs;
+    #   default = [ ];
+    # };
   };
 
   config = lib.mkIf cfg.enable {
@@ -78,7 +78,8 @@ in
           fts = "postgresql";
           lookup = "postgresql";
           # directory = "keycloak";
-          directory = "in-memory";
+          # directory = "in-memory";
+          directory = "internal";
         };
         store."postgresql" = {
           type = "postgresql";
@@ -100,9 +101,13 @@ in
         #   fields.full-name = "name";
         #   lookup.domains = [ config.domain ];
         # };
-        directory."in-memory" = {
-          type = "memory";
-          principals = cfg.principals;
+        # directory."in-memory" = {
+        #   type = "memory";
+        #   principals = cfg.principals;
+        # };
+        directory."internal" = {
+          type = "internal";
+          store = "postgresql";
         };
         authentication.fallback-admin = {
           user = "admin";
@@ -117,7 +122,7 @@ in
     # Access to TLS keys & shared secrets
     users.users.stalwart-mail.extraGroups = [
       "nginx"
-      "keys"
+      # "keys"
     ];
 
     services.nginx.virtualHosts.${cfg.hostname} = {

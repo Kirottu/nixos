@@ -16,9 +16,13 @@
 
     sops.secrets =
       let
-        block = {
+        spreed = {
           sopsFile = ../../secrets/hell-of-harold.yaml;
           owner = config.services.nextcloud-spreed-signaling.user;
+        };
+        stalwart = {
+          sopsFile = ../../secrets/hell-of-harold.yaml;
+          owner = "stalwart-mail";
         };
       in
       {
@@ -27,12 +31,12 @@
           group = "keys";
           mode = "0440";
         };
-        "spreed-hpb/hashkey" = block;
-        "spreed-hpb/blockkey" = block;
-        "spreed-hpb/internalsecret" = block;
-        "spreed-hpb/nextcloudsecret" = block;
-        "stalwart/admin-pass" = block;
-        "stalwart/db-pass" = block;
+        "spreed-hpb/hashkey" = spreed;
+        "spreed-hpb/blockkey" = spreed;
+        "spreed-hpb/internalsecret" = spreed;
+        "spreed-hpb/nextcloudsecret" = spreed;
+        "stalwart/admin-pass" = stalwart;
+        "stalwart/db-pass" = stalwart;
       };
     server = {
       spreed-hpb = {

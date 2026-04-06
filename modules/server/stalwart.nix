@@ -17,6 +17,9 @@ in
     adminPassFile = lib.mkOption {
       type = lib.types.path;
     };
+    dbPassFile = lib.mkOption {
+      type = lib.types.path;
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -36,12 +39,16 @@ in
             smpts = {
               protocol = "smtp";
               bind = "[::]:465";
-              tls = true;
+              tls.implicit = true;
+            };
+            submission = {
+              protocol = "smtp";
+              bind = "[::]:587";
             };
             imaps = {
               protocol = "imap";
               bind = "[::]:993";
-              tls = true;
+              tls.implicit = true;
             };
             web = {
               protocol = "http";
@@ -66,10 +73,10 @@ in
         };
         store."postgresql" = {
           type = "postgresql";
-          host = "/run/postgresql";
+          host = "localhost";
           database = "stalwart-mail";
           user = "stalwart-mail";
-          password = "";
+          password = "%{file:${cfg.dbPassFile}}";
           tls.enable = false;
         };
         directory."keycloak" = {
@@ -85,6 +92,9 @@ in
           user = "admin";
           secret = "%{file:${cfg.adminPassFile}}";
         };
+        http = {
+          use-x-forwarded = true;
+        };
       };
     };
 
@@ -93,6 +103,7 @@ in
       enableACME = true;
       locations."/" = {
         proxyPass = "http://[::1]:${toString port}";
+        recommendedProxySettings = true;
       };
     };
   };

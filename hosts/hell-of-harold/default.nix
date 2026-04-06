@@ -32,6 +32,7 @@
         "spreed-hpb/internalsecret" = block;
         "spreed-hpb/nextcloudsecret" = block;
         "stalwart/admin-pass" = block;
+        "stalwart/db-pass" = block;
       };
     server = {
       spreed-hpb = {
@@ -53,6 +54,7 @@
       stalwart = {
         enable = true;
         adminPassFile = config.sops.secrets."stalwart/admin-pass".path;
+        dbPassFile = config.sops.secrets."stalwart/db-pass".path;
       };
     };
 

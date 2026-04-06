@@ -17,3 +17,9 @@ creation_rules:
     key_groups:
       - age:
         - *hell-of-harold
+  - path_regex: secrets/mail\.yaml$
+    key_groups:
+      - age:
+        - *hell-of-harold
+        - *overwatch-of-harold
+    

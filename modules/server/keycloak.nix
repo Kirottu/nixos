@@ -31,6 +31,7 @@ in
       plugins = [
         pkgs.keycloak.plugins.junixsocket-common
         pkgs.keycloak.plugins.junixsocket-native-common
+        pkgs.keycloak.plugins.keycloak-restrict-client-auth
       ];
       database = {
         host = "/run/postgresql";

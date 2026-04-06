@@ -74,8 +74,8 @@ in
         store."postgresql" = {
           type = "postgresql";
           host = "localhost";
-          database = "stalwart-mail";
-          user = "stalwart-mail";
+          database = "stalwart_mail";
+          user = "stalwart_mail";
           password = "%{file:${cfg.dbPassFile}}";
           tls.enable = false;
         };

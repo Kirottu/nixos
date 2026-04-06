@@ -77,7 +77,8 @@ in
           blob = "postgresql";
           fts = "postgresql";
           lookup = "postgresql";
-          directory = "keycloak";
+          # directory = "keycloak";
+          directory = "in-memory";
         };
         store."postgresql" = {
           type = "postgresql";

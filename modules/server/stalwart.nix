@@ -74,10 +74,11 @@ in
         store."postgresql" = {
           type = "postgresql";
           host = "localhost";
+          port = 5432;
           database = "stalwart_mail";
           user = "stalwart_mail";
           password = "%{file:${cfg.dbPassFile}}";
-          tls.enable = false;
+          compression = "lz4";
         };
         directory."keycloak" = {
           type = "oidc";

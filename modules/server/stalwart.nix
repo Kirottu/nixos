@@ -56,10 +56,10 @@ in
             };
           };
         };
-        lookup.default = {
-          hostname = cfg.hostname;
-          domain = config.domain;
-        };
+        # lookup.default = {
+        #   hostname = cfg.hostname;
+        #   domain = config.domain;
+        # };
         storage = {
           encryption = {
             enable = true;
@@ -88,7 +88,9 @@ in
           fields.email = "email";
           fields.username = "preferred_username";
           fields.full-name = "name";
+          lookup.domains = [ config.domain ];
         };
+        # directory."in-memory" = { };
         authentication.fallback-admin = {
           user = "admin";
           secret = "%{file:${cfg.adminPassFile}}%";

@@ -5,6 +5,7 @@
 }:
 let
   cfg = config.server.stalwart;
+  port = 9002;
 in
 {
   options.server.stalwart = {
@@ -44,7 +45,7 @@ in
             };
             web = {
               protocol = "http";
-              bind = "[::1]:9002";
+              bind = "[::1]:${toString port}";
             };
           };
         };
@@ -84,6 +85,14 @@ in
           user = "admin";
           secret = "%{file:${cfg.adminPassFile}}";
         };
+      };
+    };
+
+    services.nginx.virtualHosts.${cfg.hostname} = {
+      forceSSL = true;
+      enableACME = true;
+      locations."/" = {
+        proxyPass = "http://[::1]:${toString port}";
       };
     };
   };

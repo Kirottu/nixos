@@ -50,7 +50,10 @@
       };
       synapse.enable = true;
       keycloak.enable = true;
-      stallwart.enable = true;
+      stallwart = {
+        enable = true;
+        adminPassFile = config.sops.secrets."stalwart/admin-pass".path;
+      };
     };
 
     impermanence = {

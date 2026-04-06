@@ -77,7 +77,7 @@ in
           port = 5432;
           database = "stalwart_mail";
           user = "stalwart_mail";
-          password = "%{file:${cfg.dbPassFile}}";
+          password = "%{file:${cfg.dbPassFile}}%";
           compression = "lz4";
         };
         directory."keycloak" = {
@@ -91,7 +91,7 @@ in
         };
         authentication.fallback-admin = {
           user = "admin";
-          secret = "%{file:${cfg.adminPassFile}}";
+          secret = "%{file:${cfg.adminPassFile}}%";
         };
         http = {
           use-x-forwarded = true;

@@ -56,6 +56,10 @@ in
             };
           };
         };
+        certificate.default = {
+          cert = "%{file:${config.security.acme.certs.${cfg.hostname}.directory}/cert.pem}%";
+          private-key = "%{file:${config.security.acme.certs.${cfg.hostname}.directory}/key.pem}%";
+        };
         lookup.default = {
           hostname = cfg.hostname;
           domain = config.domain;
@@ -100,6 +104,9 @@ in
         };
       };
     };
+
+    # Access to TLS keys
+    users.users.stalwart-mail.extraGroups = [ "nginx" ];
 
     services.nginx.virtualHosts.${cfg.hostname} = {
       forceSSL = true;

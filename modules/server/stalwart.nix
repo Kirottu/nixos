@@ -56,10 +56,10 @@ in
             };
           };
         };
-        # lookup.default = {
-        #   hostname = cfg.hostname;
-        #   domain = config.domain;
-        # };
+        lookup.default = {
+          hostname = cfg.hostname;
+          domain = config.domain;
+        };
         storage = {
           encryption = {
             enable = true;

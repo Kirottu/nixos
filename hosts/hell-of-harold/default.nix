@@ -31,6 +31,7 @@
         "spreed-hpb/blockkey" = block;
         "spreed-hpb/internalsecret" = block;
         "spreed-hpb/nextcloudsecret" = block;
+        "stalwart/admin-pass" = block;
       };
     server = {
       spreed-hpb = {
@@ -49,6 +50,7 @@
       };
       synapse.enable = true;
       keycloak.enable = true;
+      stallwart.enable = true;
     };
 
     impermanence = {

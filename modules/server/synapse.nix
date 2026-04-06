@@ -226,7 +226,7 @@ in
             idp_name = "Keycloak";
             issuer = "https://idp.kirottu.com/realms/main";
             client_id = "synapse";
-            client_secret_path = cfg.clientSecretPath;
+            client_secret_path = cfg.clientSecretFile;
             scopes = [
               "openid"
               "profile"
@@ -235,6 +235,7 @@ in
               localpart_template = "{{ user.preferred_username }}";
               display_name_template = "{{ user.name }}";
             };
+            allow_existing_users = true;
           }
         ];
         log_config = (pkgs.formats.yaml { }).generate "log_config" {

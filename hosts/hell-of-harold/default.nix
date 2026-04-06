@@ -44,6 +44,10 @@
         "stalwart/db-pass" = stalwart;
         "mail/noreply" = shared-mail;
         "mail/postmaster" = stalwart;
+        "synapse/client-secret" = {
+          sopsFile = ../../secrets/hell-of-harold.yaml;
+          owner = "matrix-synapse";
+        };
       };
     server = {
       spreed-hpb = {
@@ -60,7 +64,10 @@
         enable = true;
         # musicbot.enable = true;
       };
-      synapse.enable = true;
+      synapse = {
+        enable = true;
+        clientSecretFile = config.sops.secrets."synapse/client-secret".path;
+      };
       keycloak.enable = true;
       stalwart = {
         enable = true;

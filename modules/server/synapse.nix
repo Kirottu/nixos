@@ -62,7 +62,12 @@ let
   cfg = config.server.synapse;
 in
 {
-  options.server.synapse.enable = lib.mkEnableOption "Synapse";
+  options.server.synapse = {
+    enable = lib.mkEnableOption "Synapse";
+    clientSecretFile = lib.mkOption {
+      type = lib.types.path;
+    };
+  };
 
   config = lib.mkIf cfg.enable {
     impermanence.directories = [ config.services.matrix-synapse.dataDir ];
@@ -213,8 +218,25 @@ in
           per_second = 1;
           burst_count = 20;
         };
-        registration_requires_token = true;
-        enable_registration = true;
+        # registration_requires_token = true;
+        # enable_registration = true;
+        oidc_providers = [
+          {
+            idp_id = "keycloak";
+            idp_name = "Keycloak";
+            issuer = "https://idp.kirottu.com/realms/main";
+            client_id = "synapse";
+            client_secret_path = cfg.clientSecretPath;
+            scopes = [
+              "openid"
+              "profile"
+            ];
+            user_mapping_provider.config = {
+              localpart_template = "{{ user.preferred_username }}";
+              display_name_template = "{{ user.name }}";
+            };
+          }
+        ];
         log_config = (pkgs.formats.yaml { }).generate "log_config" {
           disable_existing_loggers = false;
           formatters = {

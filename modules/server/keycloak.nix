@@ -44,6 +44,10 @@ in
         proxyPass = "http://[::1]:${toString port}";
         recommendedProxySettings = true;
       };
+      # Redirect requests at the root to the account management portal for the main realm
+      locations."/" = {
+        return = "301 https://${cfg.hostname}/realms/main/account";
+      };
     };
 
     services.postgresql = {

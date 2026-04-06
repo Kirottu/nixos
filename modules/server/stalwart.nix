@@ -20,6 +20,10 @@ in
     dbPassFile = lib.mkOption {
       type = lib.types.path;
     };
+    principals = lib.mkOption {
+      type = lib.types.listOf lib.types.attrs;
+      default = [ ];
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -84,17 +88,21 @@ in
           password = "%{file:${cfg.dbPassFile}}%";
           compression = "lz4";
         };
-        directory."keycloak" = {
-          type = "oidc";
-          timeout = "1s";
-          endpoint.url = "https://${config.server.keycloak.hostname}/realms/main/protocol/openid-connect/userinfo";
-          endpoint.method = "userinfo";
-          fields.email = "email";
-          fields.username = "preferred_username";
-          fields.full-name = "name";
-          lookup.domains = [ config.domain ];
+        # Currently, Stalwart's and other clients' OIDC support is barebones as best. It'll have to wait
+        # directory."keycloak" = {
+        #   type = "oidc";
+        #   timeout = "1s";
+        #   endpoint.url = "https://${config.server.keycloak.hostname}/realms/main/protocol/openid-connect/userinfo";
+        #   endpoint.method = "userinfo";
+        #   fields.email = "email";
+        #   fields.username = "preferred_username";
+        #   fields.full-name = "name";
+        #   lookup.domains = [ config.domain ];
+        # };
+        directory."in-memory" = {
+          type = "memory";
+          principals = cfg.principals;
         };
-        # directory."in-memory" = { };
         authentication.fallback-admin = {
           user = "admin";
           secret = "%{file:${cfg.adminPassFile}}%";
@@ -105,8 +113,11 @@ in
       };
     };
 
-    # Access to TLS keys
-    users.users.stalwart-mail.extraGroups = [ "nginx" ];
+    # Access to TLS keys & shared secrets
+    users.users.stalwart-mail.extraGroups = [
+      "nginx"
+      "keys"
+    ];
 
     services.nginx.virtualHosts.${cfg.hostname} = {
       forceSSL = true;

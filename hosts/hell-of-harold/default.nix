@@ -24,6 +24,11 @@
           sopsFile = ../../secrets/hell-of-harold.yaml;
           owner = "stalwart-mail";
         };
+        shared-mail = {
+          sopsFile = ../../secrets/mail.yaml;
+          group = "keys";
+          mode = "0440";
+        };
       in
       {
         "turn/secret" = {
@@ -37,6 +42,8 @@
         "spreed-hpb/nextcloudsecret" = spreed;
         "stalwart/admin-pass" = stalwart;
         "stalwart/db-pass" = stalwart;
+        "mail/noreply" = shared-mail;
+        "mail/postmaster" = stalwart;
       };
     server = {
       spreed-hpb = {
@@ -59,6 +66,20 @@
         enable = true;
         adminPassFile = config.sops.secrets."stalwart/admin-pass".path;
         dbPassFile = config.sops.secrets."stalwart/db-pass".path;
+        principals = [
+          {
+            class = "individual";
+            name = "Noreply";
+            secret = "%{file:${config.sops.secrets."mail/noreply".path}}%";
+            email = [ "noreply@${config.domain}" ];
+          }
+          {
+            class = "individual";
+            name = "Postmaster";
+            secret = "%{file:${config.sops.secrets."mail/postmaster".path}}%";
+            email = [ "postmaster@${config.domain}" ];
+          }
+        ];
       };
     };
 

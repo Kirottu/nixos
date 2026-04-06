@@ -972,11 +972,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1772053682,
-        "narHash": "sha256-La9AYgUqriJmcHJxhFO+udIqb+6HU0LxxnHD+JzyHQI=",
+        "lastModified": 1775416406,
+        "narHash": "sha256-NRSgkYTvHmUvRZAkNf1M7awbhMOBTWWYFCVhdqqQ/oA=",
         "ref": "refs/heads/main",
-        "rev": "110d3c7506a94f61a32085f54dae0fda8f9a42cb",
-        "revCount": 10,
+        "rev": "4c80d1530c808edcb2e001c8a75e0c284362f2f9",
+        "revCount": 11,
         "type": "git",
         "url": "ssh://git@github.com/Kirottu/nixos-private"
       },

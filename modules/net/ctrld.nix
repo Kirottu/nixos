@@ -32,8 +32,9 @@ in
         upstream = {
           "0" = {
             type = "doh";
-            endpoint = if (cfg.upstream != null) then cfg.upstream else "https://freedns.controld.com/p2";
+            endpoint = if (cfg.upstream != null) then cfg.upstream else "https://cloudflare-dns.com/dns-query";
             timeout = 5000;
+            bootstrap_ip = "1.1.1.1";
           };
           # "0" = {
           #   type = "doh";

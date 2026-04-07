@@ -31,13 +31,17 @@ in
         ROCKET_PORT = 8222;
         ROCKET_LOG = "critical";
 
-        # SSO_ENABLED = true;
-        # SSO_ONLY = true;
+        SSO_ENABLED = true;
+        SSO_ONLY = true;
+        SSO_AUTHORITY = "https://${config.server.keycloak.hostname}/realms/main";
+        SSO_CLIENT_ID = "vaultwarden";
+        SSO_SCOPES = "openid profile email offline_access";
+        # SSO_CLIENT_SECRET = <defined in secrets>;
 
         SMTP_HOST = "${config.server.stalwart.hostname}";
         SMTP_PORT = 465;
         SMTP_SECURITY = "force_tls";
-        SMTP_FROM = "Vaultwarden";
+        SMTP_FROM = "noreply@${config.domain}";
         SMTP_USERNAME = "noreply";
         # SMTP_PASSWORD = <defined in secrets>;
       };

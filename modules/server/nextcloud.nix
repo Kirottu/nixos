@@ -28,6 +28,9 @@ in
     dbPass = lib.mkOption {
       type = lib.types.path;
     };
+    emailPass = lib.mkOption {
+      type = lib.types.path;
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -43,6 +46,9 @@ in
       maxUploadSize = "5G";
       database.createLocally = true;
       configureRedis = true;
+      secrets = {
+        mail_smtppassword = cfg.emailPass;
+      };
       phpOptions = {
         "opcache.interned_strings_buffer" = "12";
       };
@@ -50,6 +56,14 @@ in
         overwriteprotocol = "https";
         log_type = "file";
         loglevel = 2;
+
+        mail_smtpsecure = "ssl";
+        mail_smtpport = 465;
+        mail_smtpname = "noreply";
+        mail_from_address = "noreply";
+        mail_domain = config.domain;
+        mail_smtphost = config.server.stalwart.hostname;
+        mail_smtpauth = true;
       };
       config = {
         adminuser = "Kirottu";

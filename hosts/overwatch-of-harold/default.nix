@@ -31,6 +31,9 @@
       "nextcloud/adminpass" = {
         sopsFile = ../../secrets/overwatch-of-harold.yaml;
       };
+      "mail/noreply" = {
+        sopsFile = ../../secrets/mail.yaml;
+      };
     };
 
     # synapse.enable = true;
@@ -43,6 +46,7 @@
         enable = true;
         monitoredServices = [ "nixos-upgrade" ];
         adminPass = config.sops.secrets."nextcloud/adminpass".path;
+        emailPass = config.sops.secrets."mail/noreply".path;
       };
       ddclient = {
         enable = true;

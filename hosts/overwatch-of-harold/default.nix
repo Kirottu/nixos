@@ -137,7 +137,7 @@
       config =
         let
           interface = "enp0s25";
-          upSpeed = "20mbit";
+          upSpeed = "40mbit";
           downSpeed = "80mbit";
         in
         ''

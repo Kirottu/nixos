@@ -14,11 +14,18 @@ in
       type = lib.types.nonEmptyStr;
       default = "mail.${config.domain}";
     };
+    # adminHost = lib.mkOption {
+    #   type = lib.types.nonEmptyStr;
+    #   default = "admin.mail.${config.domain}";
+    # };
     adminPassFile = lib.mkOption {
       type = lib.types.path;
     };
     dbPassFile = lib.mkOption {
       type = lib.types.path;
+    };
+    webmailSecret = lib.mkOption {
+      type = lib.types.nonEmptyStr;
     };
     # principals = lib.mkOption {
     #   type = lib.types.listOf lib.types.attrs;
@@ -27,7 +34,14 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    impermanence.directories = [ config.services.stalwart.dataDir ];
+    impermanence.directories = [
+      config.services.stalwart.dataDir
+      {
+        directory = "/var/lib/roundcube";
+        user = "roundcube";
+        group = "roundcube";
+      }
+    ];
 
     services.stalwart = {
       enable = true;
@@ -77,9 +91,9 @@ in
           blob = "postgresql";
           fts = "postgresql";
           lookup = "postgresql";
-          # directory = "keycloak";
+          directory = "keycloak";
           # directory = "in-memory";
-          directory = "internal";
+          # directory = "internal";
         };
         store."postgresql" = {
           type = "postgresql";
@@ -91,16 +105,16 @@ in
           compression = "lz4";
         };
         # Currently, Stalwart's and other clients' OIDC support is barebones as best. It'll have to wait
-        # directory."keycloak" = {
-        #   type = "oidc";
-        #   timeout = "1s";
-        #   endpoint.url = "https://${config.server.keycloak.hostname}/realms/main/protocol/openid-connect/userinfo";
-        #   endpoint.method = "userinfo";
-        #   fields.email = "email";
-        #   fields.username = "preferred_username";
-        #   fields.full-name = "name";
-        #   lookup.domains = [ config.domain ];
-        # };
+        directory."keycloak" = {
+          type = "oidc";
+          timeout = "1s";
+          endpoint.url = "https://${config.server.keycloak.hostname}/realms/main/protocol/openid-connect/userinfo";
+          endpoint.method = "userinfo";
+          fields.email = "email";
+          fields.username = "preferred_username";
+          fields.full-name = "name";
+          lookup.domains = [ config.domain ];
+        };
         # directory."in-memory" = {
         #   type = "memory";
         #   principals = cfg.principals;
@@ -125,13 +139,38 @@ in
       # "keys"
     ];
 
-    services.nginx.virtualHosts.${cfg.hostname} = {
-      forceSSL = true;
-      enableACME = true;
-      locations."/" = {
-        proxyPass = "http://[::1]:${toString port}";
-        recommendedProxySettings = true;
-      };
+    # A bit hacky but it must be done, the default NixOS module doesn't provide a way to set secrets
+    sops.templates."roundcube-config" = lib.mkIf config.security.sops.enable {
+      content = ''
+        $config['oauth_client_secret'] = '${config.sops.placeholder.${cfg.webmailSecret}}';
+      '';
+      path = "/etc/roundcube/default.inc.php";
     };
+
+    services.roundcube = {
+      enable = true;
+      hostName = cfg.hostname;
+      configureNginx = true;
+      extraConfig = ''
+        $config['imap_host'] = 'ssl://${cfg.hostname}';
+        $config['smtp_host'] = 'ssl://${cfg.hostname}';
+
+        $config['oauth_provider'] = 'generic';
+        $config['oauth_provider_name'] = 'Keycloak';
+        $config['oauth_client_id'] = 'roundcube';
+        $config['oauth_config_uri'] = 'https://${config.server.keycloak.hostname}/realms/main/.well-known/openid-configuration';
+        $config['oauth_scope'] = 'email profile openid';
+        $config['oauth_login_redirect'] = true;
+      '';
+    };
+
+    # services.nginx.virtualHosts.${cfg.adminHost} = {
+    #   forceSSL = true;
+    #   enableACME = true;
+    #   locations."/" = {
+    #     proxyPass = "http://[::1]:${toString port}";
+    #     recommendedProxySettings = true;
+    #   };
+    # };
   };
 }

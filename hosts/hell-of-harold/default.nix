@@ -48,6 +48,10 @@
           sopsFile = ../../secrets/hell-of-harold.yaml;
           owner = "matrix-synapse";
         };
+        "webmail/client-secret" = {
+          sopsFile = ../../secrets/hell-of-harold.yaml;
+          owner = "rouncube";
+        };
       };
     server = {
       spreed-hpb = {
@@ -73,6 +77,7 @@
         enable = true;
         adminPassFile = config.sops.secrets."stalwart/admin-pass".path;
         dbPassFile = config.sops.secrets."stalwart/db-pass".path;
+        webmailSecret = "webmail/client-secret";
         # principals = [
         #   {
         #     class = "individual";

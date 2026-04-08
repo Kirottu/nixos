@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 let
@@ -14,18 +15,14 @@ in
       type = lib.types.nonEmptyStr;
       default = "mail.${config.domain}";
     };
-    # adminHost = lib.mkOption {
-    #   type = lib.types.nonEmptyStr;
-    #   default = "admin.mail.${config.domain}";
-    # };
     adminPassFile = lib.mkOption {
       type = lib.types.path;
     };
     dbPassFile = lib.mkOption {
       type = lib.types.path;
     };
-    webmailSecret = lib.mkOption {
-      type = lib.types.nonEmptyStr;
+    webmailSecretPath = lib.mkOption {
+      type = lib.types.path;
     };
     # principals = lib.mkOption {
     #   type = lib.types.listOf lib.types.attrs;
@@ -139,16 +136,22 @@ in
       # "keys"
     ];
 
-    # A bit hacky but it must be done, the default NixOS module doesn't provide a way to set secrets
-    sops.templates."roundcube-config" = lib.mkIf config.security.sops.enable {
-      content = ''
-        $config['oauth_client_secret'] = '${config.sops.placeholder.${cfg.webmailSecret}}';
-      '';
-      path = "/etc/roundcube/default.inc.php";
-    };
-
     services.roundcube = {
       enable = true;
+      package = pkgs.roundcube.overrideAttrs rec {
+        version = "1.7-rc6";
+        src = pkgs.fetchurl {
+          url = "https://github.com/roundcube/roundcubemail/releases/download/${version}/roundcubemail-${version}-complete.tar.gz";
+          sha256 = "sha256-xop89EwvI63HazKDqtsJw9KSG9JO/sHp4U5XknySQmU=";
+        };
+        patches = [];
+        installPhase = ''
+          mkdir $out
+          cp -r * $out/
+          ln -sf /etc/roundcube/config.inc.php $out/config/config.inc.php
+          rm -rf $out/installer
+        '';
+      };
       hostName = cfg.hostname;
       configureNginx = true;
       extraConfig = ''
@@ -159,18 +162,14 @@ in
         $config['oauth_provider_name'] = 'Keycloak';
         $config['oauth_client_id'] = 'roundcube';
         $config['oauth_config_uri'] = 'https://${config.server.keycloak.hostname}/realms/main/.well-known/openid-configuration';
-        $config['oauth_scope'] = 'email profile openid';
+        $config['oauth_identity_fields'] = ['preferred_username'];
+        $config['oauth_scope'] = 'openid email profile';
+        $config['oauth_client_secret'] = file_get_contents('${cfg.webmailSecretPath}');
         $config['oauth_login_redirect'] = true;
       '';
     };
 
-    # services.nginx.virtualHosts.${cfg.adminHost} = {
-    #   forceSSL = true;
-    #   enableACME = true;
-    #   locations."/" = {
-    #     proxyPass = "http://[::1]:${toString port}";
-    #     recommendedProxySettings = true;
-    #   };
-    # };
+    services.nginx.virtualHosts.${cfg.hostname}.root = lib.mkForce "${config.services.roundcube.package}/public_html";
+
   };
 }

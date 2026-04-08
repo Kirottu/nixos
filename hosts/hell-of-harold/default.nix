@@ -50,7 +50,7 @@
         };
         "webmail/client-secret" = {
           sopsFile = ../../secrets/hell-of-harold.yaml;
-          owner = "rouncube";
+          owner = "roundcube";
         };
       };
     server = {
@@ -77,7 +77,7 @@
         enable = true;
         adminPassFile = config.sops.secrets."stalwart/admin-pass".path;
         dbPassFile = config.sops.secrets."stalwart/db-pass".path;
-        webmailSecret = "webmail/client-secret";
+        webmailSecretPath = config.sops.secrets."webmail/client-secret".path;
         # principals = [
         #   {
         #     class = "individual";

@@ -25,7 +25,7 @@ in
 
     services.llama-swap = {
       enable = true;
-      package = inputs.nixpkgs-llama-swap.legacyPackages.${pkgs.stdenv.hostPlatform.system}.llama-swap;
+      # package = inputs.nixpkgs-llama-swap.legacyPackages.${pkgs.stdenv.hostPlatform.system}.llama-swap;
       settings =
         let
           llama-cpp = pkgs.llama-cpp-vulkan;

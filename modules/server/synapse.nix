@@ -234,9 +234,11 @@ in
             user_mapping_provider.config = {
               localpart_template = "{{ user.preferred_username }}";
               display_name_template = "{{ user.name }}";
+              config = {
+                confirm_localpart = true;
+              };
             };
             allow_existing_users = true;
-            confirm_localpart = true;
           }
         ];
         log_config = (pkgs.formats.yaml { }).generate "log_config" {

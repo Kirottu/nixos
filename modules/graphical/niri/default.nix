@@ -62,7 +62,7 @@
             owner = "niri-wm";
             repo = "niri";
             rev = "wip/branch";
-            hash = "sha256-L/Ldq9G41Mj8WjWTuC+rePvWIx1A/tHdFpLbQmtrMSA=";
+            hash = "sha256-dGRgX8apemRre1Za/p00ZhUiCjQqy9h0HHEgA96ZkYs=";
           };
           version = "blur";
           env = prev.env // {

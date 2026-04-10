@@ -43,6 +43,7 @@ in
     services.stalwart = {
       enable = true;
       openFirewall = true;
+      stateVersion = "25.11";
       settings = {
         server = {
           hostname = cfg.hostname;
@@ -144,7 +145,7 @@ in
           url = "https://github.com/roundcube/roundcubemail/releases/download/${version}/roundcubemail-${version}-complete.tar.gz";
           sha256 = "sha256-xop89EwvI63HazKDqtsJw9KSG9JO/sHp4U5XknySQmU=";
         };
-        patches = [];
+        patches = [ ];
         installPhase = ''
           mkdir $out
           cp -r * $out/
@@ -169,7 +170,8 @@ in
       '';
     };
 
-    services.nginx.virtualHosts.${cfg.hostname}.root = lib.mkForce "${config.services.roundcube.package}/public_html";
+    services.nginx.virtualHosts.${cfg.hostname}.root =
+      lib.mkForce "${config.services.roundcube.package}/public_html";
 
   };
 }

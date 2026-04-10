@@ -236,6 +236,7 @@ in
               display_name_template = "{{ user.name }}";
             };
             allow_existing_users = true;
+            confirm_localpart = true;
           }
         ];
         log_config = (pkgs.formats.yaml { }).generate "log_config" {

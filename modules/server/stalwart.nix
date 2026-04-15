@@ -24,10 +24,10 @@ in
     webmailSecretPath = lib.mkOption {
       type = lib.types.path;
     };
-    # principals = lib.mkOption {
-    #   type = lib.types.listOf lib.types.attrs;
-    #   default = [ ];
-    # };
+    principals = lib.mkOption {
+      type = lib.types.listOf lib.types.attrs;
+      default = [ ];
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -113,14 +113,14 @@ in
           fields.full-name = "name";
           lookup.domains = [ config.domain ];
         };
-        # directory."in-memory" = {
-        #   type = "memory";
-        #   principals = cfg.principals;
-        # };
-        directory."internal" = {
-          type = "internal";
-          store = "postgresql";
+        directory."in-memory" = {
+          type = "memory";
+          principals = cfg.principals;
         };
+        # directory."internal" = {
+        #   type = "internal";
+        #   store = "postgresql";
+        # };
         authentication.fallback-admin = {
           user = "admin";
           secret = "%{file:${cfg.adminPassFile}}%";
@@ -134,7 +134,7 @@ in
     # Access to TLS keys & shared secrets
     users.users.stalwart-mail.extraGroups = [
       "nginx"
-      # "keys"
+      "keys"
     ];
 
     services.roundcube = {

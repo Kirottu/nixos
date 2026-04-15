@@ -132,7 +132,6 @@
     boot.loader.grub.device = "/dev/sda";
 
     hm.programs.helix.enable = lib.mkForce false;
-    environment.systemPackages = [ pkgs.neovim ];
 
     system.stateVersion = "25.11";
     hm.home.stateVersion = "25.11";

@@ -17,7 +17,7 @@ in
     itch.enable = lib.mkEnableOption "itch";
   };
 
-  config = lib.mkMerge [
+  config = lib.mkIf cfg.enable (lib.mkMerge [
     {
       programs.gamescope = {
         enable = true;
@@ -111,5 +111,5 @@ in
         ];
       }
     ))
-  ];
+  ]);
 }

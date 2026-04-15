@@ -167,7 +167,7 @@ in
           path = "/var/lib/stalwart-mail/logs";
           prefix = "stalwart.log";
           rotate = "daily";
-          level = "trace";
+          level = "info";
           ansi = false;
           enable = true;
         };
@@ -213,8 +213,13 @@ in
       '';
     };
 
-    services.nginx.virtualHosts.${cfg.hostname}.root =
-      lib.mkForce "${config.services.roundcube.package}/public_html";
-
+    services.nginx.virtualHosts.${cfg.hostname} = {
+      root = lib.mkForce "${config.services.roundcube.package}/public_html";
+      
+      locations."/.well-known" = {
+        proxyPass = "http://[::1]:${toString port}";
+        recommendedProxySettings = true;
+      };
+    };
   };
 }

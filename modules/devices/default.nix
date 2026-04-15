@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ lib, config, ... }:
 {
   options.devices = {
     class = lib.mkOption {
@@ -8,6 +8,10 @@
         "laptop"
         "server"
       ];
+    };
+    graphical = lib.mkOption {
+      type = lib.types.bool;
+      default = config.devices.class == "desktop" || config.devices.class == "laptop";
     };
   };
 }

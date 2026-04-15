@@ -5,7 +5,7 @@
   ...
 }:
 {
-  config = lib.mkIf (config.devices.class == "laptop" || config.devices.class == "desktop") {
+  config = lib.mkIf config.devices.graphical {
     hm.programs.direnv = {
       enable = true;
       nix-direnv.enable = true;

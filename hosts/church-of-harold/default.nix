@@ -235,6 +235,9 @@ in
         # Hardware accelerated scheduling maybe?
         "amdgpu.mes=1"
       ];
+      kernel.sysctl = {
+        "vm.swappiness" = 10;
+      };
     };
 
     hardware.amdgpu.overdrive.enable = true;

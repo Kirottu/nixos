@@ -58,7 +58,7 @@ in
         loglevel = 2;
 
         mail_smtpsecure = "ssl";
-        mail_smtpport = 465;
+        mail_smtpport = config.server.stalwart.automation.port;
         mail_smtpname = "noreply";
         mail_from_address = "noreply";
         mail_domain = config.domain;

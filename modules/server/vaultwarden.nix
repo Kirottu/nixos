@@ -25,7 +25,7 @@ in
       environmentFile = cfg.secrets;
       config = {
         DOMAIN = "https://${vwDomain}";
-        SIGNUPS_ALLOWED = false;
+        # SIGNUPS_ALLOWED = false;
 
         ROCKET_ADDRESS = "127.0.0.1";
         ROCKET_PORT = 8222;
@@ -38,11 +38,11 @@ in
         SSO_SCOPES = "openid profile email offline_access";
         # SSO_CLIENT_SECRET = <defined in secrets>;
 
-        # SMTP_HOST = "${config.server.stalwart.hostname}";
-        # SMTP_PORT = 465;
-        # SMTP_SECURITY = "force_tls";
-        # SMTP_FROM = "noreply@${config.domain}";
-        # SMTP_USERNAME = "noreply";
+        SMTP_HOST = "${config.server.stalwart.hostname}";
+        SMTP_PORT = config.server.stalwart.automation.port;
+        SMTP_SECURITY = "force_tls";
+        SMTP_FROM = "noreply@${config.domain}";
+        SMTP_USERNAME = "noreply";
         # SMTP_PASSWORD = <defined in secrets>;
       };
     };
@@ -52,6 +52,10 @@ in
       forceSSL = true;
       locations."/" = {
         proxyPass = "http://127.0.0.1:${toString config.services.vaultwarden.config.ROCKET_PORT}";
+        recommendedProxySettings = true;
+      };
+      locations."/admin" = {
+        return = 404;
       };
     };
   };

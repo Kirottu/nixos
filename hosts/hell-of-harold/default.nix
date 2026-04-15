@@ -78,19 +78,13 @@
         adminPassFile = config.sops.secrets."stalwart/admin-pass".path;
         dbPassFile = config.sops.secrets."stalwart/db-pass".path;
         webmailSecretPath = config.sops.secrets."webmail/client-secret".path;
-        principals = [
+        automation.principals = [
           {
             class = "individual";
             name = "Noreply";
             secret = "%{file:${config.sops.secrets."mail/noreply".path}}%";
             email = [ "noreply@${config.domain}" ];
           }
-          # {
-          #   class = "individual";
-          #   name = "Postmaster";
-          #   secret = "%{file:${config.sops.secrets."mail/postmaster".path}}%";
-          #   email = [ "postmaster@${config.domain}" ];
-          # }
         ];
       };
     };

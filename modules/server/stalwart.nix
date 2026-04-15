@@ -7,6 +7,9 @@
 let
   cfg = config.server.stalwart;
   port = 9002;
+  smtp-automation = "smtp-automation";
+  directory-automation = "in-memory";
+  directory-oidc = "keycloak";
 in
 {
   options.server.stalwart = {
@@ -24,9 +27,15 @@ in
     webmailSecretPath = lib.mkOption {
       type = lib.types.path;
     };
-    principals = lib.mkOption {
-      type = lib.types.listOf lib.types.attrs;
-      default = [ ];
+    automation = {
+      principals = lib.mkOption {
+        type = lib.types.listOf lib.types.attrs;
+        default = [ ];
+      };
+      port = lib.mkOption {
+        type = lib.types.number;
+        default = 466;
+      };
     };
   };
 
@@ -44,7 +53,7 @@ in
       enable = true;
       openFirewall = true;
       stateVersion = "25.11";
-      settings = {
+      settings = lib.mkForce {
         server = {
           hostname = cfg.hostname;
           listener = {
@@ -60,6 +69,10 @@ in
             submission = {
               protocol = "smtp";
               bind = "[::]:587";
+            };
+            ${smtp-automation} = {
+              protocol = "smtp";
+              bind = "[::]:${toString cfg.automation.port}";
             };
             imaps = {
               protocol = "imap";
@@ -102,8 +115,7 @@ in
           password = "%{file:${cfg.dbPassFile}}%";
           compression = "lz4";
         };
-        # Currently, Stalwart's and other clients' OIDC support is barebones as best. It'll have to wait
-        directory."keycloak" = {
+        directory.${directory-oidc} = {
           type = "oidc";
           timeout = "1s";
           endpoint.url = "https://${config.server.keycloak.hostname}/realms/main/protocol/openid-connect/userinfo";
@@ -111,22 +123,52 @@ in
           fields.email = "email";
           fields.username = "preferred_username";
           fields.full-name = "name";
-          lookup.domains = [ config.domain ];
         };
-        directory."in-memory" = {
+        directory.${directory-automation} = {
           type = "memory";
-          principals = cfg.principals;
+          principals = cfg.automation.principals;
         };
-        # directory."internal" = {
-        #   type = "internal";
-        #   store = "postgresql";
-        # };
+
+        session.auth = {
+          directory = [
+            {
+              "if" = "listener == '${smtp-automation}'";
+              "then" = directory-automation;
+            }
+            {
+              "else" = directory-oidc;
+            }
+          ];
+        };
+        
         authentication.fallback-admin = {
           user = "admin";
           secret = "%{file:${cfg.adminPassFile}}%";
         };
         http = {
           use-x-forwarded = true;
+        };
+        resolver.public-suffix = [
+          "file://${pkgs.publicsuffix-list}/share/publicsuffix/public_suffix_list.dat"
+        ];
+        spam-filter.resource = "file://${config.services.stalwart.package.spam-filter}/spam-filter.toml";
+        webadmin = {
+          path = "/var/cache/stalwart-mail";
+          resource = "file://${config.services.stalwart.package.webadmin}/webadmin.zip";
+        };
+        # tracer.journal = {
+        #   type = "journal";
+        #   level = "trace";
+        #   enable = true;
+        # };
+        tracer.log = {
+          type = "log";
+          path = "/var/lib/stalwart-mail/logs";
+          prefix = "stalwart.log";
+          rotate = "daily";
+          level = "trace";
+          ansi = false;
+          enable = true;
         };
       };
     };

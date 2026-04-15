@@ -73,6 +73,7 @@ in
             ${smtp-automation} = {
               protocol = "smtp";
               bind = "[::]:${toString cfg.automation.port}";
+              tls.implicit = true;
             };
             imaps = {
               protocol = "imap";
@@ -133,10 +134,10 @@ in
           directory = [
             {
               "if" = "listener == '${smtp-automation}'";
-              "then" = directory-automation;
+              "then" = "'${directory-automation}'";
             }
             {
-              "else" = directory-oidc;
+              "else" = "'${directory-oidc}'";
             }
           ];
         };

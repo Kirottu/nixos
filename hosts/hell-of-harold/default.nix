@@ -81,7 +81,7 @@
         automation.principals = [
           {
             class = "individual";
-            name = "Noreply";
+            name = "noreply";
             secret = "%{file:${config.sops.secrets."mail/noreply".path}}%";
             email = [ "noreply@${config.domain}" ];
           }

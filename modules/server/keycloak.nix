@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  myPkgs,
   ...
 }:
 let
@@ -32,6 +33,7 @@ in
         pkgs.keycloak.plugins.junixsocket-common
         pkgs.keycloak.plugins.junixsocket-native-common
         pkgs.keycloak.plugins.keycloak-restrict-client-auth
+        (pkgs.callPackage myPkgs.keycloak-unique-validator { })
       ];
       database = {
         host = "/run/postgresql";

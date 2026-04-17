@@ -141,7 +141,7 @@ in
             }
           ];
         };
-        
+
         authentication.fallback-admin = {
           user = "admin";
           secret = "%{file:${cfg.adminPassFile}}%";
@@ -215,8 +215,8 @@ in
 
     services.nginx.virtualHosts.${cfg.hostname} = {
       root = lib.mkForce "${config.services.roundcube.package}/public_html";
-      
-      locations."/.well-known" = {
+
+      locations."~ ^(/.well-known|/jmap)" = {
         proxyPass = "http://[::1]:${toString port}";
         recommendedProxySettings = true;
       };

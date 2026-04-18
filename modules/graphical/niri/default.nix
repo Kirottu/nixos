@@ -57,18 +57,19 @@
 
       programs.niri = {
         enable = true;
-        package = pkgs.niri-unstable.overrideAttrs (prev: {
-          src = pkgs.fetchFromGitHub {
-            owner = "niri-wm";
-            repo = "niri";
-            rev = "wip/branch";
-            hash = "sha256-R3GQb8mJWZCMv2x3LKExgpjM7Kilu8dBxuUGJJjHNEM=";
-          };
-          version = "blur";
-          env = prev.env // {
-            NIRI_BUILD_VERSION_STRING = "blur";
-          };
-        });
+        # package = pkgs.niri-unstable.overrideAttrs (prev: {
+        #   src = pkgs.fetchFromGitHub {
+        #     owner = "niri-wm";
+        #     repo = "niri";
+        #     rev = "wip/branch";
+        #     hash = "sha256-R3GQb8mJWZCMv2x3LKExgpjM7Kilu8dBxuUGJJjHNEM=";
+        #   };
+        #   version = "blur";
+        #   env = prev.env // {
+        #     NIRI_BUILD_VERSION_STRING = "blur";
+        #   };
+        # });
+        package = pkgs.niri-unstable;
       };
       hm.wayland.windowManager.niri = {
         enable = true;

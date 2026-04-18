@@ -29,8 +29,10 @@ in
       {
         enable = true;
         openFirewall = true;
-        sslCert = "${certDir}/full.pem";
-        sslKey = "${certDir}/key.pem";
+        tls = {
+          certPath = "${certDir}/full.pem";
+          keyPath = "${certDir}/key.pem";
+        };
         welcometext = "Epämäärämääräistä möminää ja suolaista paskapuhumista.";
         bandwidth = 128000;
       };

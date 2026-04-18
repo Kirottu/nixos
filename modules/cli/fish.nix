@@ -16,7 +16,7 @@
     ];
 
     # Takes really long to eval during build
-    documentation.man.generateCaches = false;
+    documentation.man.cache.enable = false;
 
     hm.programs.fish =
       let

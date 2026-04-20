@@ -151,7 +151,7 @@ in
       btrfs.autoScrub.enable = true;
       zerotierone.enable = true;
       pid-fan-controller = {
-        enable = false;
+        enable = true;
         settings = {
           heatSources = [
             {
@@ -180,22 +180,22 @@ in
               # GPU
               wildcardPath = "/sys/class/drm/card*/device/hwmon/hwmon*/pwm1";
               minPwm = 10;
-              maxPwm = 255;
+              maxPwm = 180;
               cutoff = true;
               heatPressureSrcs = [ "gpu" ];
             }
             {
               # CPU fan
               wildcardPath = "/sys/devices/platform/it87.2624/hwmon/hwmon*/pwm1";
-              minPwm = 200;
+              minPwm = 60;
               maxPwm = 255;
               heatPressureSrcs = [ "cpu" ];
             }
             {
               # Intake fans
               wildcardPath = "/sys/devices/platform/it87.2624/hwmon/hwmon*/pwm3";
-              minPwm = 200;
-              maxPwm = 255;
+              minPwm = 60;
+              maxPwm = 180;
               heatPressureSrcs = [
                 "cpu"
                 "gpu"
@@ -220,6 +220,18 @@ in
       kernelPackages = pkgs.linuxPackagesFor pkgs.linux_latest;
       extraModulePackages = [
         # (pkgs.callPackage ./amdgpu.nix { kernel = config.boot.kernelPackages.kernel; })
+        (config.boot.kernelPackages.it87.overrideAttrs {
+          version = "unstable-2026-04-16";
+          src = pkgs.fetchFromGitHub {
+            owner = "frankcrawford";
+            repo = "it87";
+            rev = "20f2f2f4c92c14fcdd26f60d050e693ad2c30bf8";
+            hash = "sha256-o2riPbm75Bez4/SrGV7hB3mlqdxxrwRPdre+3W5y/I0=";
+          };
+        })
+      ];
+      kernelModules = [
+        "it87"
       ];
       # extraModulePackages = [
       #   (pkgs.callPackage myPkgs.it87 { kernel = config.boot.kernelPackages.kernel; })

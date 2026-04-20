@@ -40,7 +40,10 @@
           "niri-nix.cachix.org-1:SvFtqpDcf7Sm1SMJdby1/+Y+6f3Yt3/3PMcSTKPJNJ0="
         ];
       };
-      nixpkgs.overlays = [ inputs.niri-nix.overlays.niri-nix ];
+      nixpkgs.overlays = [
+        inputs.niri.overlays.default
+        inputs.niri-nix.overlays.niri-nix
+      ];
 
       graphical = {
         screenLocking = {
@@ -69,7 +72,7 @@
         #     NIRI_BUILD_VERSION_STRING = "blur";
         #   };
         # });
-        package = pkgs.niri-unstable;
+        package = pkgs.niri;
       };
       hm.wayland.windowManager.niri = {
         enable = true;

@@ -15,9 +15,8 @@
     #   url = "github:sodiboo/niri-flake";
     #   inputs.nixpkgs.follows = "nixpkgs";
     # };
-    niri-nix = {
-      url = "git+https://codeberg.org/BANanaD3V/niri-nix";
-    };
+    niri-nix.url = "git+https://codeberg.org/BANanaD3V/niri-nix";
+    niri.url = "github:niri-wm/niri";
 
     ironbar = {
       url = "github:JakeStanger/ironbar";

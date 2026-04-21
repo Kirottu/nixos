@@ -277,6 +277,8 @@ in
     theming.theme = lib.mkForce "bliss";
     zramSwap.enable = lib.mkForce false;
 
+    perf.swapspace.enable = true;
+
     system.stateVersion = "24.11"; # Did you read the comment?
     hm.home.stateVersion = "24.11";
   };

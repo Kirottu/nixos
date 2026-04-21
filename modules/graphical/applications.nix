@@ -15,6 +15,7 @@ in
       zen.enable = lib.mkEnableOption "Zen Browser";
       librewolf.enable = lib.mkEnableOption "LibreWolf";
       firefox.enable = lib.mkEnableOption "Firefox";
+      mullvad.enable = lib.mkEnableOption "Mullvad Browser";
       default = lib.mkOption {
         type = lib.types.nonEmptyStr;
         description = "Desktop entry of the default browser";

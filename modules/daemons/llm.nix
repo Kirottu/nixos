@@ -18,10 +18,11 @@ in
     #   enable = true;
     #   package = pkgs.ollama-rocm;
     # };
-    # services.open-webui = {
-    #   enable = true;
-    #   host = "0.0.0.0";
-    # };
+    services.open-webui = {
+      enable = true;
+      port = 8081;
+      host = "0.0.0.0";
+    };
 
     services.llama-swap = {
       enable = true;
@@ -85,6 +86,8 @@ in
 
     impermanence.directories = [
       "/var/lib/llama-cpp"
+      "/var/lib/private"
+      # config.services.open-webui.stateDir
     ];
   };
 }

@@ -137,7 +137,7 @@ in
 
     };
     daemons = {
-      llm.enable = false;
+      llm.enable = true;
     };
     services = {
       udev = {

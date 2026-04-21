@@ -28,7 +28,6 @@ in
         hostname-admin = "http://localhost:${toString port}";
         proxy-headers = "xforwarded";
       };
-      initialAdminPassword = "changeme";
       plugins = [
         pkgs.keycloak.plugins.junixsocket-common
         pkgs.keycloak.plugins.junixsocket-native-common

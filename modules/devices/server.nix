@@ -71,8 +71,8 @@
       ports = [ 22 ];
       settings = {
         AllowUsers = [ config.mainUser.userName ];
-        AuthenticationMethods = "publickey,password";
-        PasswordAuthentication = true;
+        PasswordAuthentication = false;
+        KbdInteractiveAuthentication = false;
         PermitRootLogin = "no";
       };
     };

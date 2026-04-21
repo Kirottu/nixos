@@ -36,11 +36,13 @@ in
             {
               name,
               filename,
+              ttl ? -1,
               isMoe ? false,
               extraArgs ? "",
             }:
             {
               ${name} = {
+                inherit ttl;
                 cmd =
                   "${llama-server} --port \${PORT} -m /var/lib/llama-cpp/models/${filename} -fit on ${extraArgs}"
                   + lib.optionalString isMoe " --cpu-moe";
@@ -51,6 +53,7 @@ in
           modelList = [
             {
               name = "qwen2.5-3b";
+              ttl = 60;
               filename = "Qwen2.5-Coder-3B-Q8_0.gguf";
               extraArgs = "-md /var/lib/llama-cpp/models/Qwen2.5-Coder-0.5B-Q8_0.gguf";
             }
@@ -59,16 +62,26 @@ in
               filename = "Qwen3-Coder-Next-UD-Q4_K_XL.gguf";
               isMoe = true;
             }
+            {
+              name = "qwen3.6-35b-a3b";
+              ttl = 120;
+              filename = "Qwen3.6-35B-A3B-UD-Q4_K_XL.gguf";
+              isMoe = true;
+            }
           ];
 
         in
         {
-          globalTTL = 60;
-          healthCheckTimeout = 15;
+          healthCheckTimeout = 45;
           # Merge all model configs into one attrset
           models = lib.foldl (acc: m: acc // buildModel m) { } modelList;
         };
     };
+
+    environment.systemPackages = [
+      pkgs.opencode-desktop
+      pkgs.opencode
+    ];
 
     impermanence.directories = [
       "/var/lib/llama-cpp"

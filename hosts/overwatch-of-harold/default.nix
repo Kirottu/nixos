@@ -59,6 +59,12 @@
         enable = true;
         secrets = config.sops.secrets."vaultwarden/env".path;
       };
+      borg.repositories."ivzoh" = {
+        quota = "150G";
+        keys = [
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKZClquRbXYBo0nMvhevwHQyWkiWfrdePdG9eouHUkzW root@ivzohserver"
+        ];
+      };
     };
     # grafana.enable = true;
     # mail.enable = true;

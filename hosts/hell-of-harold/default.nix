@@ -87,6 +87,11 @@
           }
         ];
       };
+      borg.repositories."ivzoh" = {
+        keys = [
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAus3fLTD2awXq7p9IVzKdhxV0k0VBlIas9L3KxBHmWb kirottu@missionary-of-harold"
+        ];
+      };
     };
 
     impermanence = {

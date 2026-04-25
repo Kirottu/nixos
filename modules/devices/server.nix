@@ -28,6 +28,8 @@
       defaults.email = "arnovaara@kirottu.com";
     };
 
+    server.borg.enable = true;
+
     cli.fish.enable = true;
 
     #prevent OOM on cache fail

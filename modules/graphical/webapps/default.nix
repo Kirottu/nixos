@@ -73,11 +73,9 @@
           [
             {
               mozilla.firefoxNativeMessagingHosts = [
-                (
-                  (pkgs.callPackage myPkgs.open-in {
-                    bins = [ pkgs.xdg-utils ];
-                  })
-                )
+                (pkgs.callPackage myPkgs.open-in {
+                  bins = [ pkgs.xdg-utils ];
+                })
               ];
             }
           ]
@@ -106,7 +104,7 @@
                 startupNotify = true;
                 type = "Application";
                 exec = lib.concatStrings [
-                  "/bin/sh -c \"XAPP_FORCE_GTKWINDOW_ICON=${value.icon} ${lib.getExe config.hm.programs.firefox.package}"
+                  "/bin/sh -c \"XAPP_FORCE_GTKWINDOW_ICON=${value.icon} ${lib.getExe pkg}"
                   " --class webapp-${name}"
                   " --name webapp-${name}"
                   " --profile ${config.hm.xdg.dataHome}/${data-dir}"

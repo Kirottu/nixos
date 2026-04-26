@@ -168,7 +168,17 @@ in
               name = "gpu";
               wildcardPath = "/sys/class/drm/card*/device/hwmon/hwmon*/temp1_input";
               pidParams = {
-                setPoint = 65;
+                setPoint = 60;
+                P = -5.0e-3;
+                I = -2.0e-3;
+                D = -6.0e-3;
+              };
+            }
+            {
+              name = "internal";
+              wildcardPath = "/sys/devices/platform/it87.2624/hwmon/hwmon*/temp1_input";
+              pidParams = {
+                setPoint = 40;
                 P = -5.0e-3;
                 I = -2.0e-3;
                 D = -6.0e-3;
@@ -197,8 +207,7 @@ in
               minPwm = 60;
               maxPwm = 180;
               heatPressureSrcs = [
-                "cpu"
-                "gpu"
+                "internal"
               ];
             }
           ];
@@ -255,6 +264,7 @@ in
     hardware.amdgpu.overdrive.enable = true;
 
     programs.droidcam.enable = true;
+    # programs.coolercontrol.enable = true;
 
     virtualisation.waydroid.enable = true;
     networking.nftables.enable = true;

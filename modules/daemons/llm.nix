@@ -18,18 +18,32 @@ in
     #   enable = true;
     #   package = pkgs.ollama-rocm;
     # };
-    services.open-webui = {
-      enable = true;
-      port = 8081;
-      host = "0.0.0.0";
-    };
+    # services.open-webui = {
+    #   enable = true;
+    #   port = 8081;
+    #   host = "0.0.0.0";
+    # };
 
     services.llama-swap = {
       enable = true;
       # package = inputs.nixpkgs-llama-swap.legacyPackages.${pkgs.stdenv.hostPlatform.system}.llama-swap;
       settings =
         let
-          llama-cpp = pkgs.llama-cpp-vulkan;
+          # llama-cpp = pkgs.llama-cpp-rocm.overrideAttrs {
+          #   src = pkgs.fetchFromGitHub {
+          #     owner = "ruixiang63";
+          #     repo = "llama.cpp";
+          #     rev = "d1d2c81caccc748eaaff32b6b7823bad090fd1dd";
+          #     hash = "sha256-ezbrXlVz+4RtHalAXGe01DBUUmD4bYfqhTtQQ4PO/gg=";
+          #     leaveDotGit = true;
+          #     postFetch = ''
+          #       git -C "$out" rev-parse --short HEAD > $out/COMMIT
+          #       find "$out" -name .git -print0 | xargs -0 rm -rf
+          #     '';
+          #   };
+          #   npmDepsHash = "sha256-DxgUDVr+kwtW55C4b89Pl+j3u2ILmACcQOvOBjKWAKQ=";
+          # };
+          llama-cpp = pkgs.llama-cpp-rocm;
           llama-server = lib.getExe' llama-cpp "llama-server";
 
           # Helper: build model config from (name, { filename, isMoe ? false })
@@ -59,34 +73,55 @@ in
               extraArgs = "-md /var/lib/llama-cpp/models/Qwen2.5-Coder-0.5B-Q8_0.gguf";
             }
             {
-              name = "qwen3-coder-next";
-              filename = "Qwen3-Coder-Next-UD-Q4_K_XL.gguf";
-              isMoe = true;
-            }
-            {
               name = "qwen3.6-35b-a3b";
               ttl = 120;
               filename = "Qwen3.6-35B-A3B-UD-Q4_K_XL.gguf";
+              # extraArgs = "--no-mmap -md /var/lib/llama-cpp/models/Qwen3.6-35B-A3B-DFlash-q8_0.gguf";
+              extraArgs = "--no-mmap";
               isMoe = true;
             }
           ];
 
         in
         {
-          healthCheckTimeout = 45;
+          healthCheckTimeout = 60;
           # Merge all model configs into one attrset
           models = lib.foldl (acc: m: acc // buildModel m) { } modelList;
         };
     };
 
-    environment.systemPackages = [
-      pkgs.opencode-desktop
-      pkgs.opencode
-    ];
+    environment.sessionVariables = {
+      OPENCODE_ENABLE_EXA = 1;
+      OPENCODE_EXPERIMENTAL = 1;
+      OPENCODE_DISABLE_LSP_DOWNLOAD = 1;
+    };
+
+    hm.programs.opencode = {
+      enable = true;
+      extraPackages = [
+        pkgs.nixd
+        pkgs.rust-analyzer
+      ];
+      settings = {
+        provider = {
+          local = {
+            name = "Local";
+            npm = "@ai-sdk/openai-compatible";
+            options = {
+              baseURL = "http://localhost:${toString config.services.llama-swap.port}/v1";
+            };
+            models = {
+              "qwen3.6-35b-a3b" = {
+                name = "Qwen3.6";
+              };
+            };
+          };
+        };
+      };
+    };
 
     impermanence.directories = [
       "/var/lib/llama-cpp"
-      "/var/lib/private"
       # config.services.open-webui.stateDir
     ];
   };

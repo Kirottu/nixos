@@ -77,7 +77,7 @@
             name = "rust";
             language-servers = [
               "rust-analyzer"
-              "codel"
+              # "codel"
             ];
           }
           {

@@ -32,7 +32,7 @@
         sopsFile = ../../secrets/overwatch-of-harold.yaml;
       };
       "mail/noreply" = {
-        sopsFile = ../../secrets/mail.yaml;
+        sopsFile = ../../secrets/shared.yaml;
       };
     };
 

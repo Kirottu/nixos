@@ -65,7 +65,7 @@ stdenv.mkDerivation (finalAttrs: {
     patchShebangs bin/kc.sh
     export KC_HOME_DIR=$(pwd)
     export KC_CONF_DIR=$(pwd)/conf
-    bin/kc.sh build ${featuresSubcommand} ${vaultSubcommand}
+    bin/kc.sh build ${vaultSubcommand} ${featuresSubcommand}
 
     runHook postBuild
   '';

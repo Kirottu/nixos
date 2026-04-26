@@ -17,7 +17,7 @@ creation_rules:
     key_groups:
       - age:
         - *hell-of-harold
-  - path_regex: secrets/mail\.yaml$
+  - path_regex: secrets/shared\.yaml$
     key_groups:
       - age:
         - *hell-of-harold

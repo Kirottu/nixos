@@ -25,8 +25,8 @@
           sopsFile = ../../secrets/hell-of-harold.yaml;
           owner = "stalwart-mail";
         };
-        shared-mail = {
-          sopsFile = ../../secrets/mail.yaml;
+        shared = {
+          sopsFile = ../../secrets/shared.yaml;
           group = "keys";
           mode = "0440";
         };
@@ -45,14 +45,11 @@
         "stalwart/db-pass" = stalwart;
         "mail/noreply" = shared-mail;
         "mail/postmaster" = stalwart;
-        "synapse/client-secret" = {
-          sopsFile = ../../secrets/hell-of-harold.yaml;
-          owner = "matrix-synapse";
-        };
-        "webmail/client-secret" = {
-          sopsFile = ../../secrets/hell-of-harold.yaml;
-          owner = "roundcube";
-        };
+        "oidc/synapse" = shared;
+        "oidc/webmail" = shared;
+        "oidc/fairemail" = shared;
+        "oidc/nextcloud" = shared;
+        "oidc/vaultwarden" = shared;
       };
     server = {
       spreed-hpb = {
@@ -71,14 +68,14 @@
       };
       synapse = {
         enable = true;
-        clientSecretFile = config.sops.secrets."synapse/client-secret".path;
+        clientSecretFile = config.sops.secrets."oidc/synapse".path;
       };
       keycloak.enable = true;
       stalwart = {
         enable = true;
         adminPassFile = config.sops.secrets."stalwart/admin-pass".path;
         dbPassFile = config.sops.secrets."stalwart/db-pass".path;
-        webmailSecretPath = config.sops.secrets."webmail/client-secret".path;
+        webmailSecretPath = config.sops.secrets."oidc/webmail".path;
         automation.principals = [
           {
             class = "individual";
@@ -121,7 +118,12 @@
 
     services.keycloak = {
       vault = {
-        smtpPass = config.sops.secrets."mail/noreply".path;
+        main_smtpPass = config.sops.secrets."mail/noreply".path;
+        main_nextcloud = config.sops.secrets."oidc/nextcloud".path;
+        main_synapse = config.sops.secrets."oidc/synapse".path;
+        main_vaultwarden = config.sops.secrets."oidc/vaultwarden".path;
+        main_fairemail = config.sops.secrets."oidc/fairemail".path;
+        main_webmail = config.sops.secrets."oidc/webmail".path;
       };
       package = pkgs.callPackage myPkgs.keycloak {};
     };

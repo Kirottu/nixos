@@ -118,7 +118,7 @@
       # Overlay with some utilities
       lib = import ./lib { inherit inputs lib; };
       privateInputs = inputs.private.inputs;
-      myPkgs = lib.trace (import ./packages { inherit lib; }) (import ./packages { inherit lib; });
+      myPkgs = import ./packages { inherit lib; };
       inherit (inputs.nixpkgs.lib.fileset) toList fileFilter;
       import-tree =
         path:

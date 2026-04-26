@@ -39,6 +39,13 @@ in
       };
     };
 
+    users.users."keycloak" = {
+      extraGroups = ["keys"];
+      group = "keycloak";
+      isSystemUser = true;
+    };
+    users.groups."keycloak" = {};
+
     services.nginx.virtualHosts.${cfg.hostname} = {
       enableACME = true;
       forceSSL = true;

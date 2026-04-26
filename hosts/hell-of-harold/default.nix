@@ -3,6 +3,7 @@
   pkgs,
   inputs,
   lib,
+  myPkgs,
   ...
 }:
 {
@@ -116,6 +117,13 @@
 
     services.postgresql = {
       enable = true;
+    };
+
+    services.keycloak = {
+      vault = {
+        smtpPass = config.sops.secrets."mail/noreply".path;
+      };
+      package = pkgs.callPackage myPkgs.keycloak {};
     };
 
     services.nginx = {

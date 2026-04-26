@@ -2,6 +2,7 @@
   lib,
   stdenv,
   fetchzip,
+  keycloak,
   makeBinaryWrapper,
   jre_headless,
   nixosTests,
@@ -88,7 +89,7 @@ stdenv.mkDerivation (finalAttrs: {
 
   passthru = {
     tests = nixosTests.keycloak;
-    plugins = callPackage ./all-plugins.nix { };
+    plugins = keycloak.plugins;
     enabledPlugins = plugins;
   };
 

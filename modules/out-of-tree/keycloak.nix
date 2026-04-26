@@ -46,6 +46,9 @@ let
   prefixUnlessEmpty = prefix: string: optionalString (string != "") "${prefix}${string}";
 in
 {
+  # FIXME: Disable upstream Nixpkgs module so this one is used
+  disabledModules = [ "services/web-apps/keycloak.nix" ];
+
   imports = [
     (mkRenamedOptionModule
       [ "services" "keycloak" "bindAddress" ]
@@ -76,9 +79,6 @@ in
       "extraConfig"
     ] "Use `services.keycloak.settings' instead.")
   ];
-
-  # FIXME: Disable upstream Nixpkgs module so this one is used
-  disabledModules = [ "services/web-apps/keycloak.nix" ];
 
   options.services.keycloak =
     let
@@ -151,7 +151,7 @@ in
         '';
       };
 
-      secrets = lib.mkOption {
+      vault = lib.mkOption {
         type = lib.types.attrsOf lib.types.path;
         default = null;
         description = ''
@@ -534,7 +534,7 @@ in
             quarkus-systemd-notify
             quarkus-systemd-notify-deployment
           ]);
-        vaultType = if (cfg.secrets != null) then "file" else null;
+        vaultType = if (cfg.vault != null) then "file" else null;
       };
     in
     mkIf cfg.enable {
@@ -728,16 +728,16 @@ in
             };
           }) cfg.realmFiles;
 
-          secretsList = lib.optional (cfg.secrets != null) (map (
+          vaultList = if (cfg.vault != null) then (lib.mapAttrsToList (
             name: value: {
               name = "/run/keycloak/secrets/${name}";
               value = {
                 "L+".argument = value;
               };
             }
-          )) (lib.attrsToList cfg.secrets);
+          ) cfg.vault) else [];
         in
-        builtins.listToAttrs (settingsList ++ secretsList);
+        builtins.listToAttrs (settingsList ++ vaultList);
 
       systemd.services.keycloak =
         let
@@ -776,6 +776,8 @@ in
           // lib.optionalAttrs (cfg.initialAdminPassword != null) {
             KC_BOOTSTRAP_ADMIN_USERNAME = "admin";
             KC_BOOTSTRAP_ADMIN_PASSWORD = cfg.initialAdminPassword;
+          } // lib.optionalAttrs (cfg.vault != null) {
+            KC_VAULT_DIR = "/run/keycloak/secrets";
           };
           serviceConfig = {
             LoadCredential =

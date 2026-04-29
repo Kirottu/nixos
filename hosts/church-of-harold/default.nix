@@ -139,6 +139,7 @@ in
     daemons = {
       llm.enable = true;
     };
+
     services = {
       udev = {
         # Workaround for premature wakeups
@@ -153,12 +154,12 @@ in
       pid-fan-controller = {
         enable = true;
         settings = {
-          heatSources = [
+          heat_srcs = [
             {
               name = "cpu";
-              wildcardPath = "/sys/devices/pci0000:00/0000:00:18.3/hwmon/hwmon*/temp1_input";
-              pidParams = {
-                setPoint = 60;
+              wildcard_path = "/sys/devices/pci0000:00/0000:00:18.3/hwmon/hwmon*/temp1_input";
+              PID_params = {
+                set_point = 60;
                 P = -5.0e-3;
                 I = -2.0e-3;
                 D = -6.0e-3;
@@ -166,9 +167,9 @@ in
             }
             {
               name = "gpu";
-              wildcardPath = "/sys/class/drm/card*/device/hwmon/hwmon*/temp1_input";
-              pidParams = {
-                setPoint = 60;
+              wildcard_path = "/sys/class/drm/card*/device/hwmon/hwmon*/temp1_input";
+              PID_params = {
+                set_point = 60;
                 P = -5.0e-3;
                 I = -2.0e-3;
                 D = -6.0e-3;
@@ -176,9 +177,9 @@ in
             }
             {
               name = "internal";
-              wildcardPath = "/sys/devices/platform/it87.2624/hwmon/hwmon*/temp1_input";
-              pidParams = {
-                setPoint = 40;
+              wildcard_path = "/sys/devices/platform/it87.2624/hwmon/hwmon*/temp1_input";
+              PID_params = {
+                set_point = 40;
                 P = -5.0e-3;
                 I = -2.0e-3;
                 D = -6.0e-3;
@@ -188,25 +189,25 @@ in
           fans = [
             {
               # GPU
-              wildcardPath = "/sys/class/drm/card*/device/hwmon/hwmon*/pwm1";
-              minPwm = 10;
-              maxPwm = 180;
+              wildcard_path = "/sys/class/drm/card*/device/hwmon/hwmon*/pwm1";
+              min_pwm = 10;
+              max_pwm = 180;
               cutoff = true;
-              heatPressureSrcs = [ "gpu" ];
+              heat_pressure_srcs = [ "gpu" ];
             }
             {
               # CPU fan
-              wildcardPath = "/sys/devices/platform/it87.2624/hwmon/hwmon*/pwm1";
-              minPwm = 60;
-              maxPwm = 255;
-              heatPressureSrcs = [ "cpu" ];
+              wildcard_path = "/sys/devices/platform/it87.2624/hwmon/hwmon*/pwm1";
+              min_pwm = 60;
+              max_pwm = 255;
+              heat_pressure_srcs = [ "cpu" ];
             }
             {
               # Intake fans
-              wildcardPath = "/sys/devices/platform/it87.2624/hwmon/hwmon*/pwm3";
-              minPwm = 60;
-              maxPwm = 180;
-              heatPressureSrcs = [
+              wildcard_path = "/sys/devices/platform/it87.2624/hwmon/hwmon*/pwm3";
+              min_pwm = 60;
+              max_pwm = 180;
+              heat_pressure_srcs = [
                 "internal"
               ];
             }

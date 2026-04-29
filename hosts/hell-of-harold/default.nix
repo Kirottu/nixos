@@ -43,7 +43,7 @@
         "spreed-hpb/nextcloudsecret" = spreed;
         "stalwart/admin-pass" = stalwart;
         "stalwart/db-pass" = stalwart;
-        "mail/noreply" = shared-mail;
+        "mail/noreply" = shared;
         "mail/postmaster" = stalwart;
         "oidc/synapse" = shared;
         "oidc/webmail" = shared;
@@ -125,7 +125,7 @@
         main_fairemail = config.sops.secrets."oidc/fairemail".path;
         main_webmail = config.sops.secrets."oidc/webmail".path;
       };
-      package = pkgs.callPackage myPkgs.keycloak {};
+      package = pkgs.callPackage myPkgs.keycloak { };
     };
 
     services.nginx = {

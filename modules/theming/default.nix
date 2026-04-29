@@ -129,6 +129,8 @@ in
             platformTheme.name = "qtct";
           };
 
+          hm.gtk.gtk4.theme = config.hm.gtk.theme;
+
           environment.systemPackages = with pkgs; [
             kdePackages.breeze
           ];

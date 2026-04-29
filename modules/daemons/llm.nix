@@ -74,12 +74,25 @@ in
             }
             {
               name = "qwen3.6-35b-a3b";
-              ttl = 120;
-              filename = "Qwen3.6-35B-A3B-UD-Q4_K_XL.gguf";
+              ttl = 300;
+              # filename = "Qwen3.6-35B-A3B-UD-Q4_K_XL.gguf";
+              filename = "Qwen3.6-35B-A3B-Claude-4.6-Opus-Reasoning-Distilled-UD-Q4_K_XL.gguf";
               # extraArgs = "--no-mmap -md /var/lib/llama-cpp/models/Qwen3.6-35B-A3B-DFlash-q8_0.gguf";
-              extraArgs = "--no-mmap";
+              # My RX 6700 XT has 96 mb of L3 cache, this should apparently speed up prompt processing.
+              extraArgs = "--no-mmap --ubatch-size 96";
               isMoe = true;
             }
+            {
+              name = "darwin-36b-opus";
+              ttl = 300;
+              # filename = "Qwen3.6-35B-A3B-UD-Q4_K_XL.gguf";
+              filename = "FINAL-Bench_Darwin-36B-Opus-Q4_K_L.gguf";
+              # extraArgs = "--no-mmap -md /var/lib/llama-cpp/models/Qwen3.6-35B-A3B-DFlash-q8_0.gguf";
+              # My RX 6700 XT has 96 mb of L3 cache, this should apparently speed up prompt processing.
+              extraArgs = "--no-mmap --ubatch-size 96";
+              isMoe = true;
+            }
+
           ];
 
         in
@@ -92,8 +105,8 @@ in
 
     environment.sessionVariables = {
       OPENCODE_ENABLE_EXA = 1;
-      OPENCODE_EXPERIMENTAL = 1;
-      OPENCODE_DISABLE_LSP_DOWNLOAD = 1;
+      OPENCODE_EXPERIMENTAL = "true";
+      OPENCODE_DISABLE_LSP_DOWNLOAD = "true";
     };
 
     hm.programs.opencode = {
@@ -113,6 +126,9 @@ in
             models = {
               "qwen3.6-35b-a3b" = {
                 name = "Qwen3.6";
+              };
+              "darwin-36b-opus" = {
+                name = "Darwin";
               };
             };
           };

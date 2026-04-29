@@ -16,7 +16,7 @@
 
     services.blueman.enable = true;
 
-    hm.services.blueman-applet.enable = true;
+    # hm.services.blueman-applet.enable = true;
 
     impermanence.directories = lib.mkIf config.impermanence.enable [
       "/var/lib/bluetooth"

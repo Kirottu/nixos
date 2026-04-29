@@ -106,7 +106,8 @@ in
     environment.sessionVariables = {
       OPENCODE_ENABLE_EXA = 1;
       OPENCODE_EXPERIMENTAL = "true";
-      OPENCODE_DISABLE_LSP_DOWNLOAD = "true";
+      # OPENCODE_DISABLE_LSP_DOWNLOAD = "true";
+      OPENCODE_EXPERIMENTAL_LSP_TOOL = "true";
     };
 
     hm.programs.opencode = {
@@ -133,6 +134,7 @@ in
             };
           };
         };
+        lsp = { };
       };
     };
 

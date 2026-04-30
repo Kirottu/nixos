@@ -7,6 +7,47 @@
 }:
 let
   cfg = config.daemons.llm;
+  # Your models: just list the data
+  modelList = [
+    {
+      name = "qwen2.5-3b";
+      ttl = 60;
+      filename = "Qwen2.5-Coder-3B-Q8_0.gguf";
+      extraArgs = "-md /var/lib/llama-cpp/models/Qwen2.5-Coder-0.5B-Q8_0.gguf";
+    }
+    {
+      name = "qwen3.6-35b-a3b";
+      ttl = 300;
+      # filename = "Qwen3.6-35B-A3B-UD-Q4_K_XL.gguf";
+      filename = "Qwen3.6-35B-A3B-Claude-4.6-Opus-Reasoning-Distilled-UD-Q4_K_XL.gguf";
+      # extraArgs = "--no-mmap -md /var/lib/llama-cpp/models/Qwen3.6-35B-A3B-DFlash-q8_0.gguf";
+      # My RX 6700 XT has 96 mb of L3 cache, this should apparently speed up prompt processing.
+      extraArgs = "--no-mmap";
+      isMoe = true;
+    }
+    {
+      name = "darwin-36b-opus";
+      ttl = 300;
+      # filename = "Qwen3.6-35B-A3B-UD-Q4_K_XL.gguf";
+      filename = "FINAL-Bench_Darwin-36B-Opus-Q4_K_L.gguf";
+      # extraArgs = "--no-mmap -md /var/lib/llama-cpp/models/Qwen3.6-35B-A3B-DFlash-q8_0.gguf";
+      # My RX 6700 XT has 96 mb of L3 cache, this should apparently speed up prompt processing.
+      extraArgs = "--no-mmap";
+      isMoe = true;
+    }
+    # {
+    #   name = "qwen3-8b";
+    #   ttl = 120;
+    #   filename = "Qwen3-8B-UD-Q5_K_XL.gguf";
+    # }
+    {
+      name = "qwen3.5-9b";
+      ttl = 120;
+      filename = "Qwen3.5-9B-UD-Q4_K_XL.gguf";
+      extraArgs = "-md /var/lib/llama-cpp/models/Qwen3.5-0.8B-UD-Q4_K_XL.gguf --no-kv-offload";
+    }
+  ];
+
 in
 {
   options.daemons.llm = {
@@ -59,41 +100,10 @@ in
               ${name} = {
                 inherit ttl;
                 cmd =
-                  "${llama-server} --port \${PORT} -m /var/lib/llama-cpp/models/${filename} -fit on ${extraArgs}"
+                  "${llama-server} --port \${PORT} -m /var/lib/llama-cpp/models/${filename} -fit on ${extraArgs} --ubatch-size 96"
                   + lib.optionalString isMoe " --cpu-moe";
               };
             };
-
-          # Your models: just list the data
-          modelList = [
-            {
-              name = "qwen2.5-3b";
-              ttl = 60;
-              filename = "Qwen2.5-Coder-3B-Q8_0.gguf";
-              extraArgs = "-md /var/lib/llama-cpp/models/Qwen2.5-Coder-0.5B-Q8_0.gguf";
-            }
-            {
-              name = "qwen3.6-35b-a3b";
-              ttl = 300;
-              # filename = "Qwen3.6-35B-A3B-UD-Q4_K_XL.gguf";
-              filename = "Qwen3.6-35B-A3B-Claude-4.6-Opus-Reasoning-Distilled-UD-Q4_K_XL.gguf";
-              # extraArgs = "--no-mmap -md /var/lib/llama-cpp/models/Qwen3.6-35B-A3B-DFlash-q8_0.gguf";
-              # My RX 6700 XT has 96 mb of L3 cache, this should apparently speed up prompt processing.
-              extraArgs = "--no-mmap --ubatch-size 96";
-              isMoe = true;
-            }
-            {
-              name = "darwin-36b-opus";
-              ttl = 300;
-              # filename = "Qwen3.6-35B-A3B-UD-Q4_K_XL.gguf";
-              filename = "FINAL-Bench_Darwin-36B-Opus-Q4_K_L.gguf";
-              # extraArgs = "--no-mmap -md /var/lib/llama-cpp/models/Qwen3.6-35B-A3B-DFlash-q8_0.gguf";
-              # My RX 6700 XT has 96 mb of L3 cache, this should apparently speed up prompt processing.
-              extraArgs = "--no-mmap --ubatch-size 96";
-              isMoe = true;
-            }
-
-          ];
 
         in
         {
@@ -124,14 +134,14 @@ in
             options = {
               baseURL = "http://localhost:${toString config.services.llama-swap.port}/v1";
             };
-            models = {
-              "qwen3.6-35b-a3b" = {
-                name = "Qwen3.6";
-              };
-              "darwin-36b-opus" = {
-                name = "Darwin";
-              };
-            };
+            models = lib.listToAttrs (
+              map (model: {
+                name = model.name;
+                value = {
+                  name = model.name;
+                };
+              }) modelList
+            );
           };
         };
         lsp = { };

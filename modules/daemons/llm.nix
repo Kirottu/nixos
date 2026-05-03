@@ -44,7 +44,7 @@ let
       name = "qwen3.5-9b";
       ttl = 120;
       filename = "Qwen3.5-9B-UD-Q4_K_XL.gguf";
-      extraArgs = "-md /var/lib/llama-cpp/models/Qwen3.5-0.8B-UD-Q4_K_XL.gguf --no-kv-offload";
+      extraArgs = "--no-kv-offload";
     }
   ];
 

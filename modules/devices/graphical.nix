@@ -45,6 +45,7 @@
       # stubby.enable = true;
       ctrld.enable = true;
       networkmanager.enable = true;
+      tailscale.enable = true;
     };
     impermanence = {
       userDirectories = [
@@ -87,7 +88,9 @@
       };
     };
     virt.distrobox.enable = true;
-    daemons.kidex.enable = true;
+    daemons = {
+      kidex.enable = true;
+    };
     services.mullvad-vpn = {
       enable = true;
       package = pkgs.mullvad-vpn;

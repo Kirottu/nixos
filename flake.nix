@@ -46,6 +46,11 @@
       url = "github:lassulus/wrappers";
     };
 
+    millenium = {
+      url = "git+https://github.com/Murazaki/Millennium?dir=packages/nix&ref=patch-1";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # import-tree.url = "github:vic/import-tree";
 
     impermanence.url = "github:nix-community/impermanence";

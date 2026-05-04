@@ -50,6 +50,7 @@
         "oidc/fairemail" = shared;
         "oidc/nextcloud" = shared;
         "oidc/vaultwarden" = shared;
+        "oidc/headscale" = shared;
       };
     server = {
       spreed-hpb = {
@@ -84,6 +85,10 @@
             email = [ "noreply@${config.domain}" ];
           }
         ];
+      };
+      headscale = {
+        enable = true;
+        clientSecret = config.sops.secrets."oidc/headscale".path;
       };
     };
 
@@ -124,6 +129,7 @@
         main_vaultwarden = config.sops.secrets."oidc/vaultwarden".path;
         main_fairemail = config.sops.secrets."oidc/fairemail".path;
         main_webmail = config.sops.secrets."oidc/webmail".path;
+        main_headscale = config.sops.secrets."oidc/headscale".path;
       };
       package = pkgs.callPackage myPkgs.keycloak { };
     };

@@ -175,10 +175,13 @@ in
     };
 
     # Access to TLS keys & shared secrets
-    users.users.stalwart-mail.extraGroups = [
-      "nginx"
-      "keys"
-    ];
+    users.users = {
+      stalwart-mail.extraGroups = [
+        "nginx"
+        "keys"
+      ];
+      nginx.extraGroups = [ "keys" ];
+    };
 
     services.roundcube = {
       enable = true;

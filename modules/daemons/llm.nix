@@ -17,12 +17,19 @@ let
     }
     {
       name = "qwen3.6-35b-a3b";
-      ttl = 300;
+      ttl = 600;
       # filename = "Qwen3.6-35B-A3B-UD-Q4_K_XL.gguf";
-      filename = "Qwen3.6-35B-A3B-Claude-4.6-Opus-Reasoning-Distilled-UD-Q4_K_XL.gguf";
+      # filename = "Qwen3.6-35B-A3B-Claude-4.6-Opus-Reasoning-Distilled-UD-Q4_K_XL.gguf";
+      filename = "Qwen3.6-35B-A3B-UD-Q4_K_S.gguf";
       # extraArgs = "--no-mmap -md /var/lib/llama-cpp/models/Qwen3.6-35B-A3B-DFlash-q8_0.gguf";
       # My RX 6700 XT has 96 mb of L3 cache, this should apparently speed up prompt processing.
-      extraArgs = "--no-mmap";
+      isMoe = true;
+    }
+    {
+      name = "qwopus3.6-35b-a3b";
+      ttl = 600;
+      filename = "Qwen3.6-35B-A3B-Claude-4.6-Opus-Reasoning-Distilled-UD-Q4_K_XL.gguf";
+      extraArgs = "-c 128000";
       isMoe = true;
     }
     {
@@ -32,7 +39,6 @@ let
       filename = "FINAL-Bench_Darwin-36B-Opus-Q4_K_L.gguf";
       # extraArgs = "--no-mmap -md /var/lib/llama-cpp/models/Qwen3.6-35B-A3B-DFlash-q8_0.gguf";
       # My RX 6700 XT has 96 mb of L3 cache, this should apparently speed up prompt processing.
-      extraArgs = "--no-mmap";
       isMoe = true;
     }
     # {
@@ -45,6 +51,12 @@ let
       ttl = 120;
       filename = "Qwen3.5-9B-UD-Q4_K_XL.gguf";
       extraArgs = "--no-kv-offload";
+    }
+    {
+      name = "qwen2.5-coder-14b";
+      ttl = 120;
+      filename = "Qwen2.5-Coder-14B-Q4_K_L.gguf";
+      extraArgs = "--no-kv-offload -md /var/lib/llama-cpp/models/Qwen2.5-Coder-0.5B-Q8_0.gguf";
     }
   ];
 
@@ -100,7 +112,7 @@ in
               ${name} = {
                 inherit ttl;
                 cmd =
-                  "${llama-server} --port \${PORT} -m /var/lib/llama-cpp/models/${filename} -fit on ${extraArgs} --ubatch-size 96"
+                  "${llama-server} --port \${PORT} -m /var/lib/llama-cpp/models/${filename} -fit on ${extraArgs} --no-mmap --mlock -ub 2048 -ctk q8_0 -ctv q8_0 -fa on --tools all"
                   + lib.optionalString isMoe " --cpu-moe";
               };
             };
@@ -111,6 +123,11 @@ in
           # Merge all model configs into one attrset
           models = lib.foldl (acc: m: acc // buildModel m) { } modelList;
         };
+    };
+
+    systemd.services.llama-swap.serviceConfig = {
+      # Increase memlock limit to allow preventing the model from getting swapped
+      LimitMEMLOCK = 202116300800;
     };
 
     environment.sessionVariables = {
@@ -127,6 +144,16 @@ in
         pkgs.rust-analyzer
       ];
       settings = {
+        plugin = [
+          "@simonwjackson/opencode-direnv"
+          "@tarquinen/opencode-dcp"
+        ];
+        compaction.auto = false;
+        agent = {
+          # Disable title generation to dumb extra prompts
+          title.disable = true;
+        };
+        permission.skill.deep-research = "allow";
         provider = {
           local = {
             name = "Local";
@@ -146,6 +173,9 @@ in
         };
         lsp = { };
       };
+    };
+    hm.xdg.configFile."opencode/dcp.json".source = (pkgs.formats.json { }).generate "dcp.json" {
+      compress.nudgeForce = "strong";
     };
 
     impermanence.directories = [

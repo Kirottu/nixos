@@ -152,6 +152,14 @@ in
       btrfs.autoScrub.enable = true;
       zerotierone.enable = true;
       pid-fan-controller = {
+        package = pkgs.pid-fan-controller.overrideAttrs {
+          src = pkgs.fetchFromGitHub {
+            owner = "zimward";
+            repo = "pid-fan-controller";
+            rev = "debug";
+            hash = "sha256-ZGyHr+LyrDJnszRCaC57WMHcucIwCWdeJYlS968fJOA=";
+          };
+        };
         enable = true;
         settings = {
           heat_srcs = [

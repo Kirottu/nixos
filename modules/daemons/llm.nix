@@ -7,66 +7,46 @@
 }:
 let
   cfg = config.daemons.llm;
-  # Your models: just list the data
-  modelList = [
-    {
-      name = "qwen2.5-3b";
-      ttl = 60;
-      filename = "Qwen2.5-Coder-3B-Q8_0.gguf";
-      extraArgs = "-md /var/lib/llama-cpp/models/Qwen2.5-Coder-0.5B-Q8_0.gguf";
-    }
-    {
-      name = "qwen3.6-35b-a3b";
-      ttl = 600;
-      # filename = "Qwen3.6-35B-A3B-UD-Q4_K_XL.gguf";
-      # filename = "Qwen3.6-35B-A3B-Claude-4.6-Opus-Reasoning-Distilled-UD-Q4_K_XL.gguf";
-      filename = "Qwen3.6-35B-A3B-UD-Q4_K_S.gguf";
-      # extraArgs = "--no-mmap -md /var/lib/llama-cpp/models/Qwen3.6-35B-A3B-DFlash-q8_0.gguf";
-      # My RX 6700 XT has 96 mb of L3 cache, this should apparently speed up prompt processing.
-      isMoe = true;
-    }
-    {
-      name = "qwopus3.6-35b-a3b";
-      ttl = 600;
-      filename = "Qwen3.6-35B-A3B-Claude-4.6-Opus-Reasoning-Distilled-UD-Q4_K_XL.gguf";
-      extraArgs = "-c 128000";
-      isMoe = true;
-    }
-    {
-      name = "darwin-36b-opus";
-      ttl = 300;
-      # filename = "Qwen3.6-35B-A3B-UD-Q4_K_XL.gguf";
-      filename = "FINAL-Bench_Darwin-36B-Opus-Q4_K_L.gguf";
-      # extraArgs = "--no-mmap -md /var/lib/llama-cpp/models/Qwen3.6-35B-A3B-DFlash-q8_0.gguf";
-      # My RX 6700 XT has 96 mb of L3 cache, this should apparently speed up prompt processing.
-      isMoe = true;
-    }
-    # {
-    #   name = "qwen3-8b";
-    #   ttl = 120;
-    #   filename = "Qwen3-8B-UD-Q5_K_XL.gguf";
-    # }
-    {
-      name = "qwen3.5-9b";
-      ttl = 120;
-      filename = "Qwen3.5-9B-UD-Q4_K_XL.gguf";
-      extraArgs = "--no-kv-offload";
-    }
-    {
-      name = "qwen2.5-coder-14b";
-      ttl = 120;
-      filename = "Qwen2.5-Coder-14B-Q4_K_L.gguf";
-      extraArgs = "--no-kv-offload -md /var/lib/llama-cpp/models/Qwen2.5-Coder-0.5B-Q8_0.gguf";
-    }
-  ];
-
 in
 {
   options.daemons.llm = {
-    enable = lib.mkEnableOption "LLM";
+    enable = lib.mkEnableOption "llama-swap daemon";
+    hostname = lib.mkOption {
+      type = lib.types.nonEmptyStr;
+      default =
+        if config.net.tailscale.enable then "church-of-harold.tailnet.kirottu.com" else "localhost";
+    };
+    modelList = lib.mkOption {
+      type = lib.types.listOf lib.types.attrs;
+      default = [
+        {
+          name = "qwen2.5-3b";
+          ttl = 60;
+          filename = "Qwen2.5-Coder-3B-Q8_0.gguf";
+          extraArgs = "-md /var/lib/llama-cpp/models/Qwen2.5-Coder-0.5B-Q8_0.gguf";
+        }
+        {
+          name = "qwen3.6-35b-a3b";
+          ttl = 600;
+          # filename = "Qwen3.6-35B-A3B-UD-Q4_K_XL.gguf";
+          # filename = "Qwen3.6-35B-A3B-Claude-4.6-Opus-Reasoning-Distilled-UD-Q4_K_XL.gguf";
+          filename = "Qwen3.6-35B-A3B-UD-Q4_K_S.gguf";
+          # extraArgs = "--no-mmap -md /var/lib/llama-cpp/models/Qwen3.6-35B-A3B-DFlash-q8_0.gguf";
+          # My RX 6700 XT has 96 mb of L3 cache, this should apparently speed up prompt processing.
+          isMoe = true;
+        }
+        {
+          name = "qwopus3.6-35b-a3b";
+          ttl = 600;
+          filename = "Qwen3.6-35B-A3B-Claude-4.6-Opus-Reasoning-Distilled-UD-Q4_K_XL.gguf";
+          extraArgs = "-c 128000";
+          isMoe = true;
+        }
+      ];
+    };
   };
 
-  config = lib.mkIf cfg.enable {
+  config = {
     # services.ollama = {
     #   enable = true;
     #   package = pkgs.ollama-rocm;
@@ -77,8 +57,9 @@ in
     #   host = "0.0.0.0";
     # };
 
-    services.llama-swap = {
+    services.llama-swap = lib.mkIf cfg.daemon {
       enable = true;
+      listenAddress = "0.0.0.0";
       # package = inputs.nixpkgs-llama-swap.legacyPackages.${pkgs.stdenv.hostPlatform.system}.llama-swap;
       settings =
         let
@@ -121,66 +102,19 @@ in
         {
           healthCheckTimeout = 60;
           # Merge all model configs into one attrset
-          models = lib.foldl (acc: m: acc // buildModel m) { } modelList;
+          models = lib.foldl (acc: m: acc // buildModel m) { } cfg.modelList;
         };
     };
 
-    systemd.services.llama-swap.serviceConfig = {
+    systemd.services.llama-swap.serviceConfig = lib.mkIf cfg.daemon {
       # Increase memlock limit to allow preventing the model from getting swapped
       LimitMEMLOCK = 202116300800;
     };
 
-    environment.sessionVariables = {
-      OPENCODE_ENABLE_EXA = 1;
-      OPENCODE_EXPERIMENTAL = "true";
-      # OPENCODE_DISABLE_LSP_DOWNLOAD = "true";
-      OPENCODE_EXPERIMENTAL_LSP_TOOL = "true";
-    };
-
-    hm.programs.opencode = {
-      enable = true;
-      extraPackages = [
-        pkgs.nixd
-        pkgs.rust-analyzer
-      ];
-      settings = {
-        plugin = [
-          "@simonwjackson/opencode-direnv"
-          "@tarquinen/opencode-dcp"
-        ];
-        compaction.auto = false;
-        agent = {
-          # Disable title generation to dumb extra prompts
-          title.disable = true;
-        };
-        permission.skill.deep-research = "allow";
-        provider = {
-          local = {
-            name = "Local";
-            npm = "@ai-sdk/openai-compatible";
-            options = {
-              baseURL = "http://localhost:${toString config.services.llama-swap.port}/v1";
-            };
-            models = lib.listToAttrs (
-              map (model: {
-                name = model.name;
-                value = {
-                  name = model.name;
-                };
-              }) modelList
-            );
-          };
-        };
-        lsp = { };
-      };
-    };
-    hm.xdg.configFile."opencode/dcp.json".source = (pkgs.formats.json { }).generate "dcp.json" {
-      compress.nudgeForce = "strong";
-    };
-
-    impermanence.directories = [
+    impermanence.directories = lib.mkIf cfg.daemon [
       "/var/lib/llama-cpp"
       # config.services.open-webui.stateDir
     ];
+
   };
 }

@@ -92,6 +92,8 @@
     daemons = {
       kidex.enable = true;
     };
+    devel.llm.enable = true;
+
     services.mullvad-vpn = {
       enable = true;
       package = pkgs.mullvad-vpn;

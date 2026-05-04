@@ -180,7 +180,7 @@ in
         "nginx"
         "keys"
       ];
-      nginx.extraGroups = [ "keys" ];
+      roundcube.extraGroups = [ "keys" ];
     };
 
     services.roundcube = {

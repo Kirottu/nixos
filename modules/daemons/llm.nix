@@ -46,7 +46,7 @@ in
     };
   };
 
-  config = {
+  config = lib.mkIf cfg.enable {
     # services.ollama = {
     #   enable = true;
     #   package = pkgs.ollama-rocm;
@@ -57,7 +57,7 @@ in
     #   host = "0.0.0.0";
     # };
 
-    services.llama-swap = lib.mkIf cfg.daemon {
+    services.llama-swap = {
       enable = true;
       listenAddress = "0.0.0.0";
       # package = inputs.nixpkgs-llama-swap.legacyPackages.${pkgs.stdenv.hostPlatform.system}.llama-swap;
@@ -93,7 +93,7 @@ in
               ${name} = {
                 inherit ttl;
                 cmd =
-                  "${llama-server} --port \${PORT} -m /var/lib/llama-cpp/models/${filename} -fit on ${extraArgs} --no-mmap --mlock -ub 2048 -ctk q8_0 -ctv q8_0 -fa on --tools all"
+                  "${llama-server} --port \${PORT} --host 0.0.0.0 -m /var/lib/llama-cpp/models/${filename} -fit on ${extraArgs} --no-mmap --mlock -ub 2048 -ctk q8_0 -ctv q8_0 -fa on --tools all"
                   + lib.optionalString isMoe " --cpu-moe";
               };
             };
@@ -106,12 +106,12 @@ in
         };
     };
 
-    systemd.services.llama-swap.serviceConfig = lib.mkIf cfg.daemon {
+    systemd.services.llama-swap.serviceConfig = {
       # Increase memlock limit to allow preventing the model from getting swapped
       LimitMEMLOCK = 202116300800;
     };
 
-    impermanence.directories = lib.mkIf cfg.daemon [
+    impermanence.directories = [
       "/var/lib/llama-cpp"
       # config.services.open-webui.stateDir
     ];

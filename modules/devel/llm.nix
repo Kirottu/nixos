@@ -20,7 +20,7 @@ in
       OPENCODE_EXPERIMENTAL_LSP_TOOL = "true";
     };
 
-    hm.programs.opencode = lib.mkIf {
+    hm.programs.opencode = {
       enable = true;
       extraPackages = [
         pkgs.nixd

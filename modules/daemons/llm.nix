@@ -14,7 +14,7 @@ in
     hostname = lib.mkOption {
       type = lib.types.nonEmptyStr;
       default =
-        if config.net.tailscale.enable then "church-of-harold.tailnet.kirottu.com" else "localhost";
+        if config.net.tailscale.enable then "router-of-harold.tailnet.kirottu.com" else "localhost";
     };
     modelList = lib.mkOption {
       type = lib.types.listOf lib.types.attrs;

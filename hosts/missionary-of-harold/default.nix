@@ -54,6 +54,7 @@
         ];
       };
     };
+    net.tailscale.enable = true;
 
     services.btrfs.autoScrub.enable = true;
 

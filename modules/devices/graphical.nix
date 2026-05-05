@@ -46,7 +46,6 @@
       # ctrld.enable = true;
       resolved.enable = true;
       networkmanager.enable = true;
-      tailscale.enable = true;
     };
     impermanence = {
       userDirectories = [

@@ -20,27 +20,24 @@ in
       type = lib.types.listOf lib.types.attrs;
       default = [
         {
-          name = "qwen2.5-3b";
-          ttl = 60;
-          filename = "Qwen2.5-Coder-3B-Q8_0.gguf";
-          extraArgs = "-md /var/lib/llama-cpp/models/Qwen2.5-Coder-0.5B-Q8_0.gguf";
-        }
-        {
-          name = "qwen3.6-35b-a3b";
-          ttl = 600;
-          # filename = "Qwen3.6-35B-A3B-UD-Q4_K_XL.gguf";
-          # filename = "Qwen3.6-35B-A3B-Claude-4.6-Opus-Reasoning-Distilled-UD-Q4_K_XL.gguf";
-          filename = "Qwen3.6-35B-A3B-UD-Q4_K_S.gguf";
-          # extraArgs = "--no-mmap -md /var/lib/llama-cpp/models/Qwen3.6-35B-A3B-DFlash-q8_0.gguf";
-          # My RX 6700 XT has 96 mb of L3 cache, this should apparently speed up prompt processing.
-          isMoe = true;
-        }
-        {
           name = "qwopus3.6-35b-a3b";
           ttl = 600;
           filename = "Qwen3.6-35B-A3B-Claude-4.6-Opus-Reasoning-Distilled-UD-Q4_K_XL.gguf";
           extraArgs = "-c 128000";
           isMoe = true;
+        }
+        {
+          name = "qwen3.6-35b-a3b";
+          ttl = 600;
+          filename = "Qwen3.6-35B-A3B-UD-Q4_K_XL.gguf";
+          extraArgs = "-c 128000";
+          isMoe = true;
+        }
+        {
+          name = "qwen2.5-3b";
+          ttl = 60;
+          filename = "Qwen2.5-Coder-3B-Q8_0.gguf";
+          extraArgs = "-md /var/lib/llama-cpp/models/Qwen2.5-Coder-0.5B-Q8_0.gguf";
         }
       ];
     };
@@ -93,8 +90,14 @@ in
               ${name} = {
                 inherit ttl;
                 cmd =
-                  "${llama-server} --port \${PORT} --host 0.0.0.0 -m /var/lib/llama-cpp/models/${filename} -fit on ${extraArgs} --no-mmap --mlock -ub 2048 -ctk q8_0 -ctv q8_0 -fa on --tools all"
-                  + lib.optionalString isMoe " --cpu-moe";
+                  lib.concatStringsSep " " [
+                    llama-server
+                    "--port \${PORT} --host 0.0.0.0 -m /var/lib/llama-cpp/models/${filename}"
+                    "-fit on --mlock -ub 4096 -b 4096 -ctk q8_0 -ctv q8_0 -fa on --cram 2048" # Optimization
+                    "--tools all"
+                    extraArgs
+                  ]
+                  ++ lib.optional isMoe "--cpu-moe";
               };
             };
 

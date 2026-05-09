@@ -102,7 +102,11 @@ in
               color: black;
             }
 
-            .item, .clock {
+            .item,
+            .clock,
+            .battery,
+            .brightness,
+            .volume {
               background: transparent;
               border-radius: 20px;
             }

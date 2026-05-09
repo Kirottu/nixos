@@ -76,7 +76,8 @@ in
 
             .icon {
               margin: 5px;
-            }      '';
+            }
+          '';
         };
         bliss = {
           settings = {

@@ -32,11 +32,6 @@ in
           "@tarquinen/opencode-dcp"
         ];
         compaction.auto = false;
-        agent = {
-          # Disable title generation to dumb extra prompts
-          title.disable = true;
-        };
-        permission.skill.deep-research = "allow";
         provider = {
           local = {
             name = "Local";

@@ -93,7 +93,7 @@ in
                   lib.concatStringsSep " " [
                     llama-server
                     "--port \${PORT} --host 0.0.0.0 -m /var/lib/llama-cpp/models/${filename}"
-                    "-fit on --mlock -ub 4096 -b 4096 -ctk q8_0 -ctv q8_0 -fa on --cram 2048" # Optimization
+                    "-fit on --mlock -ub 2048 -b 2048 -ctk q8_0 -ctv q8_0 -fa on --cram 2048" # Optimization
                     "--tools all"
                     extraArgs
                   ]

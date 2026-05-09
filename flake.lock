@@ -564,11 +564,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1778244391,
-        "narHash": "sha256-BOzPB49nw2zu9nQLjb0RCirL1U8CQSGu9U7iNlas5QE=",
+        "lastModified": 1778364883,
+        "narHash": "sha256-JBCtL5qs7AgyoRK3/3+X026z9ZwJlKnyafKdnru3nGA=",
         "owner": "JakeStanger",
         "repo": "ironbar",
-        "rev": "ef715bc32cad8ac547b2a8f24945e90f1f416652",
+        "rev": "8d960d9f6a55b2f671a34790a0374b52e5990bda",
         "type": "github"
       },
       "original": {
@@ -958,11 +958,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1778208868,
-        "narHash": "sha256-+UScyOe3ukCa5b7P9Vd7plbtEWeZkKXmmN7koeKFEOo=",
+        "lastModified": 1778294954,
+        "narHash": "sha256-l6XRe6TMfDmEDETz2RXKbAxD372UsUzmnGcVnXSkVaE=",
         "owner": "nix-community",
         "repo": "nixpkgs-xr",
-        "rev": "3e4e0fb65785165587f6ed3eb5d52635e3f0c3d5",
+        "rev": "27a8d94344b986cedc1f00ad48d27ffa8f46ab9b",
         "type": "github"
       },
       "original": {

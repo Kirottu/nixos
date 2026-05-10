@@ -64,22 +64,42 @@ in
         mail_domain = config.domain;
         mail_smtphost = config.server.stalwart.hostname;
         mail_smtpauth = true;
+        enabledPreviewProviders = [
+          "OC\\Preview\\PNG"
+          "OC\\Preview\\JPEG"
+          "OC\\Preview\\GIF"
+          "OC\\Preview\\BMP"
+          "OC\\Preview\\XBitmap"
+          "OC\\Preview\\Krita"
+          "OC\\Preview\\WebP"
+          "OC\\Preview\\MarkDown"
+          "OC\\Preview\\TXT"
+          "OC\\Preview\\OpenDocument"
+          "OC\\Preview\\Movie"
+          "OC\\Preview\\MP4"
+          "OC\\Preview\\AVI"
+          "OC\\Preview\\MKV"
+          "OC\\Preview\\WEBM"
+        ];
       };
       config = {
         adminuser = "Kirottu";
         adminpassFile = cfg.adminPass;
         dbtype = "pgsql";
       };
-      appstoreEnable = true;
-      autoUpdateApps.enable = true;
-      # extraApps = {
-      #   inherit (config.services.nextcloud.package.packages.apps)
-      #     calendar
-      #     deck
-      #     richdocuments
-      #     tasks
-      #     ;
-      # };
+      # appstoreEnable = true;
+      # autoUpdateApps.enable = true;
+      extraApps = {
+        inherit (config.services.nextcloud.package.packages.apps)
+          calendar
+          deck
+          richdocuments
+          # memories
+          user_oidc
+          spreed
+          # tasks
+          ;
+      };
       poolSettings = {
         pm = "dynamic";
         "pm.max_children" = "120";
@@ -94,6 +114,10 @@ in
         bendDomainToLocalhost = true;
       };
     };
+
+    environment.systemPackages = [
+      pkgs.ffmpeg-headless
+    ];
 
     # systemd.timers.${wopiUpdater} = {
     #   wantedBy = [ "timers.target" ];

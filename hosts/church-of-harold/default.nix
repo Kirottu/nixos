@@ -291,7 +291,10 @@ in
       (pkgs.zoom-us.override {
         gnomeXdgDesktopPortalSupport = true;
       })
+      pkgs.deadlock-mod-manager
     ];
+
+    fonts.packages = [ pkgs.corefonts ];
 
     theming.theme = lib.mkForce "bliss";
     zramSwap.enable = lib.mkForce false;

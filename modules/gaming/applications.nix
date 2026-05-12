@@ -74,10 +74,10 @@ in
         #   pkgs.steam-run
         # ];
 
-        nixpkgs.overlays = [ inputs.millenium.overlays.default ];
+        # nixpkgs.overlays = [ inputs.millenium.overlays.default ];
 
         programs.steam = {
-          package = pkgs.millennium-steam;
+          # package = pkgs.millennium-steam;
           enable = true;
           extest.enable = true;
           extraCompatPackages = with pkgs; [

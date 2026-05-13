@@ -294,6 +294,17 @@ in
       pkgs.deadlock-mod-manager
     ];
 
+    # This machine should always be behind a router with a competent firewall, this is fine
+    services.openssh = {
+      enable = true;
+      ports = [ 22 ];
+      settings = {
+        AllowUsers = [ config.mainUser.userName ];
+        PasswordAuthentication = true;
+        PermitRootLogin = "no";
+      };
+    };
+
     fonts.packages = [ pkgs.corefonts ];
 
     theming.theme = lib.mkForce "bliss";

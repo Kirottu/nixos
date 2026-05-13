@@ -39,7 +39,7 @@
 
             (lib.optional config.cli.getty.dm.enable ''
               if status is-login
-                if test -z $WAYLAND_DISPLAY && test -z $DISPLAY && test $XDG_VTNR = 1
+                if test -z "$WAYLAND_DISPLAY" && test -z "$DISPLAY" && test "$XDG_VTNR" = 1
                   exec ${config.cli.getty.dm.command}
                 end
               end'')

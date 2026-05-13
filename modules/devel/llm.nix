@@ -37,16 +37,9 @@ in
             name = "Local";
             npm = "@ai-sdk/openai-compatible";
             options = {
-              baseURL = "http://${config.daemons.llm.hostname}:${toString config.services.llama-swap.port}/v1";
+              baseURL = "http://${config.daemons.llm.hostname}:${toString config.daemons.llm.port}/v1";
             };
-            models = lib.listToAttrs (
-              map (model: {
-                name = model.name;
-                value = {
-                  name = model.name;
-                };
-              }) config.daemons.llm.modelList
-            );
+            models = builtins.mapAttrs (name: value: { name = name; }) config.daemons.llm.models;
           };
         };
         lsp = { };

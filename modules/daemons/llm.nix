@@ -52,7 +52,7 @@ in
       default = {
         "Qwen3.6-35B-A3B" = {
           model = "/var/lib/llms/Qwen3.6-35B-A3B-MTP-UD-Q4_K_S.gguf";
-          mmproj = "/var/lib/llms/Qwen3.6-35b-a3b-mmproj-F16.gguf";
+          # mmproj = "/var/lib/llms/Qwen3.6-35b-a3b-mmproj-F16.gguf";
           # spec-type = "mtp";
           # no-mmap = true;
           # spec-draft-n-max = 3;
@@ -83,8 +83,8 @@ in
             mlock = true;
             ub = 2048;
             b = 2048;
-            ctk = "turbo3";
-            ctv = "turbo2";
+            ctk = "turbo4";
+            ctv = "turbo4";
             # ctk = "q8_0";
             # ctv = "q8_0";
             fa = true;

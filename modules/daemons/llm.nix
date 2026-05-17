@@ -53,7 +53,7 @@ in
         "Qwen3.6-35B-A3B" = {
           model = "/var/lib/llms/Qwen3.6-35B-A3B-MTP-UD-Q4_K_S.gguf";
           # mmproj = "/var/lib/llms/Qwen3.6-35b-a3b-mmproj-F16.gguf";
-          # spec-type = "mtp";
+          # spec-type = "draft-mtp";
           # no-mmap = true;
           # spec-draft-n-max = 3;
           cpu-moe = true;
@@ -83,10 +83,10 @@ in
             mlock = true;
             ub = 2048;
             b = 2048;
-            ctk = "turbo4";
-            ctv = "turbo4";
-            # ctk = "q8_0";
-            # ctv = "q8_0";
+            # ctk = "turbo4";
+            # ctv = "turbo4";
+            ctk = "q8_0";
+            ctv = "q8_0";
             fa = true;
             cram = 2048;
 
@@ -95,34 +95,22 @@ in
         }
         // cfg.models;
         ini = iniFormat.generate "models-preset" settings;
-        llama-cpp = pkgs.llama-cpp-rocm.overrideAttrs {
-          src = pkgs.fetchFromGitHub {
-            owner = "EsmaeelNabil";
-            repo = "llama.cpp";
-            rev = "a578bb6b94529b7b2721d0ee49eaea5dbb2c6d07";
-            hash = "sha256-oVkfp2bBuyYr/kHc6+MFMGxBq31gI1VvwFg0FZ2kI0g=";
-            leaveDotGit = true;
-            postFetch = ''
-              git -C "$out" rev-parse --short HEAD > $out/COMMIT
-              find "$out" -name .git -print0 | xargs -0 rm -rf
-            '';
-          };
-          npmDepsHash = "sha256-cV3noOyKmst9vfxyvkCNhihPgwfVGhmPPT4UMloeWZM=";
-        };
         # llama-cpp = pkgs.llama-cpp-rocm.overrideAttrs {
         #   src = pkgs.fetchFromGitHub {
-        #     owner = "am17an";
-        #     repo = "llama.cpp";
-        #     rev = "e7b4848151377395b1693d326d1cda3fcd61c2d9";
-        #     hash = "sha256-ZfuwyrWjvpM7nKwkxO+drYAo8HpES3Qtm9nu6wspNU0=";
+        #     owner = "TheTom";
+        #     repo = "llama-cpp-turboquant";
+        #     rev = "e30bbcfe53a7c2576d0c621b9548d2305c735079";
+        #     hash = "sha256-aR9TwHkv5O8th7R0qEhen3+jGAUv6QrOpRc0vFI52qw=";
         #     leaveDotGit = true;
         #     postFetch = ''
         #       git -C "$out" rev-parse --short HEAD > $out/COMMIT
         #       find "$out" -name .git -print0 | xargs -0 rm -rf
         #     '';
         #   };
-        #   npmDepsHash = "sha256-cV3noOyKmst9vfxyvkCNhihPgwfVGhmPPT4UMloeWZM=";
+        #   npmDepsHash = "sha256-WaEePrEZ7O/7deP2KJhe0AwiSKYA8HOqETmMHUkmBe0=";
+        #   npmRoot = "tools/ui";
         # };
+        llama-cpp = pkgs.llama-cpp-rocm;
       in
       {
         # Increase memlock limit to allow preventing the model from getting swapped

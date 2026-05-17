@@ -41,7 +41,6 @@
         ];
       };
       nixpkgs.overlays = [
-        inputs.niri.overlays.default
         inputs.niri-nix.overlays.niri-nix
       ];
 

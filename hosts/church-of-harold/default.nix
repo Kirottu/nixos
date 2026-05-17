@@ -230,6 +230,7 @@ in
         "/var/lib/zerotier-one"
         "/var/lib/waydroid"
         "/etc/waydroid-extra"
+        "/etc/ssh"
       ];
       userDirectories = [ ".config/lact" ];
     };

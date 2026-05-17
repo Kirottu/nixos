@@ -379,11 +379,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1778954430,
-        "narHash": "sha256-oaNyOr05lblaQdtbkbN1wO0b2KLIL2O1LkmwDgdQp4I=",
+        "lastModified": 1779027260,
+        "narHash": "sha256-ZbgWWFQmSyM3HQ31nAZk2hJ7OSeNr9uRFHL8jCifY9M=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "26aaab785b0bab4af60a2c42b22760fa906ef22a",
+        "rev": "bcb774cfc3268120cd61808629f9aa7dad3750a2",
         "type": "github"
       },
       "original": {
@@ -479,11 +479,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1778579999,
-        "narHash": "sha256-mSlALKURzExD5lOc/dHkn/MQOrGv/nVwKsdkHDnbu1A=",
+        "lastModified": 1779051754,
+        "narHash": "sha256-dnbs9pCzN/Bwif7pSJ5uwC6Mf2SpDh8wl2A7vNphNGQ=",
         "owner": "JakeStanger",
         "repo": "ironbar",
-        "rev": "0e04c5816f50dc57b4e66dc92d28cb36907f37dd",
+        "rev": "0ebbeb7841b88803b54b2a73557744f1fad26dfd",
         "type": "github"
       },
       "original": {
@@ -543,11 +543,11 @@
         "xwayland-satellite-unstable": "xwayland-satellite-unstable"
       },
       "locked": {
-        "lastModified": 1778890551,
-        "narHash": "sha256-963lknoQiISHEQc4IcmGpln7dkOzurhmv8XeHxVo2fI=",
+        "lastModified": 1778976679,
+        "narHash": "sha256-VACAF2i/81+d6NPO/WYpAgv0aD+hhctm1uYRsioALgc=",
         "ref": "refs/heads/main",
-        "rev": "4136a4c78342215ec3754da4fdddb90b8cd8ae86",
-        "revCount": 115,
+        "rev": "0a5220500f2764422278f07f29576731e85b1d6c",
+        "revCount": 116,
         "type": "git",
         "url": "https://codeberg.org/BANanaD3V/niri-nix"
       },
@@ -579,11 +579,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1778393439,
-        "narHash": "sha256-mOtQxUjtKaPHLeoLOY/YEDctmud1X9KwJr4kE1MJ3Wc=",
+        "lastModified": 1778999127,
+        "narHash": "sha256-V5GquqJvAqwFTcpN6hxKSQAtwuJFRUEHmyNKbeaTQDg=",
         "owner": "nix-community",
         "repo": "nix-index-database",
-        "rev": "01466c414c7357ae2ce32be4a272a7c69e94ab5f",
+        "rev": "f680e0d3c1dbefe298c423691662e238496890f2",
         "type": "github"
       },
       "original": {
@@ -679,11 +679,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1778899973,
-        "narHash": "sha256-NZ2O8sckrmTaUspwfW70qDLjbUnJghrBLcVrsjgI//8=",
+        "lastModified": 1778986922,
+        "narHash": "sha256-9FBLoYuH6wWvsEznyMKB/AJyR3uIrg7pgEwcH6ffcV4=",
         "owner": "nix-community",
         "repo": "nixpkgs-xr",
-        "rev": "bb59d001bb12572d582c98da8fb765731c7cf11e",
+        "rev": "039bda218533a17cd750179d8a031f5506713808",
         "type": "github"
       },
       "original": {
@@ -710,11 +710,11 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1778443072,
-        "narHash": "sha256-zi7/fsqM/kFdNuED//4WOCUtezGtKKqRNORjMvfwjnA=",
+        "lastModified": 1778869304,
+        "narHash": "sha256-30sZNZoA1cqF5JNO9fVX+wgiQYjB7HJqqJ4ztCDeBZE=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "da5ad661ba4e5ef59ba743f0d112cbc30e474f32",
+        "rev": "d233902339c02a9c334e7e593de68855ad26c4cb",
         "type": "github"
       },
       "original": {
@@ -726,11 +726,11 @@
     },
     "nixpkgs_4": {
       "locked": {
-        "lastModified": 1778443072,
-        "narHash": "sha256-zi7/fsqM/kFdNuED//4WOCUtezGtKKqRNORjMvfwjnA=",
+        "lastModified": 1778869304,
+        "narHash": "sha256-30sZNZoA1cqF5JNO9fVX+wgiQYjB7HJqqJ4ztCDeBZE=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "da5ad661ba4e5ef59ba743f0d112cbc30e474f32",
+        "rev": "d233902339c02a9c334e7e593de68855ad26c4cb",
         "type": "github"
       },
       "original": {
@@ -1165,11 +1165,11 @@
         "nixpkgs": "nixpkgs_6"
       },
       "locked": {
-        "lastModified": 1778924210,
-        "narHash": "sha256-TrA7vBjRC1dYvmKrjb0XktPspmlxc+r9qYVIfQQWpcw=",
+        "lastModified": 1778971605,
+        "narHash": "sha256-WP4rOCxNwM2wlj7uDSw8RmAnKwjw1VL4SuKT32dCGPE=",
         "owner": "lassulus",
         "repo": "wrappers",
-        "rev": "9a8ed541dc28016b24541f2457fa79e3fa2ac687",
+        "rev": "ca08210d70f8e8880a490c75b7568c22c3e413fa",
         "type": "github"
       },
       "original": {

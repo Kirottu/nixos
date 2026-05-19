@@ -5,6 +5,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     # nixpkgs-wivrn.url = "github:NixOS/nixpkgs/e64102a9f7f35ef2cddaea6f09c1f5077b948296";
     nixpkgs-small.url = "github:NixOS/nixpkgs/nixos-unstable-small";
+    nixpkgs-master.url = "github:NixOS/nixpkgs/master";
 
     home-manager = {
       url = "github:nix-community/home-manager/master";

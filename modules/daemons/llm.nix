@@ -53,9 +53,10 @@ in
         "Qwen3.6-35B-A3B" = {
           model = "/var/lib/llms/Qwen3.6-35B-A3B-MTP-UD-Q4_K_S.gguf";
           # mmproj = "/var/lib/llms/Qwen3.6-35b-a3b-mmproj-F16.gguf";
-          # spec-type = "draft-mtp";
+          spec-type = "draft-mtp";
           # no-mmap = true;
-          # spec-draft-n-max = 3;
+          np = 1;
+          spec-draft-n-max = 2;
           cpu-moe = true;
           c = 128000;
         };
@@ -69,13 +70,44 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    services.llama-cpp = {
-      enable = true;
-    };
-
-    systemd.services.llama-cpp.serviceConfig =
+    services.llama-cpp =
       let
-        settings = {
+        llama-cpp =
+          inputs.nixpkgs-master.legacyPackages.${pkgs.stdenv.hostPlatform.system}.llama-cpp-vulkan.overrideAttrs
+            (prev: {
+              # src = pkgs.fetchFromGitHub {
+              #   owner = "TheTom";
+              #   repo = "llama-cpp-turboquant";
+              #   rev = "2b61ea24ef4fef435866301b7c953434e4fcb866";
+              #   hash = "sha256-gMYQJTQkOb7pZ2LAvfRWX9uFgaJ0EsrW+Yq0l7BXHus=";
+              #   leaveDotGit = true;
+              #   postFetch = ''
+              #     git -C "$out" rev-parse --short HEAD > $out/COMMIT
+              #     find "$out" -name .git -print0 | xargs -0 rm -rf
+              #   '';
+              # };
+
+              cmakeFlags = prev.cmakeFlags ++ [
+                (lib.cmakeBool "GGML_CPU_ALL_VARIANTS" true)
+                (lib.cmakeBool "GGML_BACKEND_DL" true)
+              ];
+            });
+        # llama-cpp =
+        #   inputs.nixpkgs-master.legacyPackages.${pkgs.stdenv.hostPlatform.system}.llama-cpp-rocm.overrideAttrs
+        #     (prev: {
+        #       cmakeFlags = prev.cmakeFlags ++ [
+        #         (lib.cmakeBool "GGML_CPU_ALL_VARIANTS" true)
+        #         (lib.cmakeBool "GGML_BACKEND_DL" true)
+        #       ];
+        #     });
+
+      in
+      {
+        package = llama-cpp;
+        enable = true;
+        host = "0.0.0.0";
+        port = cfg.port;
+        modelsPreset = {
           # version = 1;
           "*" = {
             # Optimization
@@ -83,48 +115,23 @@ in
             mlock = true;
             ub = 2048;
             b = 2048;
-            # ctk = "turbo4";
-            # ctv = "turbo4";
+            # ctk = "q8_0";
+            # ctv = "turbo2";
             ctk = "q8_0";
             ctv = "q8_0";
             fa = true;
-            cram = 2048;
+            cram = 1024;
 
             sleep-idle-seconds = 300;
           };
         }
         // cfg.models;
-        ini = iniFormat.generate "models-preset" settings;
-        # llama-cpp = pkgs.llama-cpp-rocm.overrideAttrs {
-        #   src = pkgs.fetchFromGitHub {
-        #     owner = "TheTom";
-        #     repo = "llama-cpp-turboquant";
-        #     rev = "e30bbcfe53a7c2576d0c621b9548d2305c735079";
-        #     hash = "sha256-aR9TwHkv5O8th7R0qEhen3+jGAUv6QrOpRc0vFI52qw=";
-        #     leaveDotGit = true;
-        #     postFetch = ''
-        #       git -C "$out" rev-parse --short HEAD > $out/COMMIT
-        #       find "$out" -name .git -print0 | xargs -0 rm -rf
-        #     '';
-        #   };
-        #   npmDepsHash = "sha256-WaEePrEZ7O/7deP2KJhe0AwiSKYA8HOqETmMHUkmBe0=";
-        #   npmRoot = "tools/ui";
-        # };
-        llama-cpp = pkgs.llama-cpp-rocm;
-      in
-      {
-        # Increase memlock limit to allow preventing the model from getting swapped
-        LimitMEMLOCK = 202116300800;
-        ExecStart = lib.mkForce (
-          lib.concatStringsSep " " [
-            (lib.getExe' llama-cpp "llama-server")
-            "--host 0.0.0.0 --port ${toString cfg.port}"
-            "--models-preset ${ini}"
-            "--models-max 1"
-            "--tools all"
-          ]
-        );
       };
+
+    systemd.services.llama-cpp.serviceConfig = {
+      # Increase memlock limit to allow preventing the model from getting swapped
+      LimitMEMLOCK = 202116300800;
+    };
 
     impermanence.directories = [
       # "/var/lib/llama-cpp"

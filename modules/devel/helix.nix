@@ -45,6 +45,7 @@
           };
           # end-of-line-diagnostics = "hint";
           auto-format = true;
+          true-color = true;
         };
 
         keys.normal.space = {

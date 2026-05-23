@@ -236,7 +236,7 @@ in
     };
 
     boot = {
-      kernelPackages = pkgs.linuxPackagesFor pkgs.linux_latest;
+      kernelPackages = pkgs.linuxPackagesFor pkgs.linux;
       extraModulePackages = [
         # (pkgs.callPackage ./amdgpu.nix { kernel = config.boot.kernelPackages.kernel; })
         (config.boot.kernelPackages.it87.overrideAttrs {
@@ -266,9 +266,9 @@ in
         # Hardware accelerated scheduling maybe?
         "amdgpu.mes=1"
       ];
-      kernel.sysctl = {
-        "vm.swappiness" = 10;
-      };
+      # kernel.sysctl = {
+      #   "vm.swappiness" = 10;
+      # };
     };
 
     hardware.amdgpu.overdrive.enable = true;
@@ -311,7 +311,7 @@ in
     theming.theme = lib.mkForce "bliss";
     zramSwap.enable = lib.mkForce false;
 
-    perf.swapspace.enable = true;
+    # perf.swapspace.enable = true;
 
     system.stateVersion = "24.11"; # Did you read the comment?
     hm.home.stateVersion = "24.11";

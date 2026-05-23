@@ -48,22 +48,36 @@ in
     #   ];
     # };
     models = lib.mkOption {
-      type = iniFormat.type;
+      type = lib.types.attrs;
       default = {
-        "Qwen3.6-35B-A3B" = {
+        "Qwen3.6-35B-A3B" = rec {
           model = "/var/lib/llms/Qwen3.6-35B-A3B-MTP-UD-Q4_K_S.gguf";
           # mmproj = "/var/lib/llms/Qwen3.6-35b-a3b-mmproj-F16.gguf";
           spec-type = "draft-mtp";
           # no-mmap = true;
           np = 1;
-          spec-draft-n-max = 2;
+          spec-draft-n-max = 3;
           cpu-moe = true;
-          c = 128000;
+          c = 262144;
+
+          reasoning-budget = 4096;
+          reasoning-budget-message = "\n\nOK, I've thought about this enough. Let's proceed.";
+
+          piOpts = {
+            contextWindow = c;
+            maxTokens = c;
+            reasoning = true;
+          };
         };
-        "Qwopus3.6-35B-A3B" = {
+        "Qwopus3.6-35B-A3B" = rec {
           model = "/var/lib/llms/Qwen3.6-35B-A3B-UD-Q4_K_XL.gguf";
           cpu-moe = true;
-          c = 128000;
+          c = 262144;
+          piOpts = {
+            contextWindow = c;
+            maxTokens = c;
+            reasoning = true;
+          };
         };
       };
     };
@@ -74,7 +88,20 @@ in
       let
         llama-cpp =
           inputs.nixpkgs-master.legacyPackages.${pkgs.stdenv.hostPlatform.system}.llama-cpp-vulkan.overrideAttrs
-            (prev: {
+            (prev: rec {
+              version = "9264";
+              src = pkgs.fetchFromGitHub {
+                owner = "ggml-org";
+                repo = "llama.cpp";
+                rev = "52fb93a2bd6b12673b9f4f225e61968e70443b11";
+                hash = "sha256-6wt2a4HFPsEEDx1uQErMSJsF98cXBQJVOazWi2k1eak=";
+                leaveDotGit = true;
+                postFetch = ''
+                  git -C "$out" rev-parse --short HEAD > $out/COMMIT
+                  find "$out" -name .git -print0 | xargs -0 rm -rf
+                '';
+              };
+
               # src = pkgs.fetchFromGitHub {
               #   owner = "TheTom";
               #   repo = "llama-cpp-turboquant";
@@ -86,6 +113,9 @@ in
               #     find "$out" -name .git -print0 | xargs -0 rm -rf
               #   '';
               # };
+              #
+
+              npmDepsHash = "sha256-Iyg8FpcTKf2UYHuK7mA3cTAqVaLcQPcS0YCa5Qf01Gc=";
 
               cmakeFlags = prev.cmakeFlags ++ [
                 (lib.cmakeBool "GGML_CPU_ALL_VARIANTS" true)
@@ -113,19 +143,21 @@ in
             # Optimization
             fit = true;
             mlock = true;
-            ub = 2048;
+            ub = 1024;
             b = 2048;
             # ctk = "q8_0";
             # ctv = "turbo2";
             ctk = "q8_0";
-            ctv = "q8_0";
+            ctv = "q4_0";
             fa = true;
             cram = 1024;
 
             sleep-idle-seconds = 300;
           };
         }
-        // cfg.models;
+        // builtins.mapAttrs (
+          name: value: lib.filterAttrs (name: value: name != "piOpts") value
+        ) cfg.models;
       };
 
     systemd.services.llama-cpp.serviceConfig = {

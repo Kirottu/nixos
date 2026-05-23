@@ -12,10 +12,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # niri = {
-    #   url = "github:sodiboo/niri-flake";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
     niri-nix.url = "git+https://codeberg.org/BANanaD3V/niri-nix";
 
     ironbar = {
@@ -46,8 +42,6 @@
       url = "github:lassulus/wrappers";
     };
 
-    # import-tree.url = "github:vic/import-tree";
-
     impermanence.url = "github:nix-community/impermanence";
 
     codel = {
@@ -55,6 +49,8 @@
       url = "github:zimward/codel";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    llm-agents.url = "github:numtide/llm-agents.nix";
 
     # My bits and bops
     yand = {

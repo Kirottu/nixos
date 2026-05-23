@@ -21,7 +21,6 @@
           zls
           marksman
           clang-tools
-          python313Packages.python-lsp-server
           typescript-language-server
           omnisharp-roslyn
         ]

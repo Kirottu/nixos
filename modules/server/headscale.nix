@@ -51,8 +51,10 @@ in
           pkce.enabled = true;
           issuer = "https://${config.server.keycloak.hostname}/realms/main";
         };
-        # coTURN already occupies the STUN port, oh well.
-        derp.server.enabled = false;
+        derp.server = {
+          enabled = true;
+          stun_listen_addr = "[::1]:3479";
+        };
       };
     };
 

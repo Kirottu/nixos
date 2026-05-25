@@ -38,12 +38,18 @@ in
       inherit port;
       settings = {
         server_url = "https://${cfg.hostname}";
-        dns.base_domain = cfg.tailnet;
+        dns = {
+          base_domain = cfg.tailnet;
+          nameservers.global = [
+            "1.1.1.1"
+            "1.0.0.1"
+          ];
+        };
         oidc = {
           client_id = "headscale";
           client_secret_path = cfg.clientSecret;
           pkce.enabled = true;
-          issuer = "https://${config.server.keycloak.hostname}";
+          issuer = "https://${config.server.keycloak.hostname}/realms/main";
         };
         # coTURN already occupies the STUN port, oh well.
         derp.server.enabled = false;
@@ -58,6 +64,7 @@ in
       locations."/" = {
         proxyPass = "http://[::1]:${toString port}";
         recommendedProxySettings = true;
+        proxyWebsockets = true;
       };
     };
   };

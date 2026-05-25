@@ -34,7 +34,7 @@ in
           keyPath = "${certDir}/key.pem";
         };
         welcometext = "Epämäärämääräistä möminää ja suolaista paskapuhumista.";
-        bandwidth = 128000;
+        bandwidth = 64000;
       };
 
     security.acme.certs.${config.domain}.reloadServices = [ "murmur.service" ];

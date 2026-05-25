@@ -16,7 +16,7 @@ in
     hostname = lib.mkOption {
       type = lib.types.nonEmptyStr;
       default =
-        if config.net.tailscale.enable then "router-of-harold.tailnet.kirottu.com" else "localhost";
+        if config.net.tailscale.enable then "church-of-harold.tailnet.kirottu.com" else "localhost";
     };
     port = lib.mkOption {
       type = lib.types.number;
@@ -53,15 +53,15 @@ in
         "Qwen3.6-35B-A3B" = rec {
           model = "/var/lib/llms/Qwen3.6-35B-A3B-MTP-UD-Q4_K_S.gguf";
           # mmproj = "/var/lib/llms/Qwen3.6-35b-a3b-mmproj-F16.gguf";
-          spec-type = "draft-mtp";
+          spec-type = "ngram-mod,draft-mtp";
           # no-mmap = true;
-          np = 1;
+          # np = 1;
           spec-draft-n-max = 3;
           cpu-moe = true;
           c = 262144;
 
           reasoning-budget = 4096;
-          reasoning-budget-message = "\n\nOK, I've thought about this enough. Let's proceed.";
+          reasoning-budget-message = ". OK, I've thought about this enough. Let's proceed.";
 
           piOpts = {
             contextWindow = c;
@@ -137,6 +137,10 @@ in
         enable = true;
         host = "0.0.0.0";
         port = cfg.port;
+        extraFlags = [
+          "--tools"
+          "all"
+        ];
         modelsPreset = {
           # version = 1;
           "*" = {
@@ -151,6 +155,7 @@ in
             ctv = "q4_0";
             fa = true;
             cram = 1024;
+            tools = "all";
 
             sleep-idle-seconds = 300;
           };
@@ -158,6 +163,37 @@ in
         // builtins.mapAttrs (
           name: value: lib.filterAttrs (name: value: name != "piOpts") value
         ) cfg.models;
+      };
+
+    # llama.cpp sleep mode for some reason tanks any subsequent performance,
+    # hence this horribleness makes sure to actually unload any models whenever they
+    # enter sleeping state
+    systemd.timers."llama.cpp-watchdog" = {
+      wantedBy = [ "timers.target" ];
+      timerConfig = {
+        OnBootSec = "5min";
+        OnUnitActiveSec = "1s";
+        Unit = "llama.cpp-watchdog.service";
+      };
+    };
+
+    systemd.services."llama.cpp-watchdog" =
+      let
+        curl = lib.getExe pkgs.curl;
+        jq = lib.getExe pkgs.jq;
+        baseUrl = "http://localhost:${toString cfg.port}";
+      in
+      {
+        script = lib.concatStrings (
+          lib.mapAttrsToList (name: value: ''
+            if [ "$(${curl} -s ${baseUrl}/models | ${jq} -r '.data[] | select(.id=="${name}") | .status.value')" == "sleeping" ]; then
+              ${curl} -s -X POST -H "Content-Type: application/json" --data '{"model": "${name}"}' ${baseUrl}/models/unload
+            fi
+          '') cfg.models
+        );
+        serviceConfig = {
+          Type = "oneshot";
+        };
       };
 
     systemd.services.llama-cpp.serviceConfig = {

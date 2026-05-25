@@ -270,6 +270,7 @@ in
       #   "vm.swappiness" = 10;
       # };
     };
+    net.tailscale.enable = true;
 
     hardware.amdgpu.overdrive.enable = true;
 

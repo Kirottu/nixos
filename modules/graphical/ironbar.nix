@@ -17,7 +17,7 @@ in
     hm.programs.ironbar = lib.mkMerge [
       {
         enable = true;
-        # package = pkgs.ironbar;
+        package = pkgs.ironbar;
         systemd = true;
       }
       {

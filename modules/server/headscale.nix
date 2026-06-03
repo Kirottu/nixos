@@ -55,6 +55,7 @@ in
           enabled = true;
           stun_listen_addr = "[::1]:3479";
         };
+        logtail.enabled = false;
       };
     };
 

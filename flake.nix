@@ -156,7 +156,7 @@
           ]
           ++ modules;
         };
-        overwatch-of-harold = inputs.nixpkgs-small.lib.nixosSystem {
+        overwatch-of-harold = lib.nixosSystem {
           system = "x86_64-linux";
           specialArgs = {
             inherit

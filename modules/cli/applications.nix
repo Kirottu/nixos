@@ -3,7 +3,7 @@
   config,
   pkgs,
   inputs,
-  utils,
+  myUtils,
   ...
 }:
 {
@@ -70,7 +70,7 @@
         );
       };
     }
-    (utils.mkApp {
+    (myUtils.mkApp {
       package = pkgs.openssh;
       userDirectories = [
         {

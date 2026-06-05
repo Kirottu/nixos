@@ -3,7 +3,7 @@
   lib,
   inputs,
   pkgs,
-  utils,
+  myUtils,
   ...
 }:
 let
@@ -88,7 +88,7 @@ in
   ];
 
   config =
-    utils.mkIfElse config.graphical.enable
+    myUtils.mkIfElse config.graphical.enable
       (
         let
           icon-theme =
@@ -130,7 +130,7 @@ in
             platformTheme.name = "qtct";
           };
 
-          hm.gtk.gtk4.theme = config.hm.gtk.theme;
+          # hm.gtk.gtk4.theme = config.hm.gtk.theme;
 
           environment.systemPackages = with pkgs; [
             kdePackages.breeze

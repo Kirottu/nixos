@@ -96,12 +96,12 @@ in
         llama-cpp =
           inputs.nixpkgs-master.legacyPackages.${pkgs.stdenv.hostPlatform.system}.llama-cpp-vulkan.overrideAttrs
             (prev: rec {
-              version = "9264";
+              version = "9521";
               src = pkgs.fetchFromGitHub {
                 owner = "ggml-org";
                 repo = "llama.cpp";
-                rev = "52fb93a2bd6b12673b9f4f225e61968e70443b11";
-                hash = "sha256-6wt2a4HFPsEEDx1uQErMSJsF98cXBQJVOazWi2k1eak=";
+                tag = "b${version}";
+                hash = "sha256-Veph82amdJn90NiPIxOhtK7ECXfQVu6wWmflU26Qe2I=";
                 leaveDotGit = true;
                 postFetch = ''
                   git -C "$out" rev-parse --short HEAD > $out/COMMIT
@@ -122,7 +122,7 @@ in
               # };
               #
 
-              npmDepsHash = "sha256-Iyg8FpcTKf2UYHuK7mA3cTAqVaLcQPcS0YCa5Qf01Gc=";
+              npmDepsHash = "sha256-pjdbI6NcZRlJVd62xhgbLhWrwFYwgsIwjORqvo1+VD8=";
 
               cmakeFlags = prev.cmakeFlags ++ [
                 (lib.cmakeBool "GGML_CPU_ALL_VARIANTS" true)

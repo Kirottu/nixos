@@ -4,7 +4,7 @@
   lib,
   myPkgs,
   pkgs,
-  utils,
+  myUtils,
   ...
 }:
 let
@@ -144,23 +144,23 @@ in
         };
         impermanence.userDirectories = [ ".zen" ];
       })
-      (utils.mkApp {
+      (myUtils.mkApp {
         package = pkgs.libreoffice-fresh;
         userDirectories = [ ".config/libreoffice" ];
       })
       (lib.mkIf cfg.browsers.librewolf.enable (
-        utils.mkApp {
+        myUtils.mkApp {
           package = pkgs.librewolf;
           userDirectories = [ ".librewolf" ];
         }
       ))
       (lib.mkIf cfg.browsers.firefox.enable (
-        utils.mkApp {
+        myUtils.mkApp {
           package = pkgs.firefox;
           userDirectories = [ ".mozilla" ];
         }
       ))
-      (utils.mkApp {
+      (myUtils.mkApp {
         package = pkgs.nextcloud-client;
         userDirectories = [
           ".config/Nextcloud"
@@ -180,26 +180,26 @@ in
             (mkLink "Videos")
           ];
       })
-      (utils.mkApp {
+      (myUtils.mkApp {
         package = pkgs.discord;
         # userDirectories = [ ".config/discordptb" ];
       })
-      # (utils.mkApp {
+      # (myUtils.mkApp {
       #   package = pkgs.vesktop;
       # })
-      # (utils.mkApp {
+      # (myUtils.mkApp {
       #   package = pkgs.equibop;
       # })
-      (utils.mkApp {
+      (myUtils.mkApp {
         package = pkgs.mumble;
       })
-      # (utils.mkApp {
+      # (myUtils.mkApp {
       #   package = pkgs.callPackage myPkgs.sable { };
       # })
-      # (utils.mkApp {
+      # (myUtils.mkApp {
       #   package = pkgs.callPackage myPkgs.sable-tauri { };
       # })
-      # (utils.mkApp {
+      # (myUtils.mkApp {
       #   package = inputs.wrappers.lib.wrapPackage {
       #     inherit pkgs;
       #     package = pkgs.element-desktop.override {
@@ -219,19 +219,19 @@ in
       #     flagSeparator = "=";
       #   };
       # })
-      (utils.mkApp {
+      (myUtils.mkApp {
         package = pkgs.gimp3-with-plugins;
         userDirectories = [
           ".config/GIMP"
         ];
       })
-      (utils.mkApp {
+      (myUtils.mkApp {
         package = pkgs.inkscape;
         userDirectories = [
           ".config/inkscape"
         ];
       })
-      # (utils.mkApp {
+      # (myUtils.mkApp {
       #   # package = pkgs.callPackage myPkgs.stremio { };
       #   package = inputs.nixpkgs-stremio.legacyPackages.${pkgs.stdenv.hostPlatform.system}.stremio;
       #   # package = pkgs.stremio;
@@ -255,14 +255,14 @@ in
       #     ".stremio-server"
       #   ];
       # }
-      (utils.mkApp {
+      (myUtils.mkApp {
         package = pkgs.freecad;
         userDirectories = [
           ".config/FreeCAD"
           ".local/share/FreeCAD"
         ];
       })
-      (utils.mkApp {
+      (myUtils.mkApp {
         package = pkgs.prusa-slicer;
         userDirectories = [
           ".config/PrusaSlicer"
@@ -274,7 +274,7 @@ in
         };
         impermanence.userDirectories = [ ".config/obs-studio" ];
       }
-      # (utils.mkApp {
+      # (myUtils.mkApp {
       #   package = pkgs.wireshark;
       #   userDirectories = [
       #     ".config/wireshark"
@@ -284,11 +284,11 @@ in
       #     mainUser.extraGroups = [ "wireshark" ];
       #   };
       # })
-      (utils.mkApp {
+      (myUtils.mkApp {
         package = pkgs.libqalculate; # TODO: HM module
         userDirectories = [ ".config/qalculate" ];
       })
-      (utils.mkApp {
+      (myUtils.mkApp {
         package = pkgs.wineWow64Packages.waylandFull;
         userDirectories = [ ".wine" ];
       })

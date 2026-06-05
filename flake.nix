@@ -111,10 +111,10 @@
   outputs =
     inputs:
     let
-      # Overlay with some utilities
-      lib = import ./lib { inherit inputs lib; };
+      lib = inputs.nixpkgs.lib;
       privateInputs = inputs.private.inputs;
       myPkgs = import ./packages { inherit lib; };
+      utils = import ./utils { inherit lib; };
       inherit (inputs.nixpkgs.lib.fileset) toList fileFilter;
       import-tree =
         path:
@@ -129,7 +129,7 @@
           specialArgs = {
             inherit
               inputs
-              lib
+              utils
               privateInputs
               myPkgs
               ;
@@ -145,7 +145,7 @@
           specialArgs = {
             inherit
               inputs
-              lib
+              utils
               privateInputs
               myPkgs
               ;
@@ -161,7 +161,7 @@
           specialArgs = {
             inherit
               inputs
-              lib
+              utils
               privateInputs
               myPkgs
               ;
@@ -177,7 +177,7 @@
           specialArgs = {
             inherit
               inputs
-              lib
+              utils
               privateInputs
               myPkgs
               ;

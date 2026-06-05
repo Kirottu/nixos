@@ -2,6 +2,7 @@
   config,
   pkgs,
   lib,
+  utils,
   ...
 }:
 let
@@ -23,7 +24,7 @@ in
   options.gaming.prismlauncher.enable = lib.mkEnableOption "Prismlauncher";
 
   config = lib.mkIf config.gaming.prismlauncher.enable (
-    lib.utils.mkApp {
+    utils.mkApp {
       package = pkgs.prismlauncher.override {
         # glfw3-minecraft = glfw;
       };

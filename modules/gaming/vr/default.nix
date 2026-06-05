@@ -208,6 +208,11 @@ in
     services.wivrn = {
       # package = inputs.nixpkgs-wivrn.legacyPackages.${pkgs.system}.wivrn;
       enable = true;
+      highPriority = true;
+      autoStart = true;
+      monadoEnvironment = {
+        U_PACING_COMP_MIN_TIME_MS = "8";
+      };
       config = {
         enable = true;
         json = wivrn-config // {
@@ -293,8 +298,6 @@ in
         };
       };
       steam.importOXRRuntimes = true;
-      highPriority = true;
-      autoStart = true;
     };
 
     # hm.programs.wlx-overlay-s = {

@@ -3,6 +3,7 @@
   lib,
   inputs,
   pkgs,
+  utils,
   ...
 }:
 let
@@ -87,7 +88,7 @@ in
   ];
 
   config =
-    lib.mkIfElse config.graphical.enable
+    utils.mkIfElse config.graphical.enable
       (
         let
           icon-theme =

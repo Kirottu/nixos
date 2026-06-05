@@ -3,6 +3,7 @@
   lib,
   pkgs,
   inputs,
+  utils,
   ...
 }:
 let
@@ -27,7 +28,7 @@ in
         };
       }
       (lib.mkIf cfg.umu-run.enable (
-        lib.utils.mkApp {
+        utils.mkApp {
           package = pkgs.umu-launcher;
           userDirectories = [
             ".local/share/umu"
@@ -35,14 +36,14 @@ in
         }
       ))
       (lib.mkIf cfg.heroic.enable (
-        (lib.utils.mkApp {
+        (utils.mkApp {
           package = pkgs.heroic;
           userDirectories = [ ".config/heroic" ];
         })
       ))
       (lib.mkIf cfg.dolphin-emu.enable (
         lib.mkMerge [
-          (lib.utils.mkApp {
+          (utils.mkApp {
             package = pkgs.dolphin-emu;
             userDirectories = [
               ".config/dolphin-emu"
@@ -91,12 +92,12 @@ in
         };
       })
       (lib.mkIf cfg.itch.enable (
-        lib.utils.mkApp {
+        utils.mkApp {
           package = pkgs.itch;
         }
       ))
       (lib.mkIf cfg.r2modman.enable (
-        lib.utils.mkApp {
+        utils.mkApp {
           package = pkgs.r2modman;
           userDirectories = [
             ".config/r2modman"

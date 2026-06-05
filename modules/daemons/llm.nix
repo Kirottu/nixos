@@ -49,37 +49,44 @@ in
     # };
     models = lib.mkOption {
       type = lib.types.attrs;
-      default = {
-        "Qwen3.6-35B-A3B" = rec {
-          model = "/var/lib/llms/Qwen3.6-35B-A3B-MTP-UD-Q4_K_S.gguf";
-          # mmproj = "/var/lib/llms/Qwen3.6-35b-a3b-mmproj-F16.gguf";
-          spec-type = "ngram-mod,draft-mtp";
-          # no-mmap = true;
-          # np = 1;
-          spec-draft-n-max = 3;
-          cpu-moe = true;
-          c = 262144;
+      default =
+        let
+          qwenDefault = rec {
+            spec-type = "ngram-mod,draft-mtp";
+            spec-draft-n-max = 3;
+            cpu-moe = true;
+            c = 262144;
 
-          reasoning-budget = 4096;
-          reasoning-budget-message = ". OK, I've thought about this enough. Let's proceed.";
+            reasoning-budget = 4096;
+            reasoning-budget-message = ". OK, I've thought about this enough. Let's proceed.";
 
-          piOpts = {
-            contextWindow = c;
-            maxTokens = c;
-            reasoning = true;
+            piOpts = {
+              contextWindow = c;
+              maxTokens = c;
+              reasoning = true;
+            };
           };
+        in
+        {
+          "Qwen3.6-35B-A3B" = {
+            model = "/var/lib/llms/Qwen3.6-35B-A3B-MTP-UD-Q4_K_S.gguf";
+          }
+          // qwenDefault;
+          "Qwopus3.6-35B-A3B-APEX-Nano" = {
+            model = "/var/lib/llms/Qwen3.6-35B-A3B-Claude-4.7-Opus-Reasoning-Distilled-APEX-MTP-I-Nano.gguf";
+            sleep-idle-seconds = 30;
+          }
+          // qwenDefault;
+          "Qwopus3.6-35B-A3B-APEX-Compact" = {
+            model = "/var/lib/llms/Qwen3.6-35B-A3B-Claude-4.7-Opus-Reasoning-Distilled-APEX-MTP-I-Compact.gguf";
+            cram = 8192;
+          }
+          // qwenDefault;
+          "Qwopus3.6-35B-A3B-APEX-Quality" = {
+            model = "/var/lib/llms/Qwen3.6-35B-A3B-Claude-4.7-Opus-Reasoning-Distilled-APEX-MTP-I-Quality.gguf";
+          }
+          // qwenDefault;
         };
-        "Qwopus3.6-35B-A3B" = rec {
-          model = "/var/lib/llms/Qwen3.6-35B-A3B-UD-Q4_K_XL.gguf";
-          cpu-moe = true;
-          c = 262144;
-          piOpts = {
-            contextWindow = c;
-            maxTokens = c;
-            reasoning = true;
-          };
-        };
-      };
     };
   };
 

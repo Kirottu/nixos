@@ -265,6 +265,7 @@ in
         "mitigations=off"
         # Hardware accelerated scheduling maybe?
         "amdgpu.mes=1"
+        # "drm_sched_policy=2"
       ];
       # kernel.sysctl = {
       #   "vm.swappiness" = 10;

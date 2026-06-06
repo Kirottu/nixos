@@ -31,6 +31,9 @@
       "nextcloud/adminpass" = {
         sopsFile = ../../secrets/overwatch-of-harold.yaml;
       };
+      "borg/passphrase" = {
+        sopsFile = ../../secrets/overwatch-of-harold.yaml;
+      };
       "mail/noreply" = {
         sopsFile = ../../secrets/shared.yaml;
       };
@@ -59,11 +62,22 @@
         enable = true;
         secrets = config.sops.secrets."vaultwarden/env".path;
       };
-      borg.repositories."ivzoh" = {
-        quota = "150G";
-        keys = [
-          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKZClquRbXYBo0nMvhevwHQyWkiWfrdePdG9eouHUkzW root@ivzohserver"
-        ];
+      borg = {
+        repositories."ivzoh" = {
+          quota = "150G";
+          keys = [
+            "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKZClquRbXYBo0nMvhevwHQyWkiWfrdePdG9eouHUkzW root@ivzohserver"
+          ];
+        };
+        encryption = {
+          mode = "repokey-blake2";
+          passCommand = "cat ${config.sops.secrets."borg/passphrase".path}";
+        };
+        environment = {
+          BORG_RSH = "ssh -i /root/.ssh/id_ed25519_backup";
+        };
+        tmpDir = "/persistent/borg";
+        repo = "ssh://ivzoh.com/.";
       };
     };
     # grafana.enable = true;

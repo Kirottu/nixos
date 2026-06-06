@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 let
@@ -58,5 +59,27 @@ in
         return = 404;
       };
     };
+
+    server.borg.jobs."vaultwarden" =
+      let
+        tmpDir = "${config.server.borg.tmpDir}/vaultwarden";
+      in
+      {
+        startAt = "weekly";
+        readWritePaths = [ tmpDir ];
+        preHook = ''
+          mkdir -p ${tmpDir}
+          ${pkgs.sqlite}/bin/sqlite3 /var/lib/vaultwarden/db.sqlite3 "VACUUM INTO '${tmpDir}/db.sqlite3'"
+          if [ -d /var/lib/vaultwarden/attachments ]; then
+              cp -r /var/lib/vaultwarden/attachments ${tmpDir}/attachments
+          fi
+
+          chown -R vaultwarden:vaultwarden ${tmpDir}
+        '';
+        paths = [ tmpDir ];
+        postHook = ''
+          rm -r ${tmpDir}
+        '';
+      };
   };
 }

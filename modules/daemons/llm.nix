@@ -57,7 +57,7 @@ in
             cpu-moe = true;
             c = 262144;
 
-            reasoning-budget = 4096;
+            reasoning-budget = 8192;
             reasoning-budget-message = ". OK, I've thought about this enough. Let's proceed.";
 
             piOpts = {
@@ -154,8 +154,8 @@ in
             # Optimization
             fit = true;
             mlock = true;
-            ub = 1024;
-            b = 2048;
+            ub = 256;
+            b = 1024;
             # ctk = "q8_0";
             # ctv = "turbo2";
             ctk = "q8_0";

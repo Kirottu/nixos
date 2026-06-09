@@ -77,7 +77,7 @@
           BORG_RSH = "ssh -i /root/.ssh/id_ed25519_backup";
         };
         tmpDir = "/persistent/borg";
-        repo = "ssh://ivzoh.com/.";
+        repo = "kirottu-backup@ivzoh.com:/home/kirottu-backup";
       };
     };
     # grafana.enable = true;

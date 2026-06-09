@@ -66,7 +66,7 @@ in
       in
       {
         startAt = "weekly";
-        readWritePaths = [ tmpDir ];
+        extraArgs = "--debug";
         preHook = ''
           mkdir -p ${tmpDir}
           ${pkgs.sqlite}/bin/sqlite3 /var/lib/vaultwarden/db.sqlite3 "VACUUM INTO '${tmpDir}/db.sqlite3'"

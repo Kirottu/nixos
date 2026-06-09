@@ -29,7 +29,7 @@ in
     };
     jobs = lib.mkOption {
       description = "Backup jobs";
-      type = lib.types.attrsOf lib.attrs;
+      type = lib.types.attrsOf lib.types.attrs;
       default = { };
     };
     repo = lib.mkOption {
@@ -43,6 +43,9 @@ in
     tmpDir = lib.mkOption {
       description = "Base tmp dir for borg jobs";
       type = lib.types.path;
+    };
+    environment = lib.mkOption {
+      type = lib.types.attrs;
     };
   };
 
@@ -107,6 +110,7 @@ in
           repo = cfg.repo + "/" + name;
           encryption = cfg.encryption;
           environment = cfg.environment;
+          readWritePaths = [ cfg.tmpDir ];
         }
         // value
       ) cfg.jobs;

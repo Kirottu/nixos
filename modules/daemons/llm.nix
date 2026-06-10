@@ -52,13 +52,19 @@ in
       default =
         let
           qwenDefault = rec {
-            spec-type = "ngram-mod,draft-mtp";
+            spec-type = "draft-mtp";
             spec-draft-n-max = 3;
+            spec-draft-p-min = 0.75;
             cpu-moe = true;
             c = 262144;
 
+            repeat-penalty = 1.1;
+
             reasoning-budget = 8192;
-            reasoning-budget-message = ". OK, I've thought about this enough. Let's proceed.";
+            reasoning-budget-message = "OK, I've thought about this enough. Let's proceed.";
+
+            chat-template-kwargs = "{\"preserve_thinking\": true}";
+            # mmproj = "/var/lib/llms/Qwen3.6-35b-a3b-mmproj-F16.gguf";
 
             piOpts = {
               contextWindow = c;
@@ -79,7 +85,10 @@ in
           // qwenDefault;
           "Qwopus3.6-35B-A3B-APEX-Compact" = {
             model = "/var/lib/llms/Qwen3.6-35B-A3B-Claude-4.7-Opus-Reasoning-Distilled-APEX-MTP-I-Compact.gguf";
-            cram = 8192;
+          }
+          // qwenDefault;
+          "Carnice-Qwen3.6-35B-A3B-APEX-Compact" = {
+            model = "/var/lib/llms/Carnice-Qwen3.6-MoE-35B-A3B-APEX-MTP-I-Compact.gguf";
           }
           // qwenDefault;
           "Qwopus3.6-35B-A3B-APEX-Quality" = {
@@ -90,11 +99,18 @@ in
     };
   };
 
+  imports = [
+    inputs.hermes-agent.nixosModules.default
+  ];
+
   config = lib.mkIf cfg.enable {
     services.llama-cpp =
       let
         llama-cpp =
-          inputs.nixpkgs-master.legacyPackages.${pkgs.stdenv.hostPlatform.system}.llama-cpp-vulkan.overrideAttrs
+          (pkgs.llama-cpp.override {
+            rocmSupport = true;
+            rocmGpuTargets = [ "gfx1030" ];
+          }).overrideAttrs
             (prev: rec {
               version = "9521";
               src = pkgs.fetchFromGitHub {
@@ -123,12 +139,60 @@ in
               #
 
               npmDepsHash = "sha256-pjdbI6NcZRlJVd62xhgbLhWrwFYwgsIwjORqvo1+VD8=";
+              # npmDepsHash = "sha256-WaEePrEZ7O/7deP2KJhe0AwiSKYA8HOqETmMHUkmBe0=";
 
-              cmakeFlags = prev.cmakeFlags ++ [
-                (lib.cmakeBool "GGML_CPU_ALL_VARIANTS" true)
-                (lib.cmakeBool "GGML_BACKEND_DL" true)
-              ];
             });
+        # llama-cpp =
+        #   (pkgs.llama-cpp.override {
+        #     rocmGpuTargets = [ "gfx1030" ];
+        #     rocmSupport = true;
+        #   }).overrideAttrs
+        #     (prev: {
+        #       version = "9190";
+        #       src = pkgs.fetchFromGitHub {
+        #         owner = "TheTom";
+        #         repo = "llama-cpp-turboquant";
+        #         rev = "7d9715f1f071fa07c7b2ad3dbfd320b314139e65";
+        #         hash = "sha256-zXACPksSyY+HzDRJO/CbAyG/MrTdnsJ01GvOrsOhFSc=";
+        #         leaveDotGit = true;
+        #         postFetch = ''
+        #           git -C "$out" rev-parse --short HEAD > $out/COMMIT
+        #           find "$out" -name .git -print0 | xargs -0 rm -rf
+        #         '';
+        #       };
+
+        #       npmDepsHash = "sha256-WaEePrEZ7O/7deP2KJhe0AwiSKYA8HOqETmMHUkmBe0=";
+
+        #       cmakeFlags = prev.cmakeFlags ++ [
+        #         (lib.cmakeBool "GGML_CPU_ALL_VARIANTS" true)
+        #         (lib.cmakeBool "GGML_BACKEND_DL" true)
+        #         # (lib.cmakeBool "GGML_HIP_ROCWMMA_FATTN" true)
+        #       ];
+        #     });
+        # llama-cpp =
+        #   inputs.nixpkgs-master.legacyPackages.${pkgs.stdenv.hostPlatform.system}.llama-cpp-vulkan.overrideAttrs
+        #     (prev: rec {
+        #       version = "9521";
+        #       src = pkgs.fetchFromGitHub {
+        #         owner = "ggml-org";
+        #         repo = "llama.cpp";
+        #         tag = "b${version}";
+        #         hash = "sha256-Veph82amdJn90NiPIxOhtK7ECXfQVu6wWmflU26Qe2I=";
+        #         leaveDotGit = true;
+        #         postFetch = ''
+        #           git -C "$out" rev-parse --short HEAD > $out/COMMIT
+        #           find "$out" -name .git -print0 | xargs -0 rm -rf
+        #         '';
+        #       };
+
+        #       npmDepsHash = "sha256-pjdbI6NcZRlJVd62xhgbLhWrwFYwgsIwjORqvo1+VD8=";
+        #       # npmDepsHash = "sha256-WaEePrEZ7O/7deP2KJhe0AwiSKYA8HOqETmMHUkmBe0=";
+
+        #       cmakeFlags = prev.cmakeFlags ++ [
+        #         (lib.cmakeBool "GGML_CPU_ALL_VARIANTS" true)
+        #         (lib.cmakeBool "GGML_BACKEND_DL" true)
+        #       ];
+        #     });
         # llama-cpp =
         #   inputs.nixpkgs-master.legacyPackages.${pkgs.stdenv.hostPlatform.system}.llama-cpp-rocm.overrideAttrs
         #     (prev: {
@@ -147,6 +211,8 @@ in
         extraFlags = [
           "--tools"
           "all"
+          "--models-max"
+          "1"
         ];
         modelsPreset = {
           # version = 1;
@@ -154,15 +220,17 @@ in
             # Optimization
             fit = true;
             mlock = true;
-            ub = 256;
-            b = 1024;
+            ub = 2048;
+            b = 2048;
             # ctk = "q8_0";
             # ctv = "turbo2";
             ctk = "q8_0";
-            ctv = "q4_0";
+            ctv = "q8_0";
             fa = true;
-            cram = 1024;
+            cram = 0;
             tools = "all";
+            np = 1;
+            ctx-checkpoints = 4;
 
             sleep-idle-seconds = 300;
           };
@@ -203,14 +271,56 @@ in
         };
       };
 
-    systemd.services.llama-cpp.serviceConfig = {
-      # Increase memlock limit to allow preventing the model from getting swapped
-      LimitMEMLOCK = 202116300800;
+    systemd.services.llama-cpp = {
+      serviceConfig = {
+        # Increase memlock limit to allow preventing the model from getting swapped
+        LimitMEMLOCK = 202116300800;
+      };
+      environment = {
+        RADV_PERTEST = "nogttspill";
+        HSA_OVERRIDE_GFX_VERSION = "10.3.0";
+        GPU_MAX_HW_QUEUES = "1";
+      };
     };
+
+    services.hermes-agent = {
+      enable = true;
+      settings = {
+        model = {
+          base_url = "http://localhost:${toString cfg.port}/v1";
+          provider = "custom";
+          # default = "Qwopus3.6-35B-A3B-APEX-Compact";
+          default = "Qwopus3.6-35B-A3B-APEX-Quality";
+        };
+        terminal = {
+          backend = "local";
+        };
+        memory = {
+          memory_enabled = true;
+          user_profile_enabled = true;
+        };
+        compression = {
+          enabled = true;
+          threshhold = 0.80;
+        };
+      };
+      mcpServers = {
+        exa.url = "https://mcp.exa.ai/mcp";
+      };
+      extraDependencyGroups = [ "matrix" ];
+      addToSystemPackages = true;
+    };
+
+    mainUser.extraGroups = [ config.services.hermes-agent.group ];
 
     impermanence.directories = [
       # "/var/lib/llama-cpp"
       "/var/lib/llms"
+      {
+        directory = config.services.hermes-agent.stateDir;
+        user = config.services.hermes-agent.user;
+        group = config.services.hermes-agent.group;
+      }
       # config.services.open-webui.stateDir
     ];
 

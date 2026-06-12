@@ -22,6 +22,11 @@ in
       type = lib.types.number;
       default = 8080;
     };
+    gatedPort = lib.mkOption {
+      description = "Resource gated proxy for llama.cpp";
+      type = lib.types.number;
+      default = 8081;
+    };
     # modelList = lib.mkOption {
     #   type = lib.types.listOf lib.types.attrs;
     #   default = [
@@ -93,6 +98,7 @@ in
           // qwenDefault;
           "Qwopus3.6-35B-A3B-APEX-Quality" = {
             model = "/var/lib/llms/Qwen3.6-35B-A3B-Claude-4.7-Opus-Reasoning-Distilled-APEX-MTP-I-Quality.gguf";
+            no-mmap = true;
           }
           // qwenDefault;
         };
@@ -112,12 +118,12 @@ in
             rocmGpuTargets = [ "gfx1030" ];
           }).overrideAttrs
             (prev: rec {
-              version = "9521";
+              version = "9585";
               src = pkgs.fetchFromGitHub {
                 owner = "ggml-org";
                 repo = "llama.cpp";
                 tag = "b${version}";
-                hash = "sha256-Veph82amdJn90NiPIxOhtK7ECXfQVu6wWmflU26Qe2I=";
+                hash = "sha256-XJiCdPy6P+g70EM/o4EPJL2WUUEyroAsZO0hDNslx5Y=";
                 leaveDotGit = true;
                 postFetch = ''
                   git -C "$out" rev-parse --short HEAD > $out/COMMIT
@@ -139,7 +145,7 @@ in
               #
 
               npmDepsHash = "sha256-pjdbI6NcZRlJVd62xhgbLhWrwFYwgsIwjORqvo1+VD8=";
-              # npmDepsHash = "sha256-WaEePrEZ7O/7deP2KJhe0AwiSKYA8HOqETmMHUkmBe0=";
+              # npmDepsHash = lib.fakeHash;
 
             });
         # llama-cpp =
@@ -229,7 +235,8 @@ in
             fa = true;
             cram = 0;
             tools = "all";
-            np = 1;
+            np = 2;
+            kv-unified = true;
             ctx-checkpoints = 4;
 
             sleep-idle-seconds = 300;
@@ -283,11 +290,55 @@ in
       };
     };
 
+    systemd.services.gated-proxy = {
+      description = "Resource gated LLM proxy";
+      requires = [ "llama-cpp.service" ];
+      wantedBy = [ "multi-user.target" ];
+
+      environment = {
+        GATED_PROXY_CONFIG = (pkgs.formats.json { }).generate "gated-proxy-config.json" {
+          host = "0.0.0.0";
+          port = cfg.gatedPort;
+          target_host = "127.0.0.1";
+          target_port = cfg.port;
+          ram_thresh = 0.5;
+          vram_thresh = 0.4;
+          idle_thresh = 120;
+          gpu_sysfs_path = "/sys/class/drm/card1/device";
+
+        };
+        RUST_LOG = "info";
+      };
+
+      serviceConfig = {
+        ExecStart = lib.getExe inputs.gated-proxy.packages.${pkgs.stdenv.hostPlatform.system}.gated-proxy;
+        Restart = "on-failure";
+        DynamicUser = true;
+        CapabilityBoundingSet = [ "" ];
+        LockPersonality = true;
+        PrivateTmp = true;
+        ProcSubset = "pid";
+        ProtectClock = true;
+        ProtectControlGroups = true;
+        ProtectHome = true;
+        ProtectHostname = true;
+        ProtectKernelLogs = true;
+        ProtectKernelModules = true;
+        ProtectKernelTunables = true;
+        ProtectProc = "invisible";
+        ProtectSystem = "strict";
+        RestrictNamespaces = true;
+        RestrictRealtime = true;
+        RestrictSUIDSGID = true;
+        SystemCallArchitectures = "native";
+      };
+    };
+
     services.hermes-agent = {
       enable = true;
       settings = {
         model = {
-          base_url = "http://localhost:${toString cfg.port}/v1";
+          base_url = "http://localhost:${toString cfg.gatedPort}/v1";
           provider = "custom";
           # default = "Qwopus3.6-35B-A3B-APEX-Compact";
           default = "Qwopus3.6-35B-A3B-APEX-Quality";
@@ -303,12 +354,18 @@ in
           enabled = true;
           threshhold = 0.80;
         };
+        agent = {
+          api_max_retries = 100;
+        };
       };
       mcpServers = {
         exa.url = "https://mcp.exa.ai/mcp";
       };
       extraDependencyGroups = [ "matrix" ];
       addToSystemPackages = true;
+      extraPackages = [
+        pkgs.git
+      ];
     };
 
     mainUser.extraGroups = [ config.services.hermes-agent.group ];

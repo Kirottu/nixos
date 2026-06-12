@@ -116,7 +116,8 @@ in
           }
           {
             _args = [ "DP-3" ];
-            mode = "1280x1024@75.025002";
+            # mode = "1280x1024@75.025002";
+            mode = "1920x1080@60.000";
             position._props = {
               x = 4480;
               y = 230;
@@ -133,6 +134,28 @@ in
             };
           }
         ];
+        binds."Mod+Shift+M" = {
+          _props.allow-when-locked = true;
+          spawn = "${
+            let
+              lockfile = "/tmp/monitors-off";
+            in
+            pkgs.writeShellScript "toggle-monitors" ''
+              if [ -f ${lockfile} ]; then
+                niri msg output DP-1 on
+                niri msg output DP-2 on
+                niri msg output DP-3 on
+                rm ${lockfile}
+              else
+                niri msg output DP-1 off
+                niri msg output DP-2 off
+                niri msg output DP-3 off
+                touch ${lockfile}
+              fi
+            ''
+          }";
+
+        };
       };
 
     };
@@ -141,6 +164,10 @@ in
     };
 
     services = {
+      printing = {
+        enable = true;
+        drivers = [ pkgs.hplip ];
+      };
       udev = {
         # Workaround for premature wakeups
         extraRules = ''
@@ -198,22 +225,21 @@ in
             {
               # GPU
               wildcard_path = "/sys/class/drm/card*/device/hwmon/hwmon*/pwm1";
-              min_pwm = 10;
+              min_pwm = 30;
               max_pwm = 180;
-              cutoff = true;
               heat_pressure_srcs = [ "gpu" ];
             }
             {
               # CPU fan
               wildcard_path = "/sys/devices/platform/it87.2624/hwmon/hwmon*/pwm1";
-              min_pwm = 60;
+              min_pwm = 80;
               max_pwm = 255;
               heat_pressure_srcs = [ "cpu" ];
             }
             {
               # Intake fans
               wildcard_path = "/sys/devices/platform/it87.2624/hwmon/hwmon*/pwm3";
-              min_pwm = 60;
+              min_pwm = 100;
               max_pwm = 180;
               heat_pressure_srcs = [
                 "internal"
@@ -223,6 +249,7 @@ in
         };
       };
     };
+
     # programs.coolercontrol.enable = true;
     impermanence = {
       directories = [
@@ -231,6 +258,7 @@ in
         "/var/lib/waydroid"
         "/etc/waydroid-extra"
         "/etc/ssh"
+        "/var/lib/cups"
       ];
       userDirectories = [ ".config/lact" ];
     };

@@ -92,6 +92,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    gated-proxy = {
+      url = "github:Kirottu/gated-proxy";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     personal-site = {
       url = "github:Kirottu/kirottu.com";
       flake = false;

@@ -427,6 +427,26 @@
         "type": "github"
       }
     },
+    "gated-proxy": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1781269265,
+        "narHash": "sha256-6pvc+oj9IkyzGyDIc7gr6Pe932STZcHZPZnezBmEbUE=",
+        "owner": "Kirottu",
+        "repo": "gated-proxy",
+        "rev": "39ca7941b7bec8694e7b27f6600ae8ee23d770ae",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Kirottu",
+        "repo": "gated-proxy",
+        "type": "github"
+      }
+    },
     "gnome-shell": {
       "flake": false,
       "locked": {
@@ -1172,6 +1192,7 @@
         "anyrun": "anyrun",
         "codel": "codel",
         "ctrld": "ctrld",
+        "gated-proxy": "gated-proxy",
         "hermes-agent": "hermes-agent",
         "hm-modules": "hm-modules",
         "home-manager": "home-manager",

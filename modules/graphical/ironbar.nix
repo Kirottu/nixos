@@ -112,7 +112,7 @@ in
             }
 
             .focused {
-              background: #99ccff;
+              background: ${config.theming.themeAttrs.focus};
             }
 
             .container {

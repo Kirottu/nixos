@@ -52,7 +52,7 @@
         yand.enable = true;
         waybar.enable = config.theming.theme == "diagonals";
         ironbar.enable = config.theming.theme == "bliss";
-        wayle.enable = config.theming.theme == "bliss";
+        # wayle.enable = config.theming.theme == "bliss";
         terminals.alacritty.enable = true;
         anyrun.enable = true;
       };

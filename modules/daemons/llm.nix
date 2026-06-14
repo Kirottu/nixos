@@ -292,7 +292,6 @@ in
 
     systemd.services.gated-proxy = {
       description = "Resource gated LLM proxy";
-      requires = [ "llama-cpp.service" ];
       wantedBy = [ "multi-user.target" ];
 
       environment = {

@@ -31,7 +31,9 @@ in
             # Subthemes: vertical, overview
             subtheme = "vertical";
           };
-          bliss = { };
+          bliss = {
+            focus = "#99ccff";
+          };
         }
         .${config.theming.theme};
       description = "Additional attributes for theme";

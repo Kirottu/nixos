@@ -79,13 +79,6 @@
     theming = {
       plymouth.enable = true;
       theme = "bliss";
-      themeAttrs = {
-        l4 = "#1a000d";
-        l3 = "#33001a";
-        l2 = "#4d0026";
-        l1 = "#660033";
-        subtheme = "overview";
-      };
     };
     virt.distrobox.enable = true;
     daemons = {

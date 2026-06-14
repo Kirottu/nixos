@@ -231,7 +231,7 @@ in
             }
 
             .match:selected {
-              background-color: #99ccff;
+              background-color: ${focus};
               animation: fade 0.1s linear;
             }
 

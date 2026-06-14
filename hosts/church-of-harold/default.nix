@@ -79,10 +79,6 @@ in
             open-on-output = "DP-2";
           }
           {
-            _args = [ "vr" ];
-            open-on-output = "DP-1";
-          }
-          {
             _args = [ "web-dp1" ];
             open-on-output = "DP-1";
           }

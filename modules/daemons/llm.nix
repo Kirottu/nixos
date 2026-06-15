@@ -118,12 +118,12 @@ in
             rocmGpuTargets = [ "gfx1030" ];
           }).overrideAttrs
             (prev: rec {
-              version = "9585";
+              version = "9630";
               src = pkgs.fetchFromGitHub {
                 owner = "ggml-org";
                 repo = "llama.cpp";
                 tag = "b${version}";
-                hash = "sha256-XJiCdPy6P+g70EM/o4EPJL2WUUEyroAsZO0hDNslx5Y=";
+                hash = "sha256-U5BjKYLmR9Jp5eetQUZtj8O31zZB+PhcizMpk1iOWMk=";
                 leaveDotGit = true;
                 postFetch = ''
                   git -C "$out" rev-parse --short HEAD > $out/COMMIT
@@ -131,21 +131,8 @@ in
                 '';
               };
 
-              # src = pkgs.fetchFromGitHub {
-              #   owner = "TheTom";
-              #   repo = "llama-cpp-turboquant";
-              #   rev = "2b61ea24ef4fef435866301b7c953434e4fcb866";
-              #   hash = "sha256-gMYQJTQkOb7pZ2LAvfRWX9uFgaJ0EsrW+Yq0l7BXHus=";
-              #   leaveDotGit = true;
-              #   postFetch = ''
-              #     git -C "$out" rev-parse --short HEAD > $out/COMMIT
-              #     find "$out" -name .git -print0 | xargs -0 rm -rf
-              #   '';
-              # };
-              #
-
-              npmDepsHash = "sha256-pjdbI6NcZRlJVd62xhgbLhWrwFYwgsIwjORqvo1+VD8=";
-              # npmDepsHash = lib.fakeHash;
+              # npmDepsHash = "sha256-pjdbI6NcZRlJVd62xhgbLhWrwFYwgsIwjORqvo1+VD8=";
+              npmDepsHash = "sha256-TU4Gv+dd48WDpswhfVtm79IVIOwoCXz1fZ/DI/z40Wg=";
 
             });
         # llama-cpp =
@@ -212,39 +199,37 @@ in
       {
         package = llama-cpp;
         enable = true;
-        host = "0.0.0.0";
-        port = cfg.port;
-        extraFlags = [
-          "--tools"
-          "all"
-          "--models-max"
-          "1"
-        ];
-        modelsPreset = {
-          # version = 1;
-          "*" = {
-            # Optimization
-            fit = true;
-            mlock = true;
-            ub = 2048;
-            b = 2048;
-            # ctk = "q8_0";
-            # ctv = "turbo2";
-            ctk = "q8_0";
-            ctv = "q8_0";
-            fa = true;
-            cram = 0;
-            tools = "all";
-            np = 2;
-            kv-unified = true;
-            ctx-checkpoints = 4;
+        settings = {
+          host = "0.0.0.0";
+          port = cfg.port;
+          tools = "all";
+          models-max = 1;
+          models-preset = iniFormat.generate "models.ini" (
+            {
+              # version = 1;
+              "*" = {
+                # Optimization
+                fit = true;
+                mlock = true;
+                ub = 2048;
+                b = 2048;
+                # ctk = "q8_0";
+                # ctv = "turbo2";
+                ctk = "q8_0";
+                ctv = "q8_0";
+                fa = true;
+                cram = 0;
+                tools = "all";
+                np = 2;
+                kv-unified = true;
+                ctx-checkpoints = 4;
 
-            sleep-idle-seconds = 300;
-          };
-        }
-        // builtins.mapAttrs (
-          name: value: lib.filterAttrs (name: value: name != "piOpts") value
-        ) cfg.models;
+                sleep-idle-seconds = 300;
+              };
+            }
+            // builtins.mapAttrs (name: value: lib.filterAttrs (name: value: name != "piOpts") value) cfg.models
+          );
+        };
       };
 
     # llama.cpp sleep mode for some reason tanks any subsequent performance,

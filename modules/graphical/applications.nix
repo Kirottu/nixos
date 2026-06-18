@@ -152,6 +152,12 @@ in
         myUtils.mkApp {
           package = pkgs.librewolf;
           userDirectories = [ ".librewolf" ];
+          extraOptions = {
+            nixpkgs.config.permittedInsecurePackages = [
+              "librewolf-151.0.2-1"
+              "librewolf-unwrapped-151.0.2-1"
+            ];
+          };
         }
       ))
       (lib.mkIf cfg.browsers.firefox.enable (

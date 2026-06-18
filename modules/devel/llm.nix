@@ -19,19 +19,19 @@ in
       OPENCODE_EXPERIMENTAL = "true";
       # OPENCODE_DISABLE_LSP_DOWNLOAD = "true";
       OPENCODE_EXPERIMENTAL_LSP_TOOL = "true";
-      PI_CODING_AGENT_DIR = "${config.users.users.${config.mainUser.userName}.home}/.config/pi";
+      # PI_CODING_AGENT_DIR = "${config.users.users.${config.mainUser.userName}.home}/.config/pi";
     };
 
-    environment.systemPackages = [ inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.pi ];
+    # environment.systemPackages = [ inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.pi ];
 
-    hm.xdg.configFile."pi/models.json".source = (pkgs.formats.json { }).generate "models.json" {
-      providers.local = {
-        baseUrl = "http://${config.daemons.llm.hostname}:${toString config.daemons.llm.port}/v1";
-        api = "openai-completions";
-        apiKey = "ignored";
-        models = lib.mapAttrsToList (name: value: { id = name; } // value.piOpts) config.daemons.llm.models;
-      };
-    };
+    # hm.xdg.configFile."pi/models.json".source = (pkgs.formats.json { }).generate "models.json" {
+    #   providers.local = {
+    #     baseUrl = "http://${config.daemons.llm.hostname}:${toString config.daemons.llm.port}/v1";
+    #     api = "openai-completions";
+    #     apiKey = "ignored";
+    #     models = lib.mapAttrsToList (name: value: { id = name; } // value.piOpts) config.daemons.llm.models;
+    #   };
+    # };
 
     hm.programs.opencode = {
       enable = true;

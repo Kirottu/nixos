@@ -56,49 +56,42 @@ in
       type = lib.types.attrs;
       default =
         let
-          qwenDefault = rec {
-            spec-type = "draft-mtp";
-            spec-draft-n-max = 3;
-            spec-draft-p-min = 0.75;
-            cpu-moe = true;
-            c = 262144;
+          qwenDefault = {
+            # spec-type = "draft-mtp";
+            # spec-draft-n-max = 2;
+            # spec-draft-p-min = 0.75;
+            # cpu-moe = true;
+            n-cpu-moe = 35;
+            # c = 262144;
 
-            repeat-penalty = 1.1;
+            # repeat-penalty = 1.1;
 
             reasoning-budget = 8192;
             reasoning-budget-message = "OK, I've thought about this enough. Let's proceed.";
 
             chat-template-kwargs = "{\"preserve_thinking\": true}";
             # mmproj = "/var/lib/llms/Qwen3.6-35b-a3b-mmproj-F16.gguf";
-
-            piOpts = {
-              contextWindow = c;
-              maxTokens = c;
-              reasoning = true;
-            };
           };
         in
         {
-          "Qwen3.6-35B-A3B" = {
-            model = "/var/lib/llms/Qwen3.6-35B-A3B-MTP-UD-Q4_K_S.gguf";
-          }
-          // qwenDefault;
           "Qwopus3.6-35B-A3B-APEX-Nano" = {
             model = "/var/lib/llms/Qwen3.6-35B-A3B-Claude-4.7-Opus-Reasoning-Distilled-APEX-MTP-I-Nano.gguf";
             sleep-idle-seconds = 30;
           }
           // qwenDefault;
-          "Qwopus3.6-35B-A3B-APEX-Compact" = {
-            model = "/var/lib/llms/Qwen3.6-35B-A3B-Claude-4.7-Opus-Reasoning-Distilled-APEX-MTP-I-Compact.gguf";
-          }
-          // qwenDefault;
-          "Carnice-Qwen3.6-35B-A3B-APEX-Compact" = {
-            model = "/var/lib/llms/Carnice-Qwen3.6-MoE-35B-A3B-APEX-MTP-I-Compact.gguf";
-          }
-          // qwenDefault;
           "Qwopus3.6-35B-A3B-APEX-Quality" = {
-            model = "/var/lib/llms/Qwen3.6-35B-A3B-Claude-4.7-Opus-Reasoning-Distilled-APEX-MTP-I-Quality.gguf";
+            # model = "/var/lib/llms/Qwen3.6-35B-A3B-Claude-4.7-Opus-Reasoning-Distilled-APEX-MTP-I-Quality.gguf";
+            model = "/var/lib/llms/Qwopus3.6-35B-A3B-v1-APEX-MTP-I-Quality.gguf";
+            temperature = 1.0;
             no-mmap = true;
+          }
+          // qwenDefault;
+          "Qwopus3.6-35B-A3B-APEX-Quality-Coding" = {
+            # model = "/var/lib/llms/Qwen3.6-35B-A3B-Claude-4.7-Opus-Reasoning-Distilled-APEX-MTP-I-Quality.gguf";
+            model = "/var/lib/llms/Qwopus3.6-35B-A3B-v1-APEX-MTP-I-Quality.gguf";
+            no-mmap = true;
+            temperature = 0.3;
+            top-p = 0.9;
           }
           // qwenDefault;
         };
@@ -112,18 +105,20 @@ in
   config = lib.mkIf cfg.enable {
     services.llama-cpp =
       let
+        # Mainline
         llama-cpp =
           (pkgs.llama-cpp.override {
             rocmSupport = true;
             rocmGpuTargets = [ "gfx1030" ];
+            # vulkanSupport = true;
           }).overrideAttrs
             (prev: rec {
-              version = "9630";
+              version = "9692";
               src = pkgs.fetchFromGitHub {
                 owner = "ggml-org";
                 repo = "llama.cpp";
                 tag = "b${version}";
-                hash = "sha256-U5BjKYLmR9Jp5eetQUZtj8O31zZB+PhcizMpk1iOWMk=";
+                hash = "sha256-j8Z0yqdWU6x3fdtu1psVuO45v3mB3KyhdLM/cuIsAIQ=";
                 leaveDotGit = true;
                 postFetch = ''
                   git -C "$out" rev-parse --short HEAD > $out/COMMIT
@@ -131,9 +126,7 @@ in
                 '';
               };
 
-              # npmDepsHash = "sha256-pjdbI6NcZRlJVd62xhgbLhWrwFYwgsIwjORqvo1+VD8=";
-              npmDepsHash = "sha256-TU4Gv+dd48WDpswhfVtm79IVIOwoCXz1fZ/DI/z40Wg=";
-
+              npmDepsHash = "sha256-0dctM/apI3ysMIEVBaBXO9hZMWskpJpNpOws1gwiOYc=";
             });
         # llama-cpp =
         #   (pkgs.llama-cpp.override {
@@ -210,9 +203,12 @@ in
               "*" = {
                 # Optimization
                 fit = true;
+                fit-target = 2048;
                 mlock = true;
                 ub = 2048;
                 b = 2048;
+                # ub = 512;
+                # b = 512;
                 # ctk = "q8_0";
                 # ctv = "turbo2";
                 ctk = "q8_0";
@@ -345,7 +341,10 @@ in
       mcpServers = {
         exa.url = "https://mcp.exa.ai/mcp";
       };
-      extraDependencyGroups = [ "matrix" ];
+      extraDependencyGroups = [
+        "matrix"
+        "acp"
+      ];
       addToSystemPackages = true;
       extraPackages = [
         pkgs.git

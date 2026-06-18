@@ -46,7 +46,7 @@ in
     # graphical.eww.enable = true;
     graphical = {
       yand.output = "DP-3";
-      browsers.librewolf.enable = true;
+      # browsers.librewolf.enable = true;
       tv = {
         enable = true;
         desktopOutputs = [
@@ -260,7 +260,8 @@ in
     };
 
     boot = {
-      kernelPackages = pkgs.linuxPackagesFor pkgs.linux;
+      # kernelPackages = pkgs.linuxPackagesFor pkgs.linux;
+      kernelPackages = pkgs.linuxPackagesFor pkgs.linux_latest;
       extraModulePackages = [
         # (pkgs.callPackage ./amdgpu.nix { kernel = config.boot.kernelPackages.kernel; })
         (config.boot.kernelPackages.it87.overrideAttrs {
@@ -290,6 +291,8 @@ in
         # Hardware accelerated scheduling maybe?
         "amdgpu.mes=1"
         # "drm_sched_policy=2"
+        "amdgpu.gpu_recovery=1"
+        "amdgpu.lockup_timeout=10000"
       ];
       # kernel.sysctl = {
       #   "vm.swappiness" = 10;

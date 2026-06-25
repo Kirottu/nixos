@@ -58,31 +58,42 @@ in
         let
           qwenDefault = {
             # spec-type = "draft-mtp";
-            # spec-draft-n-max = 2;
+            # spec-draft-n-max = 3;
             # spec-draft-p-min = 0.75;
-            # cpu-moe = true;
-            n-cpu-moe = 35;
+            # n-cpu-moe = 30;
             # c = 262144;
 
-            # repeat-penalty = 1.1;
-
-            reasoning-budget = 8192;
-            reasoning-budget-message = "OK, I've thought about this enough. Let's proceed.";
+            repeat-penalty = 1.1;
 
             chat-template-kwargs = "{\"preserve_thinking\": true}";
             # mmproj = "/var/lib/llms/Qwen3.6-35b-a3b-mmproj-F16.gguf";
           };
         in
         {
-          "Qwopus3.6-35B-A3B-APEX-Nano" = {
-            model = "/var/lib/llms/Qwen3.6-35B-A3B-Claude-4.7-Opus-Reasoning-Distilled-APEX-MTP-I-Nano.gguf";
-            sleep-idle-seconds = 30;
+          "Qwen3.6-35B-A3B" = {
+            model = "/var/lib/llms/Qwen3.6-35B-A3B-UD-Q4_K_XL.gguf";
+            n-cpu-moe = 30;
+            # cram = 4096;
+            no-mmap = true;
+          }
+          // qwenDefault;
+          "Qwopus3.6-35B-A3B-APEX-Compact" = {
+            model = "/var/lib/llms/Qwopus3.6-35B-A3B-v1-APEX-MTP-I-Compact.gguf";
+            no-mmap = true;
+            cram = 8192;
+
+            n-cpu-moe = 25;
+
           }
           // qwenDefault;
           "Qwopus3.6-35B-A3B-APEX-Quality" = {
             # model = "/var/lib/llms/Qwen3.6-35B-A3B-Claude-4.7-Opus-Reasoning-Distilled-APEX-MTP-I-Quality.gguf";
             model = "/var/lib/llms/Qwopus3.6-35B-A3B-v1-APEX-MTP-I-Quality.gguf";
-            temperature = 1.0;
+            # temperature = 1.0;
+            # reasoning-budget = 4096;
+            # reasoning-budget-message = "OK, I've thought about this enough. Let's proceed.";
+
+            cpu-moe = true;
             no-mmap = true;
           }
           // qwenDefault;
@@ -90,11 +101,17 @@ in
             # model = "/var/lib/llms/Qwen3.6-35B-A3B-Claude-4.7-Opus-Reasoning-Distilled-APEX-MTP-I-Quality.gguf";
             model = "/var/lib/llms/Qwopus3.6-35B-A3B-v1-APEX-MTP-I-Quality.gguf";
             no-mmap = true;
-            temperature = 0.3;
+            cpu-moe = true;
+            temperature = 0.6;
+            # reasoning-budget = 8192;
+            # reasoning-budget-message = "OK, I've thought about this enough. Let's proceed.";
             top-p = 0.9;
           }
           // qwenDefault;
         };
+    };
+    clankerSecrets = lib.mkOption {
+      type = lib.types.path;
     };
   };
 
@@ -105,6 +122,7 @@ in
   config = lib.mkIf cfg.enable {
     services.llama-cpp =
       let
+        # llama-cpp = pkgs.llama-cpp-rocm;
         # Mainline
         llama-cpp =
           (pkgs.llama-cpp.override {
@@ -113,12 +131,16 @@ in
             # vulkanSupport = true;
           }).overrideAttrs
             (prev: rec {
-              version = "9692";
+              # version = "9692";
+              # version = "9630";
+              version = "9747";
               src = pkgs.fetchFromGitHub {
                 owner = "ggml-org";
                 repo = "llama.cpp";
                 tag = "b${version}";
-                hash = "sha256-j8Z0yqdWU6x3fdtu1psVuO45v3mB3KyhdLM/cuIsAIQ=";
+                # hash = "sha256-j8Z0yqdWU6x3fdtu1psVuO45v3mB3KyhdLM/cuIsAIQ=";
+                # hash = "sha256-U5BjKYLmR9Jp5eetQUZtj8O31zZB+PhcizMpk1iOWMk=";
+                hash = "sha256-ecXJxidnlQRAyDftYIcTrER5U3+YQ+XfvAxA29pj+uI=";
                 leaveDotGit = true;
                 postFetch = ''
                   git -C "$out" rev-parse --short HEAD > $out/COMMIT
@@ -126,8 +148,33 @@ in
                 '';
               };
 
+              # npmDepsHash = "sha256-0dctM/apI3ysMIEVBaBXO9hZMWskpJpNpOws1gwiOYc=";
+              # npmDepsHash = "sha256-TU4Gv+dd48WDpswhfVtm79IVIOwoCXz1fZ/DI/z40Wg=";
               npmDepsHash = "sha256-0dctM/apI3ysMIEVBaBXO9hZMWskpJpNpOws1gwiOYc=";
             });
+        # MoE caching
+        # llama-cpp =
+        #   (pkgs.llama-cpp.override {
+        #     rocmSupport = true;
+        #     rocmGpuTargets = [ "gfx1030" ];
+        #     # vulkanSupport = true;
+        #   }).overrideAttrs
+        #     (prev: rec {
+        #       version = "9700";
+        #       src = pkgs.fetchFromGitHub {
+        #         owner = "leloch";
+        #         repo = "llama.cpp";
+        #         rev = "4dabb01a9abbef67860c20711bf7772079a3d9bb";
+        #         hash = "sha256-4FklMDllWuGy8vA2+xDrteTtRuVnENhEp8rddbXgLTk=";
+        #         leaveDotGit = true;
+        #         postFetch = ''
+        #           git -C "$out" rev-parse --short HEAD > $out/COMMIT
+        #           find "$out" -name .git -print0 | xargs -0 rm -rf
+        #         '';
+        #       };
+
+        #       npmDepsHash = "sha256-pjdbI6NcZRlJVd62xhgbLhWrwFYwgsIwjORqvo1+VD8=";
+        #     });
         # llama-cpp =
         #   (pkgs.llama-cpp.override {
         #     rocmGpuTargets = [ "gfx1030" ];
@@ -207,6 +254,7 @@ in
                 mlock = true;
                 ub = 2048;
                 b = 2048;
+                # moe-cache = 2048;
                 # ub = 512;
                 # b = 512;
                 # ctk = "q8_0";
@@ -214,16 +262,17 @@ in
                 ctk = "q8_0";
                 ctv = "q8_0";
                 fa = true;
-                cram = 0;
+                cram = 2048;
                 tools = "all";
-                np = 2;
+                np = 1;
                 kv-unified = true;
                 ctx-checkpoints = 4;
+                lv = 5;
 
                 sleep-idle-seconds = 300;
               };
             }
-            // builtins.mapAttrs (name: value: lib.filterAttrs (name: value: name != "piOpts") value) cfg.models
+            // cfg.models
           );
         };
       };
@@ -268,6 +317,7 @@ in
         RADV_PERTEST = "nogttspill";
         HSA_OVERRIDE_GFX_VERSION = "10.3.0";
         GPU_MAX_HW_QUEUES = "1";
+        # GGML_CUDA_MOE_CACHE_MIN_EXPERT_KB = "0";
       };
     };
 
@@ -314,14 +364,33 @@ in
       };
     };
 
+    environment.systemPackages = [
+      inputs.hermes-agent.packages.${pkgs.stdenv.hostPlatform.system}.tui
+    ];
+
     services.hermes-agent = {
       enable = true;
+      environmentFiles = [ cfg.clankerSecrets ];
+      mcpServers = {
+        exa.url = "https://mcp.exa.ai/mcp";
+      };
+      extraDependencyGroups = [
+        "matrix"
+        "acp"
+      ];
+      addToSystemPackages = true;
+      container = {
+        enable = true;
+        backend = "podman";
+        hostUsers = [ config.mainUser.userName ];
+      };
       settings = {
         model = {
           base_url = "http://localhost:${toString cfg.gatedPort}/v1";
           provider = "custom";
+          default = "Qwen3.6-35B-A3B";
           # default = "Qwopus3.6-35B-A3B-APEX-Compact";
-          default = "Qwopus3.6-35B-A3B-APEX-Quality";
+          # default = "Qwopus3.6-35B-A3B-APEX-Quality";
         };
         terminal = {
           backend = "local";
@@ -335,23 +404,24 @@ in
           threshhold = 0.80;
         };
         agent = {
-          api_max_retries = 100;
+          api_max_retries = 200;
         };
       };
-      mcpServers = {
-        exa.url = "https://mcp.exa.ai/mcp";
-      };
-      extraDependencyGroups = [
-        "matrix"
-        "acp"
-      ];
-      addToSystemPackages = true;
-      extraPackages = [
-        pkgs.git
-      ];
     };
 
-    mainUser.extraGroups = [ config.services.hermes-agent.group ];
+    security.sudo-rs.extraRules = [
+      {
+        users = [ config.mainUser.userName ];
+        commands = [
+          {
+            command = "/run/current-system/sw/bin/podman";
+            options = [ "NOPASSWD" ];
+          }
+        ];
+      }
+    ];
+
+    # mainUser.extraGroups = [ config.services.hermes-agent.group ];
 
     impermanence.directories = [
       # "/var/lib/llama-cpp"
@@ -361,6 +431,11 @@ in
         user = config.services.hermes-agent.user;
         group = config.services.hermes-agent.group;
       }
+      # {
+      #   directory = config.services.zeroclaw.instances.assistant.dataDir;
+      #   user = config.services.zeroclaw.instances.assistant.user;
+      #   group = config.services.zeroclaw.instances.assistant.group;
+      # }
       # config.services.open-webui.stateDir
     ];
 

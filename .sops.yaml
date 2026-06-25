@@ -22,4 +22,8 @@ creation_rules:
       - age:
         - *hell-of-harold
         - *overwatch-of-harold
+  - path_regex: secrets/church-of-harold\.yaml$
+    key_groups:
+      - age:
+        - *church-of-harold
     

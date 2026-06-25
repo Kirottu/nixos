@@ -138,14 +138,10 @@ in
             in
             pkgs.writeShellScript "toggle-monitors" ''
               if [ -f ${lockfile} ]; then
-                niri msg output DP-1 on
-                niri msg output DP-2 on
-                niri msg output DP-3 on
+                niri msg action power-on-monitors
                 rm ${lockfile}
               else
-                niri msg output DP-1 off
-                niri msg output DP-2 off
-                niri msg output DP-3 off
+                niri msg action power-off-monitors
                 touch ${lockfile}
               fi
             ''
@@ -155,8 +151,18 @@ in
       };
 
     };
+
+    sops.secrets."clanker/env" = {
+      sopsFile = ../../secrets/church-of-harold.yaml;
+      owner = "hermes";
+      group = "hermes";
+    };
+
     daemons = {
-      llm.enable = true;
+      llm = {
+        enable = true;
+        clankerSecrets = config.sops.secrets."clanker/env".path;
+      };
     };
 
     services = {
@@ -191,6 +197,9 @@ in
               wildcard_path = "/sys/devices/pci0000:00/0000:00:18.3/hwmon/hwmon*/temp1_input";
               PID_params = {
                 set_point = 60;
+                # P = -0.005;
+                # I = -0.05;
+                # D = -0.01;
                 P = -5.0e-3;
                 I = -2.0e-3;
                 D = -6.0e-3;
@@ -201,7 +210,10 @@ in
               wildcard_path = "/sys/class/drm/card*/device/hwmon/hwmon*/temp1_input";
               PID_params = {
                 set_point = 60;
-                P = -5.0e-3;
+                # P = -0.008;
+                # I = -0.05;
+                # D = -0.01;
+                P = -10.0e-3;
                 I = -2.0e-3;
                 D = -6.0e-3;
               };
@@ -211,6 +223,9 @@ in
               wildcard_path = "/sys/devices/platform/it87.2624/hwmon/hwmon*/temp1_input";
               PID_params = {
                 set_point = 40;
+                # P = -0.005;
+                # I = -0.05;
+                # D = -0.01;
                 P = -5.0e-3;
                 I = -2.0e-3;
                 D = -6.0e-3;
@@ -261,7 +276,7 @@ in
 
     boot = {
       # kernelPackages = pkgs.linuxPackagesFor pkgs.linux;
-      kernelPackages = pkgs.linuxPackagesFor pkgs.linux_latest;
+      # kernelPackages = pkgs.linuxPackagesFor pkgs.linux_latest;
       extraModulePackages = [
         # (pkgs.callPackage ./amdgpu.nix { kernel = config.boot.kernelPackages.kernel; })
         (config.boot.kernelPackages.it87.overrideAttrs {
@@ -289,10 +304,13 @@ in
       kernelParams = [
         "mitigations=off"
         # Hardware accelerated scheduling maybe?
-        "amdgpu.mes=1"
+        # "amdgpu.mes=1"
         # "drm_sched_policy=2"
         "amdgpu.gpu_recovery=1"
         "amdgpu.lockup_timeout=10000"
+        "amdgpu.cwsr_enable=0"
+        "amdgpu.mcbp=0"
+        "amdgpu.gfxoff=0"
       ];
       # kernel.sysctl = {
       #   "vm.swappiness" = 10;

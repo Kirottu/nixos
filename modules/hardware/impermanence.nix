@@ -75,6 +75,7 @@
         "/var/log"
         "/var/lib/systemd/coredump"
         "/var/lib/nixos"
+        "/var/lib/private"
       ];
       files = config.impermanence.files ++ [
         "/etc/machine-id"

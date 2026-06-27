@@ -62,7 +62,6 @@ in
             # spec-draft-p-min = 0.75;
             # n-cpu-moe = 30;
             # c = 262144;
-
             repeat-penalty = 1.1;
 
             chat-template-kwargs = "{\"preserve_thinking\": true}";
@@ -72,6 +71,7 @@ in
         {
           "Qwen3.6-35B-A3B" = {
             model = "/var/lib/llms/Qwen3.6-35B-A3B-UD-Q4_K_XL.gguf";
+            cpu-moe = true;
             n-cpu-moe = 30;
             # cram = 4096;
             no-mmap = true;
@@ -80,9 +80,22 @@ in
           "Qwopus3.6-35B-A3B-APEX-Compact" = {
             model = "/var/lib/llms/Qwopus3.6-35B-A3B-v1-APEX-MTP-I-Compact.gguf";
             no-mmap = true;
-            cram = 8192;
+            # cram = 8192;
+            temperature = 1.0;
+            dry-multiplier = 0.6;
+            dry-allowed-length = 2;
 
-            n-cpu-moe = 25;
+            n-cpu-moe = 32;
+
+          }
+          // qwenDefault;
+          "Qwopus3.6-35B-A3B-APEX-Compact-Coding" = {
+            model = "/var/lib/llms/Qwopus3.6-35B-A3B-v1-APEX-MTP-I-Compact.gguf";
+            no-mmap = true;
+            # cram = 8192;
+            temperature = 0.6;
+
+            n-cpu-moe = 32;
 
           }
           // qwenDefault;
@@ -131,16 +144,14 @@ in
             # vulkanSupport = true;
           }).overrideAttrs
             (prev: rec {
-              # version = "9692";
-              # version = "9630";
-              version = "9747";
+              # version = "9747";
+              version = "9821";
               src = pkgs.fetchFromGitHub {
                 owner = "ggml-org";
                 repo = "llama.cpp";
                 tag = "b${version}";
-                # hash = "sha256-j8Z0yqdWU6x3fdtu1psVuO45v3mB3KyhdLM/cuIsAIQ=";
-                # hash = "sha256-U5BjKYLmR9Jp5eetQUZtj8O31zZB+PhcizMpk1iOWMk=";
-                hash = "sha256-ecXJxidnlQRAyDftYIcTrER5U3+YQ+XfvAxA29pj+uI=";
+                # hash = "sha256-ecXJxidnlQRAyDftYIcTrER5U3+YQ+XfvAxA29pj+uI=";
+                hash = "sha256-gkE3weJIQGDaGgVPRok+I08n1HfGD9tnugy7HBdlqCs=";
                 leaveDotGit = true;
                 postFetch = ''
                   git -C "$out" rev-parse --short HEAD > $out/COMMIT
@@ -149,8 +160,7 @@ in
               };
 
               # npmDepsHash = "sha256-0dctM/apI3ysMIEVBaBXO9hZMWskpJpNpOws1gwiOYc=";
-              # npmDepsHash = "sha256-TU4Gv+dd48WDpswhfVtm79IVIOwoCXz1fZ/DI/z40Wg=";
-              npmDepsHash = "sha256-0dctM/apI3ysMIEVBaBXO9hZMWskpJpNpOws1gwiOYc=";
+              npmDepsHash = "sha256-X1DZgmhS/zHTqDT5zq0kywwntthcJ9vRXeqyO3zz6UU=";
             });
         # MoE caching
         # llama-cpp =
@@ -264,10 +274,10 @@ in
                 fa = true;
                 cram = 2048;
                 tools = "all";
-                np = 1;
+                # np = 2;
                 kv-unified = true;
                 ctx-checkpoints = 4;
-                lv = 5;
+                lv = 4;
 
                 sleep-idle-seconds = 300;
               };
@@ -331,7 +341,8 @@ in
           port = cfg.gatedPort;
           target_host = "127.0.0.1";
           target_port = cfg.port;
-          ram_thresh = 0.5;
+          # Disable entirely
+          ram_thresh = 2.0;
           vram_thresh = 0.4;
           idle_thresh = 120;
           gpu_sysfs_path = "/sys/class/drm/card1/device";
@@ -366,17 +377,36 @@ in
 
     environment.systemPackages = [
       inputs.hermes-agent.packages.${pkgs.stdenv.hostPlatform.system}.tui
+      # (
+      #   inputs.nixpkgs-vllm.legacyPackages.${pkgs.stdenv.hostPlatform.system}.python313Packages.vllm.override
+      #   {
+      #     rocmSupport = true;
+      #   }
+      # )
     ];
 
     services.hermes-agent = {
       enable = true;
-      environmentFiles = [ cfg.clankerSecrets ];
+      environmentFiles = [
+        cfg.clankerSecrets
+        "${pkgs.writeText "hermes-env" ''
+          LCM_CONTEXT_THRESHOLD=0.70
+        ''}"
+      ];
       mcpServers = {
         exa.url = "https://mcp.exa.ai/mcp";
       };
       extraDependencyGroups = [
         "matrix"
         "acp"
+      ];
+      extraPlugins = [
+        (pkgs.fetchFromGitHub {
+          owner = "stephenschoettler";
+          repo = "hermes-lcm";
+          rev = "08980b7c6728e846745a603046ab012deb3f9c71";
+          hash = "sha256-c5ycRJkce+NuHGwvb2j2gsyRMiVxtFHsYDFnpaZDFYA=";
+        })
       ];
       addToSystemPackages = true;
       container = {
@@ -385,17 +415,22 @@ in
         hostUsers = [ config.mainUser.userName ];
       };
       settings = {
+        plugins.enabled = [
+          "hermes-lcm"
+        ];
         model = {
           base_url = "http://localhost:${toString cfg.gatedPort}/v1";
           provider = "custom";
-          default = "Qwen3.6-35B-A3B";
-          # default = "Qwopus3.6-35B-A3B-APEX-Compact";
+          # default = "Qwen3.6-35B-A3B";
+          context_length = 262144;
+          default = "Qwopus3.6-35B-A3B-APEX-Compact";
           # default = "Qwopus3.6-35B-A3B-APEX-Quality";
         };
         terminal = {
           backend = "local";
         };
         memory = {
+          provider = "holographic";
           memory_enabled = true;
           user_profile_enabled = true;
         };
@@ -405,6 +440,9 @@ in
         };
         agent = {
           api_max_retries = 200;
+        };
+        context = {
+          engine = "lcm";
         };
       };
     };

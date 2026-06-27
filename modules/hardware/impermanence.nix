@@ -75,7 +75,10 @@
         "/var/log"
         "/var/lib/systemd/coredump"
         "/var/lib/nixos"
-        "/var/lib/private"
+        {
+          directory = "/var/lib/private";
+          mode = "0700";
+        }
       ];
       files = config.impermanence.files ++ [
         "/etc/machine-id"

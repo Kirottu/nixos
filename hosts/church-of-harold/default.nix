@@ -165,6 +165,10 @@ in
       };
     };
 
+    systemd.coredump.settings.Coredump = {
+      ExternalSizeMax = "1G";
+    };
+
     services = {
       printing = {
         enable = true;

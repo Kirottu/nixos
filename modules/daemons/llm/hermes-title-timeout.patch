@@ -1,0 +1,13 @@
+diff --git a/agent/title_generator.py b/agent/title_generator.py
+index 583a2cfc6..d5ccbe0e3 100644
+--- a/agent/title_generator.py
++++ b/agent/title_generator.py
+@@ -51,7 +51,7 @@ def _title_language() -> str:
+def generate_title(
+user_message: str,
+assistant_response: str,
+-    timeout: float = 30.0,
++    timeout: float = 240.0,
+failure_callback: Optional[FailureCallback] = None,
+main_runtime: dict = None,
+) -> Optional[str]:

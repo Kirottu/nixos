@@ -62,16 +62,35 @@ in
             # spec-draft-p-min = 0.75;
             # n-cpu-moe = 30;
             # c = 262144;
-            repeat-penalty = 1.1;
+            reasoning-budget = 4096;
+            reasoning-budget-message = "OK, I've thought about this enough. Let's proceed.";
+            # repeat-penalty = 1.1;
 
             chat-template-kwargs = "{\"preserve_thinking\": true}";
             # mmproj = "/var/lib/llms/Qwen3.6-35b-a3b-mmproj-F16.gguf";
           };
         in
         {
+          "SIQ-1-35B" = {
+            model = "/var/lib/llms/SIQ-1-35B.Q4_K_M.gguf";
+            n-cpu-moe = 35;
+            # ngl = 28;
+            no-mmap = true;
+            temperature = 0.7;
+          }
+          // qwenDefault;
+          "SIQ-1-35B-APEX-Quality" = {
+            model = "/var/lib/llms/SIQ-1-35B-APEX-I-Quality.gguf";
+            n-cpu-moe = 35;
+            # Incorrect model metadata
+            override-kv = "qwen35moe.block_count=int:40;kv_count=int:47";
+            no-mmap = true;
+            temperature = 0.7;
+          }
+          // qwenDefault;
           "Qwen3.6-35B-A3B" = {
             model = "/var/lib/llms/Qwen3.6-35B-A3B-UD-Q4_K_XL.gguf";
-            cpu-moe = true;
+            # cpu-moe = true;
             n-cpu-moe = 30;
             # cram = 4096;
             no-mmap = true;
@@ -82,8 +101,8 @@ in
             no-mmap = true;
             # cram = 8192;
             temperature = 1.0;
-            dry-multiplier = 0.6;
-            dry-allowed-length = 2;
+            # dry-multiplier = 0.6;
+            # dry-allowed-length = 2;
 
             n-cpu-moe = 32;
 
@@ -116,8 +135,6 @@ in
             no-mmap = true;
             cpu-moe = true;
             temperature = 0.6;
-            # reasoning-budget = 8192;
-            # reasoning-budget-message = "OK, I've thought about this enough. Let's proceed.";
             top-p = 0.9;
           }
           // qwenDefault;
@@ -387,6 +404,11 @@ in
 
     services.hermes-agent = {
       enable = true;
+      package = inputs.hermes-agent.packages.${pkgs.stdenv.hostPlatform.system}.minimal.overrideAttrs {
+        patches = [
+          ./hermes-title-timeout.patch
+        ];
+      };
       environmentFiles = [
         cfg.clankerSecrets
         "${pkgs.writeText "hermes-env" ''
@@ -398,7 +420,6 @@ in
       };
       extraDependencyGroups = [
         "matrix"
-        "acp"
       ];
       extraPlugins = [
         (pkgs.fetchFromGitHub {
@@ -423,7 +444,8 @@ in
           provider = "custom";
           # default = "Qwen3.6-35B-A3B";
           context_length = 262144;
-          default = "Qwopus3.6-35B-A3B-APEX-Compact";
+          # default = "Qwopus3.6-35B-A3B-APEX-Compact";
+          default = "SIQ-1-35B";
           # default = "Qwopus3.6-35B-A3B-APEX-Quality";
         };
         terminal = {

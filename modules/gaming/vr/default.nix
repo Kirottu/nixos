@@ -24,7 +24,7 @@ let
         in
         [
           (pkg.overrideAttrs attrs)
-          ((pkgs.pkgsi686Linux.callPackage pkg.override { }).overrideAttrs attrs)
+          # ((pkgs.pkgsi686Linux.callPackage pkg.override { }).overrideAttrs attrs)
         ];
     };
   wivrn-config = {
@@ -129,47 +129,15 @@ in
     # hm.xdg.configFile."openxr/1/active_runtime.i686.json".source = "${
     #   pkgs.pkgsi686Linux.callPackage myPkgs.wivrn-server-lib { absolute = true; }
     # }/share/openxr/1/openxr_wivrn.json";
-    hm.xdg.configFile."openxr/1/active_runtime.i686.json".source =
-      let
-        p = pkgs.pkgsi686Linux;
-        pkg = pkgs.pkgsi686Linux.wivrn.overrideAttrs (prev: {
-          pname = "wivrn-server-lib";
-          nativeBuildInputs = with p; [
-            cmake
-            git
-            glslang
-            pkg-config
-            python3
-          ];
-
-          buildInputs = with p; [
-            boost
-            eigen
-            glm
-            libdrm
-            nlohmann_json
-            openxr-loader
-            udev
-            vulkan-headers
-            vulkan-loader
-          ];
-
-          desktopItems = [ ];
-
-          cmakeFlags = [
-            (lib.cmakeBool "WIVRN_BUILD_SERVER" false)
-            (lib.cmakeBool "WIVRN_BUILD_WIVRNCTL" false)
-            (lib.cmakeBool "WIVRN_BUILD_SERVER_LIBRARY" true)
-            (lib.cmakeBool "FETCHCONTENT_FULLY_DISCONNECTED" true)
-            (lib.cmakeFeature "WIVRN_OPENXR_MANIFEST_TYPE" "absolute")
-            (lib.cmakeFeature "GIT_DESC" "v${prev.version}")
-            (lib.cmakeFeature "FETCHCONTENT_SOURCE_DIR_MONADO" "${prev.monado}")
-          ];
-
-          preFixup = "";
-        });
-      in
-      "${pkg}/share/openxr/1/openxr_wivrn.json";
+    #
+    # TODO: Resolve this mess
+    # hm.xdg.configFile."openxr/1/active_runtime.i686.json".source =
+    #   let
+    #     pkg = pkgs.pkgsi686Linux.wivrn.override {
+    #       clientLibOnly = true;
+    #     };
+    #   in
+    #   "${pkg}/share/openxr/1/openxr_wivrn.json";
 
     # programs.steam =
     #   let

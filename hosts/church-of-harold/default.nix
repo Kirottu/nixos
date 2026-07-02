@@ -166,7 +166,8 @@ in
     };
 
     systemd.coredump.settings.Coredump = {
-      ExternalSizeMax = "1G";
+      ProcessSizeMax = "512M";
+      ExternalSizeMax = "512M";
     };
 
     services = {

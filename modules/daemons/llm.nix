@@ -62,8 +62,6 @@ in
             # spec-draft-p-min = 0.75;
             # n-cpu-moe = 30;
             # c = 262144;
-            reasoning-budget = 4096;
-            reasoning-budget-message = "OK, I've thought about this enough. Let's proceed.";
             # repeat-penalty = 1.1;
 
             chat-template-kwargs = "{\"preserve_thinking\": true}";
@@ -71,21 +69,18 @@ in
           };
         in
         {
-          "SIQ-1-35B" = {
-            model = "/var/lib/llms/SIQ-1-35B.Q4_K_M.gguf";
-            n-cpu-moe = 35;
-            # ngl = 28;
-            no-mmap = true;
-            temperature = 0.7;
-          }
-          // qwenDefault;
-          "SIQ-1-35B-APEX-Quality" = {
-            model = "/var/lib/llms/SIQ-1-35B-APEX-I-Quality.gguf";
-            n-cpu-moe = 35;
-            # Incorrect model metadata
-            override-kv = "qwen35moe.block_count=int:40;kv_count=int:47";
-            no-mmap = true;
-            temperature = 0.7;
+          "Gemma4" = {
+            model = "/var/lib/llms/gemma-4-26B-A4B-APEX-I-Compact.gguf";
+            n-cpu-moe = 18;
+            temperature = 1.0;
+            top-p = 0.95;
+            top-k = 64;
+          };
+          "Ornith-1.0-35B-APEX-Compact" = {
+            model = "/var/lib/llms/Ornith-1.0-35B-MTP-APEX-I-Compact.gguf";
+            n-cpu-moe = 28;
+            # cpu-moe = true;
+            temperature = 0.6;
           }
           // qwenDefault;
           "Qwen3.6-35B-A3B" = {
@@ -93,12 +88,10 @@ in
             # cpu-moe = true;
             n-cpu-moe = 30;
             # cram = 4096;
-            no-mmap = true;
           }
           // qwenDefault;
           "Qwopus3.6-35B-A3B-APEX-Compact" = {
             model = "/var/lib/llms/Qwopus3.6-35B-A3B-v1-APEX-MTP-I-Compact.gguf";
-            no-mmap = true;
             # cram = 8192;
             temperature = 1.0;
             # dry-multiplier = 0.6;
@@ -110,7 +103,6 @@ in
           // qwenDefault;
           "Qwopus3.6-35B-A3B-APEX-Compact-Coding" = {
             model = "/var/lib/llms/Qwopus3.6-35B-A3B-v1-APEX-MTP-I-Compact.gguf";
-            no-mmap = true;
             # cram = 8192;
             temperature = 0.6;
 
@@ -126,13 +118,11 @@ in
             # reasoning-budget-message = "OK, I've thought about this enough. Let's proceed.";
 
             cpu-moe = true;
-            no-mmap = true;
           }
           // qwenDefault;
           "Qwopus3.6-35B-A3B-APEX-Quality-Coding" = {
             # model = "/var/lib/llms/Qwen3.6-35B-A3B-Claude-4.7-Opus-Reasoning-Distilled-APEX-MTP-I-Quality.gguf";
             model = "/var/lib/llms/Qwopus3.6-35B-A3B-v1-APEX-MTP-I-Quality.gguf";
-            no-mmap = true;
             cpu-moe = true;
             temperature = 0.6;
             top-p = 0.9;
@@ -285,16 +275,19 @@ in
                 # ub = 512;
                 # b = 512;
                 # ctk = "q8_0";
+                reasoning-budget = 4096;
+                reasoning-budget-message = "OK, I've thought about this enough. Let's proceed.";
                 # ctv = "turbo2";
                 ctk = "q8_0";
                 ctv = "q8_0";
                 fa = true;
-                cram = 2048;
+                cram = 0;
                 tools = "all";
                 # np = 2;
                 kv-unified = true;
                 ctx-checkpoints = 4;
                 lv = 4;
+                no-mmap = true;
 
                 sleep-idle-seconds = 300;
               };
@@ -404,15 +397,10 @@ in
 
     services.hermes-agent = {
       enable = true;
-      package = inputs.hermes-agent.packages.${pkgs.stdenv.hostPlatform.system}.minimal.overrideAttrs {
-        patches = [
-          ./hermes-title-timeout.patch
-        ];
-      };
       environmentFiles = [
         cfg.clankerSecrets
         "${pkgs.writeText "hermes-env" ''
-          LCM_CONTEXT_THRESHOLD=0.70
+          LCM_CONTEXT_THRESHOLD=0.60
         ''}"
       ];
       mcpServers = {
@@ -436,16 +424,24 @@ in
         hostUsers = [ config.mainUser.userName ];
       };
       settings = {
-        plugins.enabled = [
-          "hermes-lcm"
-        ];
+        timezone = "Europe/Helsinki";
+        plugins = {
+          enabled = [
+            "hermes-lcm"
+          ];
+          hermes-memory-store = {
+            auto_extract = true;
+          };
+        };
         model = {
           base_url = "http://localhost:${toString cfg.gatedPort}/v1";
           provider = "custom";
           # default = "Qwen3.6-35B-A3B";
-          context_length = 262144;
           # default = "Qwopus3.6-35B-A3B-APEX-Compact";
-          default = "SIQ-1-35B";
+          # default = "Ornith-1.0-35B-APEX-Compact";
+          # context_length = 187136;
+          default = "Gemma4";
+          context_length = 134912;
           # default = "Qwopus3.6-35B-A3B-APEX-Quality";
         };
         terminal = {
@@ -455,10 +451,6 @@ in
           provider = "holographic";
           memory_enabled = true;
           user_profile_enabled = true;
-        };
-        compression = {
-          enabled = true;
-          threshhold = 0.80;
         };
         agent = {
           api_max_retries = 200;

@@ -50,7 +50,7 @@ in
             name = "Local";
             npm = "@ai-sdk/openai-compatible";
             options = {
-              baseURL = "http://${config.daemons.llm.hostname}:${toString config.daemons.llm.gatedPort}/v1";
+              baseURL = "http://${config.daemons.llm.hostname}:${toString config.daemons.llm.port}/v1";
             };
             models = builtins.mapAttrs (name: value: { name = name; }) config.daemons.llm.models;
           };

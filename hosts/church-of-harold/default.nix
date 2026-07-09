@@ -35,6 +35,7 @@ in
         defaultSink = desktopSink;
         defaultSource = "alsa_input.pci-0000_0a_00.4.analog-stereo";
       };
+      itch.enable = true;
       dolphin-emu.enable = true;
       heroic.enable = true;
       prismlauncher.enable = true;
@@ -345,6 +346,7 @@ in
         gnomeXdgDesktopPortalSupport = true;
       })
       pkgs.deadlock-mod-manager
+      (pkgs.callPackage myPkgs.statlocker-companion { })
     ];
 
     # This machine should always be behind a router with a competent firewall, this is fine

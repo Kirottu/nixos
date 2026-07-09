@@ -71,14 +71,26 @@ in
         {
           "Gemma4" = {
             model = "/var/lib/llms/gemma-4-26B-A4B-APEX-I-Compact.gguf";
-            n-cpu-moe = 18;
+            n-cpu-moe = 22;
             temperature = 1.0;
             top-p = 0.95;
             top-k = 64;
           };
+          "Agents-A1" = {
+            model = "/var/lib/llms/Agents-A1-APEX-I-Compact.gguf";
+            n-cpu-moe = 30;
+            temperature = 0.85;
+            top-p = 0.95;
+            min-p = 0.0;
+            top-k = 20;
+            presence-penalty = 1.1;
+            sleep-idle-seconds = 30;
+            mmproj = "/var/lib/llms/mmproj-Agents-A1.gguf";
+            no-mmproj-offload = true;
+          };
           "Ornith-1.0-35B-APEX-Compact" = {
-            model = "/var/lib/llms/Ornith-1.0-35B-MTP-APEX-I-Compact.gguf";
-            n-cpu-moe = 28;
+            model = "/var/lib/llms/Ornith-1.0-35B-APEX-I-Compact.gguf";
+            n-cpu-moe = 30;
             # cpu-moe = true;
             temperature = 0.6;
           }
@@ -144,32 +156,6 @@ in
       let
         # llama-cpp = pkgs.llama-cpp-rocm;
         # Mainline
-        llama-cpp =
-          (pkgs.llama-cpp.override {
-            rocmSupport = true;
-            rocmGpuTargets = [ "gfx1030" ];
-            # vulkanSupport = true;
-          }).overrideAttrs
-            (prev: rec {
-              # version = "9747";
-              version = "9821";
-              src = pkgs.fetchFromGitHub {
-                owner = "ggml-org";
-                repo = "llama.cpp";
-                tag = "b${version}";
-                # hash = "sha256-ecXJxidnlQRAyDftYIcTrER5U3+YQ+XfvAxA29pj+uI=";
-                hash = "sha256-gkE3weJIQGDaGgVPRok+I08n1HfGD9tnugy7HBdlqCs=";
-                leaveDotGit = true;
-                postFetch = ''
-                  git -C "$out" rev-parse --short HEAD > $out/COMMIT
-                  find "$out" -name .git -print0 | xargs -0 rm -rf
-                '';
-              };
-
-              # npmDepsHash = "sha256-0dctM/apI3ysMIEVBaBXO9hZMWskpJpNpOws1gwiOYc=";
-              npmDepsHash = "sha256-X1DZgmhS/zHTqDT5zq0kywwntthcJ9vRXeqyO3zz6UU=";
-            });
-        # MoE caching
         # llama-cpp =
         #   (pkgs.llama-cpp.override {
         #     rocmSupport = true;
@@ -177,12 +163,39 @@ in
         #     # vulkanSupport = true;
         #   }).overrideAttrs
         #     (prev: rec {
-        #       version = "9700";
+        #       # version = "9821";
+        #       version = "9859";
         #       src = pkgs.fetchFromGitHub {
-        #         owner = "leloch";
+        #         owner = "ggml-org";
         #         repo = "llama.cpp";
-        #         rev = "4dabb01a9abbef67860c20711bf7772079a3d9bb";
-        #         hash = "sha256-4FklMDllWuGy8vA2+xDrteTtRuVnENhEp8rddbXgLTk=";
+        #         tag = "b${version}";
+        #         # hash = "sha256-gkE3weJIQGDaGgVPRok+I08n1HfGD9tnugy7HBdlqCs=";
+        #         hash = "sha256-htIMo3pOldoELyHyGIZ4voUJeay3fymIIRy89Z8gNK8=";
+        #         leaveDotGit = true;
+        #         postFetch = ''
+        #           git -C "$out" rev-parse --short HEAD > $out/COMMIT
+        #           find "$out" -name .git -print0 | xargs -0 rm -rf
+        #         '';
+        #       };
+
+        #       # npmDepsHash = "sha256-X1DZgmhS/zHTqDT5zq0kywwntthcJ9vRXeqyO3zz6UU=";
+        #       npmDepsHash = "sha256-X1DZgmhS/zHTqDT5zq0kywwntthcJ9vRXeqyO3zz6UU=";
+        #     });
+        # # Auto save slots on router
+        # llama-cpp =
+        #   (pkgs.llama-cpp.override {
+        #     rocmSupport = true;
+        #     rocmGpuTargets = [ "gfx1030" ];
+        #     # vulkanSupport = true;
+        #   }).overrideAttrs
+        #     (prev: rec {
+        #       # version = "9821";
+        #       version = "9600";
+        #       src = pkgs.fetchFromGitHub {
+        #         owner = "dark-penguin";
+        #         repo = "llama.cpp";
+        #         rev = "368caf763879de72a5c41828705f3d0e7fde7eb9";
+        #         hash = "sha256-kbyscjMjikWmjv9Fkq0UOp3HER8QTOOgwdMcRMqzSqo=";
         #         leaveDotGit = true;
         #         postFetch = ''
         #           git -C "$out" rev-parse --short HEAD > $out/COMMIT
@@ -192,6 +205,33 @@ in
 
         #       npmDepsHash = "sha256-pjdbI6NcZRlJVd62xhgbLhWrwFYwgsIwjORqvo1+VD8=";
         #     });
+        # Local
+        llama-cpp =
+          (pkgs.llama-cpp.override {
+            rocmSupport = true;
+            rocmGpuTargets = [ "gfx1030" ];
+            # vulkanSupport = true;
+          }).overrideAttrs
+            (prev: rec {
+              # version = "9821";
+              # version = "9873";
+              version = "9902";
+              src = pkgs.fetchgit {
+                url = "http://localhost:8082";
+                hash = "sha256-PhzaWAEoSfL4fkdDcC5kdfvkCWLCMkcODxTqs/672cQ=";
+                rev = "c5a0978cbbbe0a27b2eddc7e6cedd7e07b7833ef";
+                # hash = "sha256-U8IQXS0QUKMx4+5ZpJSP99m2HBc0aelk4FF269kCkog=";
+                # rev = "ef8640fd93fefbf61db318fc41a3fb9aa2e65f57";
+                leaveDotGit = true;
+                postFetch = ''
+                  git -C "$out" rev-parse --short HEAD > $out/COMMIT
+                  find "$out" -name .git -print0 | xargs -0 rm -rf
+                '';
+              };
+
+              npmDepsHash = "sha256-X1DZgmhS/zHTqDT5zq0kywwntthcJ9vRXeqyO3zz6UU=";
+              # npmDepsHash = lib.fakeHash;
+            });
         # llama-cpp =
         #   (pkgs.llama-cpp.override {
         #     rocmGpuTargets = [ "gfx1030" ];
@@ -277,19 +317,20 @@ in
                 # ctk = "q8_0";
                 reasoning-budget = 4096;
                 reasoning-budget-message = "OK, I've thought about this enough. Let's proceed.";
+                slot-save-path = "/var/lib/private/llama-cpp";
                 # ctv = "turbo2";
-                ctk = "q8_0";
-                ctv = "q8_0";
+                # ctk = "q8_0";
+                # ctv = "q8_0";
+                ctk = "q4_0";
+                ctv = "q4_0";
                 fa = true;
-                cram = 0;
+                cram = 4096;
                 tools = "all";
-                # np = 2;
+                np = 4;
                 kv-unified = true;
                 ctx-checkpoints = 4;
-                lv = 4;
+                lv = 5;
                 no-mmap = true;
-
-                sleep-idle-seconds = 300;
               };
             }
             // cfg.models
@@ -300,35 +341,36 @@ in
     # llama.cpp sleep mode for some reason tanks any subsequent performance,
     # hence this horribleness makes sure to actually unload any models whenever they
     # enter sleeping state
-    systemd.timers."llama.cpp-watchdog" = {
-      wantedBy = [ "timers.target" ];
-      timerConfig = {
-        OnBootSec = "5min";
-        OnUnitActiveSec = "1s";
-        Unit = "llama.cpp-watchdog.service";
-      };
-    };
+    # systemd.timers."llama.cpp-watchdog" = {
+    #   wantedBy = [ "timers.target" ];
+    #   timerConfig = {
+    #     OnBootSec = "5min";
+    #     OnUnitActiveSec = "1s";
+    #     Unit = "llama.cpp-watchdog.service";
+    #   };
+    # };
 
-    systemd.services."llama.cpp-watchdog" =
-      let
-        curl = lib.getExe pkgs.curl;
-        jq = lib.getExe pkgs.jq;
-        baseUrl = "http://localhost:${toString cfg.port}";
-      in
-      {
-        script = lib.concatStrings (
-          lib.mapAttrsToList (name: value: ''
-            if [ "$(${curl} -s ${baseUrl}/models | ${jq} -r '.data[] | select(.id=="${name}") | .status.value')" == "sleeping" ]; then
-              ${curl} -s -X POST -H "Content-Type: application/json" --data '{"model": "${name}"}' ${baseUrl}/models/unload
-            fi
-          '') cfg.models
-        );
-        serviceConfig = {
-          Type = "oneshot";
-        };
-      };
+    # systemd.services."llama.cpp-watchdog" =
+    #   let
+    #     curl = lib.getExe pkgs.curl;
+    #     jq = lib.getExe pkgs.jq;
+    #     baseUrl = "http://localhost:${toString cfg.port}";
+    #   in
+    #   {
+    #     script = lib.concatStrings (
+    #       lib.mapAttrsToList (name: value: ''
+    #         if [ "$(${curl} -s ${baseUrl}/models | ${jq} -r '.data[] | select(.id=="${name}") | .status.value')" == "sleeping" ]; then
+    #           ${curl} -s -X POST -H "Content-Type: application/json" --data '{"model": "${name}"}' ${baseUrl}/models/unload
+    #         fi
+    #       '') cfg.models
+    #     );
+    #     serviceConfig = {
+    #       Type = "oneshot";
+    #     };
+    #   };
 
     systemd.services.llama-cpp = {
+      path = [ pkgs.ffmpeg ];
       serviceConfig = {
         # Increase memlock limit to allow preventing the model from getting swapped
         LimitMEMLOCK = 202116300800;
@@ -336,7 +378,7 @@ in
       environment = {
         RADV_PERTEST = "nogttspill";
         HSA_OVERRIDE_GFX_VERSION = "10.3.0";
-        GPU_MAX_HW_QUEUES = "1";
+        # GPU_MAX_HW_QUEUES = "1";
         # GGML_CUDA_MOE_CACHE_MIN_EXPERT_KB = "0";
       };
     };
@@ -351,12 +393,14 @@ in
           port = cfg.gatedPort;
           target_host = "127.0.0.1";
           target_port = cfg.port;
-          # Disable entirely
-          ram_thresh = 2.0;
-          vram_thresh = 0.4;
-          idle_thresh = 120;
-          gpu_sysfs_path = "/sys/class/drm/card1/device";
 
+          gpu = "AMD Radeon RX 6700 XT";
+          load_average_window = 15;
+          cpu_load_average_thresh = 40.0;
+          gpu_load_average_thresh = 30.0;
+          model_loaded_grace = 120;
+
+          idle_unload_timeouts = { };
         };
         RUST_LOG = "info";
       };
@@ -368,7 +412,7 @@ in
         CapabilityBoundingSet = [ "" ];
         LockPersonality = true;
         PrivateTmp = true;
-        ProcSubset = "pid";
+        ProcSubset = "all";
         ProtectClock = true;
         ProtectControlGroups = true;
         ProtectHome = true;
@@ -376,7 +420,7 @@ in
         ProtectKernelLogs = true;
         ProtectKernelModules = true;
         ProtectKernelTunables = true;
-        ProtectProc = "invisible";
+        ProtectProc = "default";
         ProtectSystem = "strict";
         RestrictNamespaces = true;
         RestrictRealtime = true;
@@ -400,7 +444,7 @@ in
       environmentFiles = [
         cfg.clankerSecrets
         "${pkgs.writeText "hermes-env" ''
-          LCM_CONTEXT_THRESHOLD=0.60
+          LCM_CONTEXT_THRESHOLD=0.40
         ''}"
       ];
       mcpServers = {
@@ -413,8 +457,10 @@ in
         (pkgs.fetchFromGitHub {
           owner = "stephenschoettler";
           repo = "hermes-lcm";
-          rev = "08980b7c6728e846745a603046ab012deb3f9c71";
-          hash = "sha256-c5ycRJkce+NuHGwvb2j2gsyRMiVxtFHsYDFnpaZDFYA=";
+          # rev = "08980b7c6728e846745a603046ab012deb3f9c71";
+          tag = "v0.19.0";
+          # hash = "sha256-c5ycRJkce+NuHGwvb2j2gsyRMiVxtFHsYDFnpaZDFYA=";
+          hash = "sha256-B80HCn3BT+M1B8THMm3Ph5tpimTB68yIVkBfPaV4X40=";
         })
       ];
       addToSystemPackages = true;
@@ -439,10 +485,17 @@ in
           # default = "Qwen3.6-35B-A3B";
           # default = "Qwopus3.6-35B-A3B-APEX-Compact";
           # default = "Ornith-1.0-35B-APEX-Compact";
-          # context_length = 187136;
-          default = "Gemma4";
-          context_length = 134912;
-          # default = "Qwopus3.6-35B-A3B-APEX-Quality";
+          # context_length = 257536;
+          # default = "Gemma4";
+          # context_length = 222464;
+          default = "Agents-A1";
+          context_length = 262144;
+        };
+        auxiliary = {
+          # The default auxiliary client timeout of 30 s simply isn't feasible on my hardware
+          title_generation.timeout = 3600;
+          extraction.timeout = 3600;
+          compression.timeout = 3600;
         };
         terminal = {
           backend = "local";

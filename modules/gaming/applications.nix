@@ -93,7 +93,15 @@ in
       })
       (lib.mkIf cfg.itch.enable (
         myUtils.mkApp {
-          package = pkgs.itch;
+          package = pkgs.itch.override {
+            steam-run =
+              (pkgs.steam.override {
+                extraPkgs = p: [
+                  p.nss
+                  p.libxscrnsaver
+                ];
+              }).passthru.run;
+          };
         }
       ))
       (lib.mkIf cfg.r2modman.enable (

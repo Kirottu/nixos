@@ -34,6 +34,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nix-alien.url = "github:thiagokokada/nix-alien";
+
     nixpkgs-xr = {
       url = "github:nix-community/nixpkgs-xr";
     };

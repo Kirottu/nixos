@@ -100,6 +100,9 @@
       "audio"
     ];
 
-    boot.kernel.sysctl."kernel.sysrq" = 1;
+    boot = {
+      kernel.sysctl."kernel.sysrq" = 1;
+      zswap.enable = true;
+    };
   };
 }

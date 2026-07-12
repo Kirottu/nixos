@@ -78,15 +78,17 @@ in
           };
           "Agents-A1" = {
             model = "/var/lib/llms/Agents-A1-APEX-I-Compact.gguf";
-            n-cpu-moe = 30;
+            n-cpu-moe = 32;
+            # model = "/var/lib/llms/Agents-A1-APEX-I-Quality.gguf";
+            # n-cpu-moe = 35;
             temperature = 0.85;
             top-p = 0.95;
             min-p = 0.0;
             top-k = 20;
             presence-penalty = 1.1;
             sleep-idle-seconds = 30;
-            mmproj = "/var/lib/llms/mmproj-Agents-A1.gguf";
-            no-mmproj-offload = true;
+            # mmproj = "/var/lib/llms/mmproj-Agents-A1.gguf";
+            # no-mmproj-offload = true;
           };
           "Ornith-1.0-35B-APEX-Compact" = {
             model = "/var/lib/llms/Ornith-1.0-35B-APEX-I-Compact.gguf";
@@ -319,17 +321,15 @@ in
                 reasoning-budget-message = "OK, I've thought about this enough. Let's proceed.";
                 slot-save-path = "/var/lib/private/llama-cpp";
                 # ctv = "turbo2";
-                # ctk = "q8_0";
-                # ctv = "q8_0";
-                ctk = "q4_0";
-                ctv = "q4_0";
+                ctk = "q8_0";
+                ctv = "q8_0";
                 fa = true;
                 cram = 4096;
                 tools = "all";
                 np = 4;
                 kv-unified = true;
                 ctx-checkpoints = 4;
-                lv = 5;
+                lv = 4;
                 no-mmap = true;
               };
             }

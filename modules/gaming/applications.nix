@@ -79,7 +79,15 @@ in
         #
 
         programs.steam = {
-          # package = pkgs.millennium-steam;
+          package = pkgs.steam.override {
+            # extraBwrapArgs = [
+            #   "--cap-add"
+            #   "CAP_SYS_ADMIN"
+            #   "--dev-bind"
+            #   "/dev/fuse"
+            #   "/dev/fuse"
+            # ];
+          };
           enable = true;
           extest.enable = true;
           extraCompatPackages = with pkgs; [

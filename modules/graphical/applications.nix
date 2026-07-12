@@ -93,6 +93,7 @@ in
             '';
           })
         ];
+        hm.xdg.configFile."mimeapps.list".force = true;
         hm.xdg.mimeApps = {
           enable = true;
           defaultApplications = {

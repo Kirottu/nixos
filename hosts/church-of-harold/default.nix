@@ -327,6 +327,8 @@ in
     hardware.amdgpu.overdrive.enable = true;
 
     programs.droidcam.enable = true;
+    programs.nix-ld.enable = true;
+
     # programs.coolercontrol.enable = true;
 
     virtualisation.waydroid.enable = true;
@@ -346,8 +348,10 @@ in
         gnomeXdgDesktopPortalSupport = true;
       })
       pkgs.deadlock-mod-manager
-      (pkgs.callPackage myPkgs.statlocker-companion { })
+      inputs.nix-alien.packages.${pkgs.stdenv.hostPlatform.system}.nix-alien
     ];
+
+    programs.fuse.enable = true;
 
     # This machine should always be behind a router with a competent firewall, this is fine
     services.openssh = {

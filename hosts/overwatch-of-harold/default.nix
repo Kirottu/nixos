@@ -37,6 +37,9 @@
       "mail/noreply" = {
         sopsFile = ../../secrets/shared.yaml;
       };
+      "oidc/forgejo" = {
+        sopsFile = ../../secrets/shared.yaml;
+      };
     };
 
     # synapse.enable = true;
@@ -78,6 +81,10 @@
         };
         tmpDir = "/persistent/borg";
         repo = "kirottu-backup@ivzoh.com:/home/kirottu-backup";
+      };
+      forgejo = {
+        enable = true;
+        clientSecretFile = config.sops.secrets."oidc/forgejo".path;
       };
     };
     # grafana.enable = true;

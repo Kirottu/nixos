@@ -51,6 +51,7 @@
         "oidc/nextcloud" = shared;
         "oidc/vaultwarden" = shared;
         "oidc/headscale" = shared;
+        "oidc/forgejo" = shared;
       };
     server = {
       spreed-hpb = {
@@ -130,6 +131,7 @@
         main_fairemail = config.sops.secrets."oidc/fairemail".path;
         main_webmail = config.sops.secrets."oidc/webmail".path;
         main_headscale = config.sops.secrets."oidc/headscale".path;
+        main_forgejo = config.sops.secrets."oidc/forgejo".path;
       };
       package = pkgs.callPackage myPkgs.keycloak { };
     };

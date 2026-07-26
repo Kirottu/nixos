@@ -15,10 +15,10 @@
       pkgs.devenv
     ];
 
-    hm.programs.zed-editor = {
-      enable = true;
-      package = pkgs.zed-editor-fhs;
-    };
+    # hm.programs.zed-editor = {
+    #   enable = true;
+    #   package = pkgs.zed-editor-fhs;
+    # };
 
     nix.settings = {
       substituters = [ "https://devenv.cachix.org" ];

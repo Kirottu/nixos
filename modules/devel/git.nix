@@ -1,5 +1,10 @@
 {
+  config,
+  ...
+}:
+{
   config = {
+    hm.programs.git-credential-oauth.enable = true;
     hm.programs.git = {
       enable = true;
       signing = {

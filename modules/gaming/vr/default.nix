@@ -18,13 +18,15 @@ let
           attrs = {
             postInstall = ''
               mkdir -p $out/lib/xrizer/$platformPath
+              patchelf $out/lib/libxrizer.so \
+                --add-needed "libopenxr_loader.so.1"
               mv "$out/lib/libxrizer.so" "$out/lib/xrizer/$platformPath/vrclient.so"
             '';
           };
         in
         [
           (pkg.overrideAttrs attrs)
-          # ((pkgs.pkgsi686Linux.callPackage pkg.override { }).overrideAttrs attrs)
+          ((pkgs.pkgsi686Linux.callPackage pkg.override { }).overrideAttrs attrs)
         ];
     };
   wivrn-config = {
@@ -131,13 +133,21 @@ in
     # }/share/openxr/1/openxr_wivrn.json";
     #
     # TODO: Resolve this mess
-    # hm.xdg.configFile."openxr/1/active_runtime.i686.json".source =
-    #   let
-    #     pkg = pkgs.pkgsi686Linux.wivrn.override {
-    #       clientLibOnly = true;
-    #     };
-    #   in
-    #   "${pkg}/share/openxr/1/openxr_wivrn.json";
+    # FIXME: Should upstream this thingy with the android-tools because they should not be a part of the
+    # clientLibOnly build inputs
+    hm.xdg.configFile."openxr/1/active_runtime.i686.json".source =
+      let
+        pkg = (
+          pkgs.pkgsi686Linux.wivrn.override {
+            clientLibOnly = true;
+            android-tools = pkgs.writeShellApplication {
+              name = "dummy";
+              text = "";
+            };
+          }
+        );
+      in
+      "${pkg}/share/openxr/1/openxr_wivrn.i686.json";
 
     # programs.steam =
     #   let

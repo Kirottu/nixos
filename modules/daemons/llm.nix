@@ -66,6 +66,8 @@ in
 
             chat-template-kwargs = "{\"preserve_thinking\": true}";
             # mmproj = "/var/lib/llms/Qwen3.6-35b-a3b-mmproj-F16.gguf";
+            ctk = "q8_0";
+            ctv = "q8_0";
           };
         in
         {
@@ -74,7 +76,16 @@ in
             n-cpu-moe = 22;
             temperature = 1.0;
             top-p = 0.95;
+            ctk = "q8_0";
+            ctv = "q8_0";
             top-k = 64;
+          };
+          "Laguna-XS-2.1" = {
+            model = "/var/lib/llms/Laguna-XS-2.1-Q4_K_L.gguf";
+            n-cpu-moe = 35;
+            temperature = 1.0;
+            top-k = 20;
+            sleep-idle-seconds = 60;
           };
           "Agents-A1" = {
             model = "/var/lib/llms/Agents-A1-APEX-I-Compact.gguf";
@@ -85,8 +96,10 @@ in
             top-p = 0.95;
             min-p = 0.0;
             top-k = 20;
+            ctk = "q8_0";
+            ctv = "q8_0";
             presence-penalty = 1.1;
-            sleep-idle-seconds = 30;
+            sleep-idle-seconds = 60;
             # mmproj = "/var/lib/llms/mmproj-Agents-A1.gguf";
             # no-mmproj-offload = true;
           };
@@ -217,11 +230,12 @@ in
             (prev: rec {
               # version = "9821";
               # version = "9873";
-              version = "9902";
+              version = "10092";
               src = pkgs.fetchgit {
                 url = "http://localhost:8082";
-                hash = "sha256-PhzaWAEoSfL4fkdDcC5kdfvkCWLCMkcODxTqs/672cQ=";
-                rev = "c5a0978cbbbe0a27b2eddc7e6cedd7e07b7833ef";
+                # hash = lib.fakeHash;
+                hash = "sha256-LU0sWEHHFvioY5WrGT+97vYElpNy8qGiOLEVXcuaH54=";
+                rev = "60cc2a1a78a292e7f9eafce3bb975220d60b9ebc";
                 # hash = "sha256-U8IQXS0QUKMx4+5ZpJSP99m2HBc0aelk4FF269kCkog=";
                 # rev = "ef8640fd93fefbf61db318fc41a3fb9aa2e65f57";
                 leaveDotGit = true;
@@ -231,7 +245,7 @@ in
                 '';
               };
 
-              npmDepsHash = "sha256-X1DZgmhS/zHTqDT5zq0kywwntthcJ9vRXeqyO3zz6UU=";
+              npmDepsHash = "sha256-B7uEynAG70a3xauBKc20RuFa9cnWaWzVBCh+LPLBnIM=";
               # npmDepsHash = lib.fakeHash;
             });
         # llama-cpp =
@@ -321,14 +335,12 @@ in
                 reasoning-budget-message = "OK, I've thought about this enough. Let's proceed.";
                 slot-save-path = "/var/lib/private/llama-cpp";
                 # ctv = "turbo2";
-                ctk = "q8_0";
-                ctv = "q8_0";
                 fa = true;
                 cram = 4096;
                 tools = "all";
                 np = 4;
                 kv-unified = true;
-                ctx-checkpoints = 4;
+                ctx-checkpoints = 8;
                 lv = 4;
                 no-mmap = true;
               };
@@ -387,6 +399,8 @@ in
       description = "Resource gated LLM proxy";
       wantedBy = [ "multi-user.target" ];
 
+      path = [ pkgs.bash ];
+
       environment = {
         GATED_PROXY_CONFIG = (pkgs.formats.json { }).generate "gated-proxy-config.json" {
           host = "0.0.0.0";
@@ -399,6 +413,11 @@ in
           cpu_load_average_thresh = 40.0;
           gpu_load_average_thresh = 30.0;
           model_loaded_grace = 120;
+
+          haywire_detection_enabled = true;
+
+          on_model_loaded = "${lib.getExe pkgs.lact} cli profile set Compute";
+          on_model_unloaded = "${lib.getExe pkgs.lact} cli profile auto-switch enable";
 
           idle_unload_timeouts = { };
         };
@@ -426,6 +445,7 @@ in
         RestrictRealtime = true;
         RestrictSUIDSGID = true;
         SystemCallArchitectures = "native";
+        SupplementaryGroups = "wheel";
       };
     };
 
@@ -443,9 +463,9 @@ in
       enable = true;
       environmentFiles = [
         cfg.clankerSecrets
-        "${pkgs.writeText "hermes-env" ''
-          LCM_CONTEXT_THRESHOLD=0.40
-        ''}"
+        # "${pkgs.writeText "hermes-env" ''
+        #   LCM_CONTEXT_THRESHOLD=0.40
+        # ''}"
       ];
       mcpServers = {
         exa.url = "https://mcp.exa.ai/mcp";
@@ -454,14 +474,14 @@ in
         "matrix"
       ];
       extraPlugins = [
-        (pkgs.fetchFromGitHub {
-          owner = "stephenschoettler";
-          repo = "hermes-lcm";
-          # rev = "08980b7c6728e846745a603046ab012deb3f9c71";
-          tag = "v0.19.0";
-          # hash = "sha256-c5ycRJkce+NuHGwvb2j2gsyRMiVxtFHsYDFnpaZDFYA=";
-          hash = "sha256-B80HCn3BT+M1B8THMm3Ph5tpimTB68yIVkBfPaV4X40=";
-        })
+        # (pkgs.fetchFromGitHub {
+        #   owner = "stephenschoettler";
+        #   repo = "hermes-lcm";
+        #   # rev = "08980b7c6728e846745a603046ab012deb3f9c71";
+        #   tag = "v0.19.0";
+        #   # hash = "sha256-c5ycRJkce+NuHGwvb2j2gsyRMiVxtFHsYDFnpaZDFYA=";
+        #   hash = "sha256-B80HCn3BT+M1B8THMm3Ph5tpimTB68yIVkBfPaV4X40=";
+        # })
       ];
       addToSystemPackages = true;
       container = {
@@ -472,9 +492,9 @@ in
       settings = {
         timezone = "Europe/Helsinki";
         plugins = {
-          enabled = [
-            "hermes-lcm"
-          ];
+          # enabled = [
+          #   "hermes-lcm"
+          # ];
           hermes-memory-store = {
             auto_extract = true;
           };
@@ -497,6 +517,11 @@ in
           extraction.timeout = 3600;
           compression.timeout = 3600;
         };
+        compression = {
+          enabled = true;
+          threshold = 0.7;
+          protect_last_n = 3;
+        };
         terminal = {
           backend = "local";
         };
@@ -508,8 +533,13 @@ in
         agent = {
           api_max_retries = 200;
         };
-        context = {
-          engine = "lcm";
+        # context = {
+        #   engine = "lcm";
+        # };
+        session_reset = {
+          mode = "both";
+          idle_minutes = 1440;
+          at_hour = 4;
         };
       };
     };
@@ -526,7 +556,7 @@ in
       }
     ];
 
-    # mainUser.extraGroups = [ config.services.hermes-agent.group ];
+    mainUser.extraGroups = [ config.services.hermes-agent.group ];
 
     impermanence.directories = [
       # "/var/lib/llama-cpp"

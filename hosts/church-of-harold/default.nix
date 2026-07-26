@@ -219,7 +219,7 @@ in
                 # P = -0.008;
                 # I = -0.05;
                 # D = -0.01;
-                P = -10.0e-3;
+                P = -5.0e-2;
                 I = -2.0e-3;
                 D = -6.0e-3;
               };
@@ -318,10 +318,12 @@ in
         "amdgpu.mcbp=0"
         "amdgpu.gfxoff=0"
       ];
-      # kernel.sysctl = {
-      #   "vm.swappiness" = 10;
-      # };
+      kernel.sysctl = {
+        # "vm.swappiness" = 10;
+        "kernel.core_pattern" = "|/bin/false";
+      };
     };
+    systemd.coredump.enable = false;
     net.tailscale.enable = true;
 
     hardware.amdgpu.overdrive.enable = true;

@@ -69,7 +69,7 @@
         ".config/gtk-3.0/bookmarks"
       ];
     };
-    perf.s76-scheduler.enable = true;
+    # perf.s76-scheduler.enable = true;
     audio = {
       pipewire.enable = true;
       easyeffects.enable = true;

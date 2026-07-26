@@ -1110,11 +1110,11 @@
         "rev": "4c80d1530c808edcb2e001c8a75e0c284362f2f9",
         "revCount": 11,
         "type": "git",
-        "url": "ssh://git@github.com/Kirottu/nixos-private"
+        "url": "ssh://forgejo@git.kirottu.com/Kirottu/nixos-private"
       },
       "original": {
         "type": "git",
-        "url": "ssh://git@github.com/Kirottu/nixos-private"
+        "url": "ssh://forgejo@git.kirottu.com/Kirottu/nixos-private"
       }
     },
     "pyproject-build-systems": {

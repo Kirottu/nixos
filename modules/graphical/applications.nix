@@ -262,13 +262,13 @@ in
       #     ".stremio-server"
       #   ];
       # }
-      (myUtils.mkApp {
-        package = pkgs.freecad;
-        userDirectories = [
-          ".config/FreeCAD"
-          ".local/share/FreeCAD"
-        ];
-      })
+      # (myUtils.mkApp {
+      #   package = pkgs.freecad;
+      #   userDirectories = [
+      #     ".config/FreeCAD"
+      #     ".local/share/FreeCAD"
+      #   ];
+      # })
       (myUtils.mkApp {
         package = pkgs.prusa-slicer;
         userDirectories = [

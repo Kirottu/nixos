@@ -20,6 +20,7 @@ in
       # OPENCODE_DISABLE_LSP_DOWNLOAD = "true";
       OPENCODE_EXPERIMENTAL_LSP_TOOL = "true";
       # PI_CODING_AGENT_DIR = "${config.users.users.${config.mainUser.userName}.home}/.config/pi";
+      AGENT_BROWSER_EXECUTABLE_PATH = lib.getExe pkgs.chromium;
     };
 
     # environment.systemPackages = [ inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.pi ];
@@ -38,6 +39,7 @@ in
       extraPackages = [
         pkgs.nixd
         pkgs.rust-analyzer
+        pkgs.agent-browser
       ];
       settings = {
         plugin = [
@@ -50,7 +52,7 @@ in
             name = "Local";
             npm = "@ai-sdk/openai-compatible";
             options = {
-              baseURL = "http://${config.daemons.llm.hostname}:${toString config.daemons.llm.port}/v1";
+              baseURL = "http://${config.daemons.llm.hostname}:${toString config.daemons.llm.gatedPort}/v1";
             };
             models = builtins.mapAttrs (name: value: { name = name; }) config.daemons.llm.models;
           };

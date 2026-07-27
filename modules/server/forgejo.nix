@@ -28,6 +28,8 @@ in
       }
     ];
 
+    services.openssh.settings.AllowUsers = [ config.services.forgejo.user ];
+
     services.forgejo = {
       enable = true;
       package = pkgs.forgejo;

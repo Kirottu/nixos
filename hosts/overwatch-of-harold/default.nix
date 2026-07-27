@@ -207,33 +207,27 @@
     };
     systemd.services.updateFlake = {
       enable = true;
-      serviceConfig = {
-        User = config.mainUser.userName;
-        Type = "simple";
-        ExecStart = lib.getExe (
-          pkgs.writeShellApplication {
-            name = "updateFlake";
-            runtimeInputs = [
-              pkgs.git
-              pkgs.gnupg
-              config.services.openssh.package
-              config.nix.package
-            ];
-            text = ''
-              cd "$(mktemp -d)"
-              # GIT_SSH_COMMAND="ssh -i /etc/ssh/ssh_host_ed25519_key" git clone ssh://git@github.com/Kirottu/nixos
-              git clone https://github.com/Kirottu/nixos
-              cd nixos
-              nix flake update
-              git add flake.lock
-              git commit -m "flake: update lock"
-              git push
-              cd ..
-              rm -rf nixos
-            '';
-          }
-        );
+      path = [
+        pkgs.git
+        pkgs.gnupg
+        config.services.openssh.package
+        config.nix.package
+      ];
+      environment = {
+        GIT_SSH_COMMAND = "ssh -i /etc/ssh/ssh_host_ed25519_key";
       };
+      script = ''
+        cd "$(mktemp -d)"
+        git clone ssh://forgejo@git.kirottu.com/Kirottu/nixos
+        # git clone https://github.com/Kirottu/nixos
+        cd nixos
+        nix flake update
+        git add flake.lock
+        git -c "user.name=Traditional Clanker" -c "user.email=noreply@kirottu.com" commit -m "flake: update lock"
+        git push
+        cd ..
+        rm -rf nixos
+      '';
     };
 
     # Helix is failing currently

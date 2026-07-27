@@ -54,7 +54,7 @@
 
     system.autoUpgrade = {
       enable = true;
-      flake = "github:Kirottu/nixos";
+      flake = "ssh://forgejo@git.kirottu.com/Kirottu/nixos";
       randomizedDelaySec = "30min";
       dates = "Mon,Wed,Fri *-*-* 03:00:00";
       allowReboot = true;
@@ -84,6 +84,10 @@
         github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl
         github.com ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEmKSENjQEezOmxkZMy7opKgwFB9nkt5YRrYMjNuG5N87uRgg6CLrbo5wAdT/y6v0mKV0U2w0WZ2YB/++Tpockg=
         github.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCj7ndNxQowgcQnjshcLrqPEiiphnt+VTTvDP6mHBL9j1aNUkY4Ue1gvwnGLVlOhGeYrnZaMgRK6+PKCUXaDbC7qtbW8gIkhL7aGCsOr/C56SJMy/BCZfxd1nWzAOxSDPgVsmerOBYfNqltV9/hWCqBywINIR+5dIg6JTJ72pcEpEjcYgXkE2YEFXV1JHnsKgbLWNlhScqb2UmyRkQyytRLtL+38TGxkxCflmO+5Z8CSSNY7GidjMIZ7Q4zMjA2n1nGrlTDkzwDCsw+wqFPGQA179cnfGWOWRVruj16z6XyvxvjJwbz0wQZ75XK5tKSb7FNyeIEs4TT4jk+S4dhPeAUC5y+bDYirYgM4GC7uEnztnZyaVWQ7B381AK4Qdrwt51ZqExKbQpTUNn+EjqoTwvqNj4kqx5QUCI0ThS/YkOxJCXmPUWZbhjpCg56i+2aB6CmK2JGhn57K5mj0MNdBXA4/WnwH6XoPWJzK5Nyu2zB3nAZp+S5hpQs+p1vN1/wsjk=
+      '')
+      (pkgs.writeText "overwatch-of-harold.keys" ''
+        git.kirottu.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILI5yZzZq1oHQVGcsYp2+GuvIor8nsV+A/d2T2pI5qHz
+        git.kirottu.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC+/exb1kd5dHVZaSiQ+jiJpVfddPbxgQe5jGPfBT9aA/HVB/rhuhWifEZDs3GCyuawtGhAX+1oIsx28BeqyDB1OICjwTTkC/lOWv92R1yLB0zYiEKP0luXbH11XHauaST0HXwH5d1X7rd4cOsyIKJKCXBWmkXVaxELdyAUjIGIQPF6kRAInV6DUhHmnMtaLoG2w+HRPAkrVUeZmALcD7mgqSpnhGDW7KwE0L1CPLctK6GBoyLnEu16thq6ytJEi9pZ7wlgkuEDREzDACAszLS+4px4gf5W4fUo2Y5HzhXsDQaN6B2qW5WsQRAuOdyrHxsdKJyqA26m35EalNlBepiJ2EII8isi323iKmkr63ENl8vEi8J8izJHXkNi/+PtzxwVre8WlUb0zPs/Gl1NQGrFDhPbXNSPcjd4zXyH25Mxmu0s40/PeY9HyXoJuo/X4djlZfj7fy7/y0lgdaWxWYgQVD3SoFD49+NFMCBJwmlfSDxBVuhswSVDX2vRB9CqRMxcpMXLLTW5EqU9WPm1Wu5YBu6h9pyK5CrlF0+Pdd31eXIyVIcw2MBZETILNaKLCxgeiRuEcVcHnKuhjHHjVGBph+pKZwpAMGDhPn783UAca7SRHV5C3+jfBfYHTfWfTsz6BdDkdZI0NQb4GZg+8pKYBZykO8MmZuNS4Cp8QkE37w==
       '')
       (pkgs.writeText "ivzoh.keys" ''
         ivzoh.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC7T2NfaFOCFDDzQ3eQPTz5b8L9XKI3OT1RDRMygpqv8mW8BqPYGOK6qcP6tUhg8Sg03sOhYCDPo4NwyIXQqJzLe317omSc4Hup6F7piVe+h3BgNyhCF7KpfkM26erLZ33k7OavB3jvqB35s0DIAukumQYUpRprOoSWPlKQm0J/g7kFSBGBNxmil6eAlWLAgB/QByD5Buor0EXeBdtITIYd/ZE66bBLLJ8Tc60z29VysOab7XuTxvAcqrHu57Qav9m3GrQqApxak0CBiTGklFJJ2oVxaYUNEhuJ6xmR5doPjlIgh1iB5cIYo7jpTUkSFBP+62jBnkiD/unoCvHp0E1b0URl9fBewg+UxlE2J2kZp/SvLsCRGek7j+q63ZQBO+E4UTcOzihOfbf3AOnJ9DUNPfwCdEINwN7U2TMgUyoFsZI82KeqgTu2Hdv2N8o2QejMyxnpNBlbMi6tD8gbu86IR7FFy3en7bjeZRXaf5ar3nWN73tzhwPS0fTrgTs1088=
